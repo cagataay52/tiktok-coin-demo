@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TikTok Coins Demo</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to bottom right, #ff0050, #000000);
+      color: white;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    header {
+      padding: 20px;
+      font-size: 24px;
+      font-weight: bold;
+    }
+    .coins-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 20px;
+      width: 90%;
+      max-width: 700px;
+      margin-bottom: 40px;
+    }
+    .coin-card {
+      background: rgba(255,255,255,0.1);
+      border-radius: 15px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+    .coin-card:hover {
+      transform: translateY(-5px);
+      background: rgba(255,255,255,0.2);
+      cursor: pointer;
+    }
+    .coin-amount {
+      font-size: 22px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .coin-price {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+    button {
+      background: #ff0050;
+      border: none;
+      color: white;
+      padding: 10px 15px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+    button:hover {
+      background: #ff3366;
+    }
+    footer {
+      margin: 20px;
+      font-size: 14px;
+      opacity: 0.7;
+    }
+  </style>
+</head>
+<body>
+  <header>TikTok Coin Paketi Seç</header>
+  <div class="coins-container">
+    <div class="coin-card">
+      <div class="coin-amount">70 Coin</div>
+      <div class="coin-price">₺19,99</div>
+      <button onclick="alert('70 Coin satın alındı!')">Satın Al</button>
+    </div>
+    <div class="coin-card">
+      <div class="coin-amount">350 Coin</div>
+      <div class="coin-price">₺89,99</div>
+      <button onclick="alert('350 Coin satın alındı!')">Satın Al</button>
+    </div>
+    <div class="coin-card">
+      <div class="coin-amount">700 Coin</div>
+      <div class="coin-price">₺169,99</div>
+      <button onclick="alert('700 Coin satın alındı!')">Satın Al</button>
+    </div>
+    <div class="coin-card">
+      <div class="coin-amount">1400 Coin</div>
+      <div class="coin-price">₺329,99</div>
+      <button onclick="alert('1400 Coin satın alındı!')">Satın Al</button>
+    </div>
+  </div>
+  <footer>Bu bir demo sayfasıdır. Gerçek ödeme yapılmaz.</footer>
+</body>
+</html>
