@@ -1,166 +1,178 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+/* GENEL AYARLAR VE RENK PALETİ 2 */
+:root {
+    --bg-dark: #000000;
+    --bg-gray: #212121;
+    --primary: #FF5722;
+    --text-light: #F5F5F5;
 }
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
-    background-color: #0a0a0a;
+    background-color: #1a1a1a;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
     height: 100vh;
     font-family: 'Montserrat', sans-serif;
+    color: var(--text-light);
+    overflow: hidden;
 }
 
+/* STÜDYO ARAYÜZÜ - SOL PANEL */
+.control-panel {
+    width: 350px;
+    background-color: var(--bg-gray);
+    padding: 30px;
+    overflow-y: auto;
+    border-right: 2px solid var(--primary);
+    box-shadow: 5px 0 15px rgba(0,0,0,0.5);
+    z-index: 10;
+}
+
+.control-panel h2 {
+    font-family: 'Anton', sans-serif;
+    color: var(--primary);
+    letter-spacing: 1px;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.input-group { margin-bottom: 20px; }
+.input-group label { display: block; font-size: 12px; font-weight: bold; margin-bottom: 8px; color: #aaa; text-transform: uppercase; }
+.input-group input { width: 100%; padding: 10px; background-color: var(--bg-dark); border: 1px solid #444; color: white; border-radius: 4px; font-family: 'Montserrat', sans-serif; font-weight: bold; }
+.input-group input:focus { border-color: var(--primary); outline: none; }
+
+/* SAĞ TARAF - ŞABLONLAR ALANI */
+.templates-container {
+    flex: 1;
+    padding: 40px;
+    display: flex;
+    gap: 40px;
+    overflow-x: auto;
+    align-items: flex-start;
+    background-image: radial-gradient(circle at center, #111 0%, #000 100%);
+}
+
+.template-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+/* -----------------------------------
+   ŞABLON 1: MAÇ GÜNÜ (800x800)
+------------------------------------ */
 .match-card {
     width: 800px;
     height: 800px;
-    background-color: #121212;
-    background-image: url('https://images.unsplash.com/photo-1518605368461-1ee7c684e2a6?q=80&w=1000&auto=format&fit=crop');
-    background-size: cover;
-    background-position: center;
+    background-color: var(--bg-dark);
     position: relative;
     overflow: hidden;
-    color: #ffffff;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+    transform: scale(0.6); /* Ekrana sığması için küçülttük, inerken 800x800 inecek */
+    transform-origin: top center;
+    margin-bottom: -300px;
 }
 
 .bg-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, rgba(255, 87, 34, 0.7) 60%, rgba(10, 10, 10, 1) 100%);
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background-image: url('https://images.unsplash.com/photo-1518605368461-1ee7c684e2a6?q=80&w=1000');
+    background-size: cover; background-position: center;
     z-index: 1;
 }
 
-.match-info, .bottom-section {
-    position: relative;
-    z-index: 2;
+.bg-overlay::after {
+    content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, rgba(255, 87, 34, 0.75) 60%, rgba(0, 0, 0, 1) 100%);
 }
 
-.match-info {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 150px;
-    gap: 40px;
+.brand-top {
+    position: absolute; top: 30px; left: 0; width: 100%; text-align: center;
+    font-family: 'Anton', sans-serif; font-size: 28px; z-index: 3; letter-spacing: 2px;
 }
+.hl { color: var(--primary); }
 
-.team {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 250px;
+.match-info, .bottom-section { position: relative; z-index: 2; }
+
+.match-info { display: flex; justify-content: center; align-items: center; margin-top: 150px; gap: 40px; }
+.team { display: flex; flex-direction: column; align-items: center; width: 250px; }
+.logo { width: 160px; height: 160px; object-fit: contain; filter: drop-shadow(0 10px 10px rgba(0,0,0,0.8)); margin-bottom: 20px; }
+.team-name { font-family: 'Anton', sans-serif; font-size: 32px; letter-spacing: 2px; text-shadow: 2px 2px 4px rgba(0,0,0,0.9); }
+
+.center-details { display: flex; flex-direction: column; align-items: center; }
+.time { font-family: 'Anton', sans-serif; font-size: 64px; line-height: 1; text-shadow: 0 0 20px rgba(0,0,0,0.9); }
+.venue { font-size: 16px; font-weight: 900; letter-spacing: 1px; margin-top: 5px; text-transform: uppercase; }
+
+.bottom-section { text-align: center; margin-bottom: 40px; }
+.score-predictor { background: rgba(0,0,0,0.6); display: inline-block; padding: 8px 20px; border-radius: 30px; font-weight: 900; font-size: 14px; border: 1px solid rgba(255,87,34,0.5); margin-bottom: -15px; }
+.main-title { font-family: 'Anton', sans-serif; font-size: 140px; line-height: 1; letter-spacing: 2px; margin: 0; text-shadow: 0 0 20px rgba(255,87,34,0.8), 0 0 50px rgba(255,87,34,0.5); transform: scaleY(1.1); }
+.footer { font-weight: 700; font-size: 16px; margin-top: 15px; color: #ccc; letter-spacing: 1px; text-align: center; }
+
+/* -----------------------------------
+   ŞABLON 2: SON DAKİKA
+------------------------------------ */
+.tpl-sondakika {
+    background-color: var(--bg-gray);
+    background-image: repeating-linear-gradient(45deg, rgba(0,0,0,0.2) 0px, rgba(0,0,0,0.2) 2px, transparent 2px, transparent 10px);
 }
+.sd-bg-text { position: absolute; font-family: 'Anton', sans-serif; font-size: 250px; line-height: 0.8; color: var(--primary); opacity: 0.05; top: 100px; left: -20px; text-align: left; }
+.sd-title { position: relative; z-index: 2; font-family: 'Anton', sans-serif; font-size: 160px; line-height: 0.9; color: var(--primary); margin: 120px 0 0 40px; text-shadow: 5px 5px 0px #000; letter-spacing: 2px; }
 
-.logo {
-    width: 180px;
-    height: 180px;
-    object-fit: contain;
-    filter: drop-shadow(0px 10px 15px rgba(0,0,0,0.8));
-    margin-bottom: 20px;
+.news-box {
+    position: relative; z-index: 3; background: var(--text-light); width: 85%; height: 220px; margin: auto auto 80px auto; border-radius: 12px;
+    display: flex; align-items: center; box-shadow: 0 20px 40px rgba(0,0,0,0.8);
 }
+.close-x { position: absolute; top: -15px; right: -15px; background: var(--primary); color: white; width: 40px; height: 40px; border-radius: 5px; display: flex; justify-content: center; align-items: center; font-family: 'Anton', sans-serif; font-size: 24px; box-shadow: 0 5px 10px rgba(0,0,0,0.5); }
+.player-img-container { width: 40%; height: 100%; background: var(--primary); border-radius: 12px 0 0 12px; position: relative; overflow: hidden; }
+.player-cutout { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); height: 120%; object-fit: contain; }
+.news-text { width: 60%; padding: 30px; color: var(--bg-dark); }
+.news-text h3 { font-size: 32px; font-weight: 900; font-style: italic; text-transform: uppercase; line-height: 1.2; }
 
-.team-name {
-    font-family: 'Anton', sans-serif;
-    font-size: 32px;
-    letter-spacing: 2px;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+/* -----------------------------------
+   ŞABLON 3: MAÇ SONU İSTATİSTİK
+------------------------------------ */
+.tpl-istatistik {
+    background: radial-gradient(circle at top, var(--bg-gray) 0%, var(--bg-dark) 100%);
+    display: flex; flex-direction: column; justify-content: flex-start;
 }
+.stat-title { text-align: center; font-family: 'Anton', sans-serif; font-size: 60px; line-height: 1; margin-top: 20px; text-shadow: 0 0 15px rgba(255,87,34,0.6); }
+.stat-grid { display: flex; justify-content: center; align-items: center; width: 100%; margin-top: 50px; gap: 50px; }
+.ratings { display: flex; flex-direction: column; gap: 30px; }
+.rating-box { background: var(--primary); color: white; font-family: 'Anton', sans-serif; font-size: 28px; padding: 10px 20px; border-radius: 8px; box-shadow: 0 5px 15px rgba(255,87,34,0.4); text-align: center; }
+.stat-score-board { display: flex; justify-content: center; align-items: center; background: rgba(0,0,0,0.8); margin: 60px 40px 0 40px; padding: 20px; border-radius: 15px; border: 1px solid #333; gap: 20px; }
+.small-logo { width: 60px; }
+.stat-score-board span { font-family: 'Anton', sans-serif; font-size: 36px; }
+.stat-score { font-family: 'Anton', sans-serif; font-size: 48px; color: var(--primary); }
 
-.center-details {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+/* -----------------------------------
+   ŞABLON 4: REELS (9:16)
+------------------------------------ */
+.tpl-reels {
+    width: 540px; height: 960px; /* 1080x1920'nin yarısı, scale olunca tam boy olacak */
+    background-color: var(--bg-dark);
+    margin-bottom: -400px;
 }
+.reels-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to top, #000 0%, transparent 60%), radial-gradient(circle at center, var(--primary) 0%, transparent 50%); opacity: 0.5; z-index: 1; }
+.reels-header { position: relative; z-index: 3; text-align: center; margin-top: 80px; }
+.reels-tag { background: white; color: black; display: inline-block; padding: 5px 15px; font-weight: 900; font-style: italic; font-size: 18px; transform: skewX(-10deg); margin-bottom: 10px; }
+.reels-name { font-family: 'Anton', sans-serif; font-size: 60px; color: white; line-height: 1; text-transform: uppercase; text-shadow: 2px 2px 0 var(--primary); }
+.reels-player { position: absolute; bottom: 150px; left: 50%; transform: translateX(-50%); height: 600px; z-index: 2; object-fit: contain; filter: drop-shadow(0 20px 30px rgba(0,0,0,0.8)); }
+.reels-stats { position: absolute; bottom: 50px; left: 0; width: 100%; display: flex; justify-content: space-around; z-index: 3; padding: 0 30px; }
+.stat-item { text-align: center; }
+.stat-item h2 { font-family: 'Anton', sans-serif; font-size: 60px; line-height: 1; text-shadow: 0 0 15px rgba(255,87,34,0.8); }
+.stat-item span { font-weight: 800; font-size: 16px; text-transform: uppercase; letter-spacing: 1px; color: #ccc; }
 
-.time {
-    font-family: 'Anton', sans-serif;
-    font-size: 64px;
-    color: #ffffff;
-    line-height: 1;
-    text-shadow: 0 0 20px rgba(0,0,0,0.9);
-}
-
-.venue {
-    font-size: 16px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-top: 5px;
-}
-
-.bottom-section {
-    text-align: center;
-    margin-bottom: 40px;
-}
-
-.score-predictor {
-    background-color: rgba(0, 0, 0, 0.6);
-    display: inline-block;
-    padding: 8px 20px;
-    border-radius: 30px;
-    font-weight: 900;
-    font-size: 14px;
-    letter-spacing: 1px;
-    margin-bottom: -15px;
-    border: 1px solid rgba(255, 87, 34, 0.5);
-}
-
-.highlight {
-    color: #FF5722;
-    margin-left: 10px;
-}
-
-.main-title {
-    font-family: 'Anton', sans-serif;
-    font-size: 140px;
-    line-height: 1;
-    letter-spacing: 2px;
-    margin: 0;
-    text-shadow: 0 0 20px rgba(255, 87, 34, 0.8), 0 0 40px rgba(255, 87, 34, 0.5);
-    transform: scaleY(1.1);
-}
-
-.footer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    font-weight: 700;
-    font-size: 16px;
-    margin-top: 10px;
-    color: #ddd;
-}
-
-.social-icon {
-    width: 20px;
-    height: 20px;
-    filter: grayscale(100%) brightness(200%);
-}
-
-.x-icon {
-    width: 16px;
-}
-
+/* BUTONLAR */
 .download-btn {
-    padding: 15px 30px;
-    background-color: #FF5722;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 18px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: 0.3s;
+    padding: 15px 30px; background-color: var(--primary); color: white; border: none; border-radius: 8px;
+    font-size: 16px; font-weight: 900; cursor: pointer; transition: 0.3s; width: 100%; text-transform: uppercase;
 }
+.download-btn:hover { background-color: white; color: var(--primary); }
 
-.download-btn:hover {
-    background-color: #e64a19;
-}
+/* Scrollbar Gizleme (Temiz görünüm) */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 4px; }
+::-webkit-scrollbar-track { background: var(--bg-dark); }
