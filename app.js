@@ -4,11 +4,9 @@
 const API_KEY = "387077a621a58f5c5cde81cb20db5721"; 
 let allMatches = []; 
 
-// Sistemin güncel yılı ve sezonu otomatik hesaplaması
 const bugun = new Date();
 const guncelYil = bugun.getFullYear();
-const guncelAy = bugun.getMonth() + 1; // 1'den 12'ye kadar aylar
-// Süper Lig Ağustos'ta başlar. Eğer Ağustos'tan (8. ay) önceysek, sezon bir önceki yılın adıyla anılır.
+const guncelAy = bugun.getMonth() + 1; 
 const aktifSezon = guncelAy >= 8 ? guncelYil : guncelYil - 1;
 
 document.getElementById('btn-load-fixtures').addEventListener('click', () => {
@@ -16,7 +14,6 @@ document.getElementById('btn-load-fixtures').addEventListener('click', () => {
     btn.innerText = "YÜKLENİYOR...";
     btn.style.backgroundColor = "#555";
 
-    // API-Sports: Otomatik hesaplanan güncel sezonu çeker
     fetch(`https://v3.football.api-sports.io/fixtures?league=203&season=${aktifSezon}`, {
         method: "GET",
         headers: {
@@ -25,16 +22,18 @@ document.getElementById('btn-load-fixtures').addEventListener('click', () => {
     })
     .then(response => response.json())
     .then(data => {
-        // Hata Dedektifi
-        if (data.errors && Object.keys(data.errors).length > 0) {
-            alert("API HESABINIZ ONAYLI DEĞİL!\nLütfen e-posta adresinize gidip api-sports.io'dan gelen aktivasyon linkine tıklayın.");
+        
+        // DÜZELTİLMİŞ GERÇEK HATA DEDEKTİFİ
+        if (data.errors && (Array.isArray(data.errors) ? data.errors.length > 0 : Object.keys(data.errors).length > 0)) {
+            // API ne hata veriyorsa artık sansürsüz onu göreceğiz
+            alert("API'DEN GELEN GERÇEK HATA:\n" + JSON.stringify(data.errors, null, 2));
             btn.innerText = "1. MAÇLARI YÜKLE";
             btn.style.backgroundColor = "#111";
             return;
         }
 
         if (!data.response || data.response.length === 0) {
-            alert("Güncel sezon verisi boş geldi!");
+            alert("API bağlantısı başarılı ama lig verisi boş geldi! Sezon parametresini kontrol edelim.");
             btn.innerText = "1. MAÇLARI YÜKLE";
             btn.style.backgroundColor = "#111";
             return;
@@ -44,7 +43,6 @@ document.getElementById('btn-load-fixtures').addEventListener('click', () => {
         const select = document.getElementById('select-match');
         select.innerHTML = '<option value="">Maç Seçin...</option>';
 
-        // Maçları tarihe göre sırala
         allMatches.sort((a, b) => new Date(b.fixture.date) - new Date(a.fixture.date));
 
         allMatches.forEach(match => {
@@ -72,8 +70,9 @@ document.getElementById('btn-load-fixtures').addEventListener('click', () => {
         document.getElementById('btn-apply-match').style.display = "block";
     })
     .catch(error => {
-        console.error("Hata:", error);
-        alert("Bağlantı Hatası!");
+        // TARAYICI VEYA İNTERNET HATALARI (CORS dahil)
+        console.error("Fetch Hatası:", error);
+        alert("SİSTEM/CORS HATASI:\n" + error.message + "\n\n(Eğer 'Failed to fetch' diyorsa, dosyayı çift tıklayarak değil, VS Code Live Server ile açman gerekebilir.)");
         btn.innerText = "1. MAÇLARI YÜKLE";
         btn.style.backgroundColor = "#111";
     });
