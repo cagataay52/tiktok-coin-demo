@@ -1,24 +1,13 @@
 // ==========================================
-// 1. DİNAMİK RENK (GLOW) KONTROLÜ
-// ==========================================
-document.getElementById('inp-home-color').addEventListener('input', (e) => {
-    document.documentElement.style.setProperty('--home-color', e.target.value);
-});
-document.getElementById('inp-away-color').addEventListener('input', (e) => {
-    document.documentElement.style.setProperty('--away-color', e.target.value);
-});
-
-// ==========================================
-// 2. MANUEL GİRİŞLERİ ŞABLONLARA DAĞITMA
+// 1. MANUEL GİRİŞLERİ ŞABLONLARA DAĞITMA
 // ==========================================
 const inputs = [
     { id: 'inp-home-name', targetClasses: '.out-home-name', upper: true },
     { id: 'inp-away-name', targetClasses: '.out-away-name', upper: true },
     { id: 'inp-home-score', targetClasses: '.out-home-score', upper: false },
     { id: 'inp-away-score', targetClasses: '.out-away-score', upper: false },
-    { id: 'inp-time', targetClasses: '.out-match-time', upper: false },
-    { id: 'inp-venue', targetClasses: '.out-match-venue', upper: true },
-    { id: 'inp-player-name', targetClasses: '.out-player-name', upper: true }
+    { id: 'inp-player-name', targetClasses: '.out-player-name', upper: true },
+    { id: 'inp-news-title', targetClasses: '.out-news-title', upper: false }
 ];
 
 inputs.forEach(input => {
@@ -30,18 +19,21 @@ inputs.forEach(input => {
     });
 });
 
-// Flaş Açıklama (Quote) Textarea Dinleyicisi
-document.getElementById('inp-quote').addEventListener('input', function(e) {
-    document.querySelector('.out-quote').innerText = e.target.value;
+// YENİ: Gol Atanlar Motoru (Satır atlamalarını HTML'e çevirir)
+document.getElementById('inp-home-scorers').addEventListener('input', function(e) {
+    document.querySelector('.out-home-scorers').innerHTML = e.target.value.replace(/\n/g, '<br>');
+});
+document.getElementById('inp-away-scorers').addEventListener('input', function(e) {
+    document.querySelector('.out-away-scorers').innerHTML = e.target.value.replace(/\n/g, '<br>');
 });
 
 // İlk 11 Kadrosu Oluşturucu Motoru
 document.getElementById('inp-lineup').addEventListener('input', function(e) {
     const listContainer = document.getElementById('out-lineup-list');
-    listContainer.innerHTML = ''; // Önce temizle
+    listContainer.innerHTML = ''; 
     
-    // Virgülle ayrılan isimleri al, boşlukları temizle
-    const players = e.target.value.split(',').map(p => p.trim()).filter(p => p !== '');
+    // Satır satır (Enter'a basılarak) ayrılan isimleri al
+    const players = e.target.value.split('\n').map(p => p.trim()).filter(p => p !== '');
     
     // Maksimum 11 oyuncuyu listeye ekle
     players.slice(0, 11).forEach((player, index) => {
@@ -51,13 +43,11 @@ document.getElementById('inp-lineup').addEventListener('input', function(e) {
         listContainer.appendChild(item);
     });
 });
-// Sayfa ilk açıldığında varsayılan kadroyu da işlesin:
 document.getElementById('inp-lineup').dispatchEvent(new Event('input'));
 
 // ==========================================
-// 3. FOTOĞRAF VE ÖZEL LOGO YÜKLEME SİSTEMİ
+// 2. FOTOĞRAF VE ÖZEL LOGO YÜKLEME SİSTEMİ
 // ==========================================
-// Arka Plan Yükleme
 document.getElementById('upload-bg').addEventListener('change', function(e) {
     const file = e.target.files[0];
     if (file) {
@@ -65,13 +55,12 @@ document.getElementById('upload-bg').addEventListener('change', function(e) {
         reader.onload = function(event) {
             document.getElementById('bg-mac-gunu').style.backgroundImage = `url('${event.target.result}')`;
             document.getElementById('bg-mac-sonucu').style.backgroundImage = `url('${event.target.result}')`;
-            document.getElementById('bg-alinti').style.backgroundImage = `url('${event.target.result}')`;
+            document.getElementById('bg-reels').style.backgroundImage = `url('${event.target.result}')`;
         }
         reader.readAsDataURL(file);
     }
 });
 
-// Oyuncu Dekupe Yükleme
 document.getElementById('upload-player').addEventListener('change', function(e) {
     const file = e.target.files[0];
     if (file) {
@@ -85,7 +74,6 @@ document.getElementById('upload-player').addEventListener('change', function(e) 
     }
 });
 
-// Ev Sahibi Logosu Yükleme
 document.getElementById('upload-home-logo').addEventListener('change', function(e) {
     const file = e.target.files[0];
     if (file) {
@@ -99,7 +87,6 @@ document.getElementById('upload-home-logo').addEventListener('change', function(
     }
 });
 
-// Deplasman Logosu Yükleme
 document.getElementById('upload-away-logo').addEventListener('change', function(e) {
     const file = e.target.files[0];
     if (file) {
@@ -114,7 +101,7 @@ document.getElementById('upload-away-logo').addEventListener('change', function(
 });
 
 // ==========================================
-// 4. ULTRA YÜKSEK ÇÖZÜNÜRLÜKLÜ İNDİRME
+// 3. ULTRA YÜKSEK ÇÖZÜNÜRLÜKLÜ İNDİRME
 // ==========================================
 function downloadTpl(elementId, fileName) {
     const captureArea = document.getElementById(elementId);
