@@ -1,10 +1,57 @@
+// ==========================================
+// YAPAY ZEKA METİN KÜÇÜLTME MOTORU (Auto-Scaler)
+// ==========================================
+function autoScaleText() {
+    // Sadece "auto-scale" class'ı olan elementleri bulur (örn: Son dakika haberi)
+    const elements = document.querySelectorAll('.auto-scale');
+    
+    elements.forEach(el => {
+        // Orijinal font boyutunu 38px olarak varsayarak başla
+        let fontSize = 38; 
+        el.style.fontSize = fontSize + 'px';
+        
+        // Elementin yüksekliği, dışındaki kutunun yüksekliğini (150px) aşarsa döngüye gir
+        while (el.scrollHeight > 150 || el.scrollWidth > el.parentElement.clientWidth) {
+            fontSize--; // Fontu 1 piksel küçült
+            el.style.fontSize = fontSize + 'px';
+            if (fontSize <= 14) break; // En fazla 14px'e kadar küçülebilir, dur.
+        }
+    });
+}
+
+// Tüm "auto-text" class'ı olan düz metinleri de hafifçe kontrol et
+function autoScaleSimpleText() {
+    const elements = document.querySelectorAll('.auto-text');
+    elements.forEach(el => {
+        let parentWidth = el.parentElement.clientWidth;
+        // Eğer içindeki metin taşıyorsa
+        if(el.scrollWidth > parentWidth && parentWidth > 0) {
+            // Basit bir CSS hilesi ile sadece sığacak kadar daralt
+            el.style.transform = `scaleX(${parentWidth / el.scrollWidth})`;
+            el.style.transformOrigin = "center";
+        } else {
+            el.style.transform = "none";
+        }
+    });
+}
+
+// ==========================================
+// YARDIMCI FONKSİYONLAR
+// ==========================================
 function bindText(inputId, targetClass, isUpper = true, isHtml = false) {
     const input = document.getElementById(inputId);
     if (!input) return;
     input.addEventListener('input', function(e) {
         let value = isUpper ? e.target.value.toUpperCase() : e.target.value;
         if (isHtml) value = value.replace(/\n/g, '<br>');
-        document.querySelectorAll(targetClass).forEach(el => el.innerHTML = value);
+        
+        document.querySelectorAll(targetClass).forEach(el => {
+            el.innerHTML = value;
+        });
+        
+        // Metin her değiştiğinde küçültme motorunu çalıştır
+        autoScaleText();
+        setTimeout(autoScaleSimpleText, 10);
     });
 }
 
@@ -58,7 +105,7 @@ bindImage('ms-home-logo', 'out-ms-home-logo');
 bindImage('ms-away-logo', 'out-ms-away-logo');
 bindImage('ms-bg', 'bg-mac-sonucu', true);
 
-// 4. İSTATİSTİKLER (Matematiksel Bar Hesaplama)
+// 4. İSTATİSTİKLER 
 function bindStat(idHome, idAway, outHome, outAway, barHome, barAway, isPercent = false) {
     const iHome = document.getElementById(idHome);
     const iAway = document.getElementById(idAway);
@@ -82,7 +129,7 @@ function bindStat(idHome, idAway, outHome, outAway, barHome, barAway, isPercent 
 
     iHome.addEventListener('input', updateStats);
     iAway.addEventListener('input', updateStats);
-    updateStats(); // İlk yüklemede çalıştır
+    updateStats(); 
 }
 
 bindStat('stat-pos-home', 'stat-pos-away', '.out-stat-pos-home', '.out-stat-pos-away', 'bar-pos-home', 'bar-pos-away', true);
@@ -115,6 +162,12 @@ document.getElementById('k-lineup').dispatchEvent(new Event('input'));
 bindText('r-player-name', '.out-r-name');
 bindImage('r-player-img', 'out-r-player');
 bindImage('r-bg', 'bg-reels', true);
+
+// SAYFA YÜKLENDİĞİNDE TEXT MOTORUNU ÇALIŞTIR
+window.addEventListener('load', () => {
+    autoScaleText();
+    setTimeout(autoScaleSimpleText, 100);
+});
 
 // HD İNDİRME MOTORU
 function downloadTpl(elementId, fileName) {
