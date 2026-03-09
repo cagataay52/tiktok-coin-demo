@@ -1,213 +1,134 @@
-:root {
-    --primary: #FF5722;
-    --primary-dim: rgba(255, 87, 34, 0.4);
-    --dark: #000000;
-    --gray: #0a0a0a;
-    --light-gray: #f5f5f5;
-    --text: #ffffff;
+/* Genel Sıfırlama */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; }
-
-body { background-color: #030303; color: var(--text); font-family: 'Montserrat', sans-serif; overflow-x: hidden; }
-
-.app-container { max-width: 1500px; margin: 0 auto; padding: 40px 20px; }
-.main-header { font-family: 'Barlow', sans-serif; font-style: italic; font-weight: 900; color: white; text-align: center; font-size: 40px; text-shadow: 0 0 20px var(--primary), 0 0 40px var(--primary-dim); margin-bottom: 50px; }
-
-/* 🌟 DÜZELTME: MODÜLER ÖNİZLEME SABİTLEYİCİ Motoru 🌟 */
-/* Kaymaların asıl sebebi olan transform:scale(0.5)'i kaldırdık. */
-/* Bunun yerine kartın 800x800 kalmasını ama konteyner içinde pürüzsüzce küçülmesini (fit) sağlıyoruz. */
-.templates-container { display: flex; flex-direction: column; gap: 50px; }
-
-.studio-module { display: flex; background: var(--gray); border-radius: 12px; margin-bottom: 50px; border: 1px solid #1a1a1a; overflow: hidden; box-shadow: 0 30px 60px rgba(0,0,0,1); }
-.module-panel { width: 35%; padding: 40px; background: #000; border-right: 2px solid #222; }
-.module-panel h2 { font-family: 'Barlow'; font-weight: 900; font-style: italic; color: #fff; margin-bottom: 30px; font-size: 26px; border-bottom: 1px solid #222; padding-bottom: 10px; text-shadow: 0 0 10px var(--primary);}
-.module-preview { width: 65%; display: flex; justify-content: center; align-items: center; padding: 30px; background: #050505; background-image: radial-gradient(circle at center, #111 0%, #030303 100%);}
-
-/* 🌟 DÜZELTME: KAYMALARI BİTİREN ÖNİZLEME KAPSAYICI 🌟 */
-.preview-wrapper { 
-    width: 400px; /* 800px / 2 */
-    height: 400px; /* 800px / 2 */
-    position: relative; 
-    box-shadow: 0 15px 50px rgba(0,0,0,1); 
-    overflow: hidden; /* Taşmayı önler */
-}
-/* Reels için özel boyut (9:16) */
-.preview-wrapper.reels-wrapper { 
-    width: 270px; /* 540px / 2 */
-    height: 480px; /* 960px / 2 */
-}
-
-/* 🌟 DÜZELTME: NİHAİ 800x800 KART SÜPER SABİTLEYİCİ 🌟 */
-.match-card { 
-    width: 800px; /* NİHAİ ÇIKTI BOYUTU */
-    height: 800px; /* NİHAİ ÇIKTI BOYUTU */
-    background-color: var(--dark); 
-    position: absolute; 
-    top: 0; 
-    left: 0; 
-    transform: scale(0.5); /* 400px'e sığdırmak için küçültme (İndirme anında JS bunu scale(1) yapar) */
-    transform-origin: top left; 
-    overflow: hidden; /* Kartın dışına taşanları keser */
-    backface-visibility: hidden; /* Render pürüzsüzlüğü için */
-}
-
-/* 🌟 YENİ: ULTRA PREMIUM KRİSTAL EFEKTİ (Crystal Morphism) 🌟 */
-.crystal-panel {
-    background: rgba(10, 10, 10, 0.5);
-    backdrop-filter: blur(25px) saturate(180%);
-    -webkit-backdrop-filter: blur(25px) saturate(180%);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 1), inset 0 0 15px rgba(255, 255, 255, 0.02);
-}
-
-/* 🌟 YENİ: NEON GLOW VE BEVEL (Deep Depth) 🌟 */
-.neon-glow {
-    box-shadow: 0 0 15px var(--primary-dim), 0 0 30px rgba(255, 87, 34, 0.2);
-    border: 1px solid var(--primary);
-}
-.neon-text {
-    color: #fff;
-    text-shadow: 0 0 15px var(--primary), 0 0 30px var(--primary);
-}
-.neon-text-color {
-    color: var(--primary);
-    text-shadow: 0 0 15px var(--primary), 0 0 30px var(--primary);
-}
-.neon-border {
-    border-color: var(--primary) !important;
-}
-
-/* INPUT TASARIMLARI */
-.input-group { margin-bottom: 20px; }
-.input-group label { font-size: 12px; color: #888; font-weight: 800; text-transform: uppercase; margin-bottom: 8px; display: block; }
-.input-group input[type="text"], .input-group input[type="number"], .input-group textarea { width: 100%; padding: 12px; background: #000; border: 1px solid #333; color: white; border-radius: 6px; font-family: 'Montserrat', font-weight: 700; resize: none; transition: 0.3s;}
-.input-group input:focus, .input-group textarea:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 10px rgba(255,87,34,0.3);}
-.input-group input[type="file"] { margin-top: 8px; font-size: 12px; color: #ccc; }
-.download-btn { width: 100%; padding: 15px; background: var(--primary); color: white; font-family: 'Barlow'; font-weight: 900; font-size: 22px; border: none; border-radius: 6px; cursor: pointer; transition: 0.3s; margin-top: 20px; box-shadow: 0 0 20px rgba(255,87,34,0.4);}
-.download-btn:hover { background: white; color: var(--primary); transform: translateY(-3px);}
-
-/* ORTAK KART BİLEŞENLERİ */
-.card-footer { position: absolute; bottom: 20px; width: 100%; text-align: center; font-size: 15px; color: rgba(255,255,255,0.4); font-weight: 900; z-index: 50; letter-spacing: 2px; text-shadow: 1px 1px 3px #000; }
-.bg-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: url('https://images.unsplash.com/photo-1518605368461-1ee7c684e2a6?q=80&w=1000'); background-size: cover; background-position: center; opacity: 0.6; filter: blur(2px); }
-
-/* EVRENSEL İMZA IŞIKLARI */
-.brand-glow { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at 30% 40%, rgba(255,87,34,0.5) 0%, transparent 60%), radial-gradient(circle at 70% 60%, rgba(255,87,34,0.3) 0%, transparent 60%); mix-blend-mode: screen; z-index: 1; pointer-events: none;}
-.black-fade { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, transparent 40%, rgba(0,0,0,1) 100%); z-index: 1; pointer-events: none;}
-.reels-fade { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.95) 70%, rgba(0,0,0,1) 100%); z-index: 1; pointer-events: none;}
-.brand-gradient-bottom { position: absolute; bottom: 0; left: 0; width: 100%; height: 80%; background: linear-gradient(to top, rgba(255,87,34,0.4) 0%, transparent 100%); z-index: 1; pointer-events: none;}
-
-/* ========================================= */
-/* 1. MAÇ GÜNÜ & 2. HT & 3. MAÇ SONUCU (KAYMALARI BİTİREN KODLAR) */
-/* ========================================= */
-.mg-content, .ms-content { position: absolute; bottom: 80px; left: 0; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; z-index: 10;}
-.mg-teams, .ft-scoreboard { display: flex; justify-content: center; align-items: center; gap: 30px; margin-bottom: 20px; width: 100%; }
-.mg-team, .ft-team { display: flex; flex-direction: column; align-items: center; width: 230px; } 
-
-/* 🌟 DÜZELTME: KUSURSUZ LOGO SIZDIRICI Motoru 🌟 */
-/* Artık logoların dikine veya enine uzun olması kaymaya sebep olmaz. */
-/* Belirlenen 150x150 kareye object-fit: contain ile milimetrik sığar. */
-.premium-logo-container {
-    width: 150px;
-    height: 150px;
+body {
+    background-color: #333333; /* Tasarımı net görmek için koyu gri arka plan */
     display: flex;
     justify-content: center;
-    align-items: center; /* Dikeyde ortalar, biri up diğeri down olmaz */
-    margin-bottom: 15px;
-    filter: drop-shadow(0 15px 30px rgba(0,0,0,1));
-    position: relative;
+    align-items: center;
+    min-height: 100vh;
 }
-.mg-logo, .ft-team img { 
-    max-width: 100%; 
-    max-height: 100%; 
-    object-fit: contain; /* Sündürmeden sığdırır */
+
+/* Ana Şablon Konteyneri (Instagram Post formatına yakın - Kare) */
+.skor-agi-sablon {
+    width: 100%;
+    max-width: 600px;
+    background-color: #000000;
+    border: 2px solid #ff6600;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
 }
-/* Son dakika ve Kadro için logo ayarları */
-.auto-resize-img { position: absolute; bottom: 0; max-height: 280px; max-width: 140%; width: auto; height: auto; object-fit: contain; filter: drop-shadow(10px 0 30px rgba(0,0,0,1)); }
-.kadro-logo { width: 90px; height: 90px; object-fit: contain; filter: drop-shadow(0 10px 20px rgba(0,0,0,1)); margin-bottom: 10px;}
 
-.mg-name, .ft-team span { font-family: 'Barlow', sans-serif; font-weight: 900; font-size: 27px; letter-spacing: 1px; text-shadow: 3px 3px 6px #000; text-align: center; text-wrap: balance;}
-.mg-center { display: flex; flex-direction: column; align-items: center; margin-top: -30px; position: relative; width: 280px;}
-.mg-time { font-family: 'Barlow', sans-serif; font-weight: 900; font-size: 75px; line-height: 1; text-shadow: 0 0 30px rgba(0,0,0,1); }
+/* Üst Bilgi */
+.sa-header {
+    background-color: #000000;
+    padding: 15px 20px;
+    text-align: center;
+    border-bottom: 2px solid #111111;
+}
 
-/* NEON VS ROZETI VE STADYUM KUTUSU */
-.vs-badge { color: #111; font-family: 'Barlow'; font-weight: 900; font-style: italic; font-size: 26px; width: 55px; height: 55px; display: flex; justify-content: center; align-items: center; border-radius: 50%; box-shadow: 0 0 20px var(--primary), 0 0 30px rgba(255,87,34,0.6); margin: 15px 0; background-color: var(--primary);}
-.mg-venue { font-size: 16px; font-weight: 800; letter-spacing: 2px; color: #fff; border-radius: 40px; padding: 12px 30px; margin-top: 5px; text-align: center; text-transform: uppercase; text-wrap: balance;}
+.sa-logo {
+    color: #ff6600;
+    font-size: 28px;
+    font-weight: 900;
+    letter-spacing: 2px;
+}
 
-/* SKORLAR VE GOLLER */
-.ft-score { font-family: 'Barlow', sans-serif; font-style: italic; font-weight: 900; font-size: 140px; color: var(--primary); -webkit-text-stroke: 4px #000; text-shadow: 6px 6px 0 #000, 0 0 60px rgba(255,87,34,1); padding: 0 20px; line-height: 1; margin-top: -30px;}
+/* Son Dakika Bandı */
+.son-dakika-bandi {
+    display: flex;
+    background-color: #111111;
+    border-bottom: 2px solid #ff6600;
+    align-items: center;
+}
 
-.ft-scorers-container { display: flex; justify-content: space-between; align-items: stretch; width: 85%; margin-bottom: 40px; border-radius: 15px; padding: 20px; }
-.scorer-list { flex: 1; font-family: 'Montserrat'; font-size: 16px; color: #eee; font-weight: 700; line-height: 1.6;}
-.scorer-list.home { text-align: right; padding-right: 25px; border-right: 2px solid rgba(255,87,34,0.5); }
-.scorer-list.away { text-align: left; padding-left: 25px; border-left: 2px solid rgba(255,87,34,0.5); }
-.scorer-icon { display: flex; align-items: center; justify-content: center; font-size: 32px; padding: 0 15px; filter: drop-shadow(0 0 15px rgba(255,87,34,0.9));}
+.sd-baslik {
+    background-color: #ff6600;
+    color: #000000;
+    font-weight: 900;
+    padding: 12px 20px;
+    white-space: nowrap;
+    text-transform: uppercase;
+}
 
-.mg-bottom { display: flex; flex-direction: column; align-items: center; width: 100%;}
-.mg-title { font-family: 'Barlow', sans-serif; font-style: italic; font-weight: 900; font-size: 140px; margin: 0; letter-spacing: -2px; text-shadow: 0 0 60px var(--primary), 0 0 90px var(--primary-dim); line-height: 1;}
-.ft-main-title { font-family: 'Barlow', sans-serif; font-style: italic; font-weight: 900; font-size: 115px; margin: 0; letter-spacing: -2px; text-shadow: 0 0 60px var(--primary), 0 0 90px var(--primary-dim); line-height: 1; margin-bottom: 10px; } 
+.sd-icerik {
+    padding: 0 15px;
+    width: 100%;
+    overflow: hidden;
+}
 
-.iy-badge { font-family: 'Barlow'; font-weight: 900; font-style: italic; font-size: 32px; padding: 12px 35px; border-radius: 40px; margin-bottom: 10px;}
+#dinamik-haber-metni {
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: bold;
+    white-space: nowrap;
+}
 
-/* ========================================= */
-/* 4. İSTATİSTİK ŞABLONU                    */
-/* ========================================= */
-.stat-header { position: absolute; top: 60px; width: 100%; display: flex; justify-content: center; align-items: center; gap: 40px; z-index: 10;}
-.stat-logo-wrapper { width: 130px; height: 130px;}
-.stat-main-title { font-family: 'Barlow'; font-style: italic; font-weight: 900; font-size: 68px; letter-spacing: 2px;}
-.stat-container { position: absolute; top: 250px; left: 50%; transform: translateX(-50%); width: 85%; display: flex; flex-direction: column; gap: 30px; z-index: 10; padding: 45px; border-radius: 20px;}
-.stat-row { display: flex; align-items: center; justify-content: space-between; position: relative; flex-wrap: wrap;}
-.stat-center { width: 100%; text-align: center; font-family: 'Montserrat'; font-weight: 900; font-size: 19px; letter-spacing: 3px; color: #aaa; margin-bottom: 10px;}
-.stat-num { font-family: 'Barlow'; font-weight: 900; font-style: italic; font-size: 40px; color: #fff; text-shadow: 2px 2px 0 #000;}
-.stat-bar-container { width: 100%; height: 16px; background: rgba(0,0,0,0.8); border-radius: 12px; display: flex; overflow: hidden; box-shadow: inset 0 4px 8px #000;}
-.stat-bar { height: 100%; transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
-.stat-bar.home { background: var(--primary); box-shadow: 0 0 15px var(--primary), 0 0 25px rgba(255,87,34,0.5);}
-.stat-bar.away { background: #444; }
+/* Manşet / Ana Görsel Alanı */
+.manset-alani {
+    background-color: #1a1a1a;
+    padding: 60px 20px;
+    text-align: center;
+    /* İstersen buraya background-image ile maç fotoğrafı ekleyebilirsin */
+}
 
-/* ========================================= */
-/* 5. SON DAKİKA (KRİSTAL HUD)              */
-/* ========================================= */
-.tpl-sondakika { background-color: var(--gray); }
-.sd-pattern { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: repeating-linear-gradient(45deg, rgba(0,0,0,0.5) 0, rgba(0,0,0,0.5) 2px, transparent 2px, transparent 12px); z-index: 2;}
-.sd-big-text { position: absolute; top: 80px; width: 100%; text-align: center; z-index: 3; }
-.sd-big-text h1 { font-family: 'Barlow', sans-serif; font-style: italic; font-weight: 900; font-size: 180px; color: var(--primary); line-height: 0.9; text-shadow: 10px 10px 0px rgba(0,0,0,0.8), 0 0 60px var(--primary-dim); letter-spacing: -2px; }
-.sd-box { position: absolute; bottom: 120px; left: 50%; transform: translateX(-50%); width: 85%; height: 210px; display: flex; z-index: 10; border-radius: 20px; overflow: hidden; border: 1px solid rgba(255,87,34,0.6) !important;}
-.sd-box-left { width: 35%; background: var(--primary); position: relative; overflow: visible; display: flex; justify-content: center; align-items: flex-end; border-right: 4px solid #000;}
+.manset-baslik {
+    color: #ffffff;
+    font-size: 36px;
+    font-weight: 900;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
 
-/* YAZI TAŞMASINI ENGELLEYEN KONTEYNER */
-.sd-text-container { width: 65%; padding: 25px 45px; position: relative; display: flex; align-items: center; overflow: hidden; }
-.sd-title-wrapper { color: #fff; font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 38px; line-height: 1.15; width: 100%; max-height: 160px; text-wrap: balance; word-break: break-word; text-shadow: 2px 2px 4px #000;}
-.sd-x { position: absolute; top: 15px; right: 15px; font-size: 26px;}
+.manset-altbaslik {
+    color: #ff6600;
+    font-size: 18px;
+    font-weight: bold;
+}
 
-/* ========================================= */
-/* 6. İLK 11 KADROSU (3D SAHA VE HUD PANELLERİ) */
-/* ========================================= */
-.tpl-kadro { background: #050505; }
-.pitch-container { position: absolute; bottom: 0; left: 0; width: 100%; height: 75%; z-index: 2; overflow: hidden; perspective: 1200px;}
-.pitch-bg-3d { width: 100%; height: 160%; background-image: repeating-linear-gradient(0deg, transparent, transparent 40px, rgba(255,255,255,0.06) 40px, rgba(255,255,255,0.06) 80px); border: 3px solid rgba(255,255,255,0.2); transform: rotateX(62deg) translateY(-20%); transform-origin: top center; box-shadow: inset 0 0 100px rgba(0,0,0,0.8);}
+/* İstatistik Alanı (Kesişmeyi Önleyen Grid) */
+.istatistik-alani {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 sütunlu yapı */
+    gap: 10px;
+    background-color: #000000;
+    padding: 20px;
+}
 
-.kadro-header { position: absolute; top: 30px; left: 50%; transform: translateX(-50%); text-align: center; z-index: 10; width: 100%;} 
-.kadro-title { font-family: 'Barlow'; font-weight: 900; font-style: italic; font-size: 48px; line-height: 1; letter-spacing: 2px; color: #fff; display: inline-block; text-transform: uppercase;}
-.kadro-list { position: absolute; top: 220px; left: 50%; transform: translateX(-50%); width: 75%; display: flex; flex-direction: column; gap: 9px; z-index: 10;} 
+.istatistik-kutu {
+    background-color: #111111;
+    border-top: 4px solid #ff6600;
+    padding: 15px 5px;
+    text-align: center;
+}
 
-/* HUD STİLİ OYUNCU PANELLERİ */
-.kadro-item { background: linear-gradient(90deg, rgba(0,0,0,0.95) 0%, rgba(255,87,34,0.15) 100%); border-left: 5px solid var(--primary); border-right: 1px solid rgba(255,87,34,0.4); border-radius: 4px; padding: 10px 25px; font-family: 'Barlow'; font-weight: 800; font-size: 23px; letter-spacing: 1px; box-shadow: 0 5px 15px rgba(0,0,0,0.8); display: flex; align-items: center; color: #fff; text-shadow: 1px 1px 3px #000;} 
-.kadro-item-num { color: var(--primary); font-size: 19px; margin-right: 15px; width: 30px; font-style: italic; text-shadow: 0 0 15px var(--primary);}
+.istatistik-kutu .deger {
+    color: #ffffff;
+    font-size: 24px;
+    font-weight: 900;
+    margin-bottom: 5px;
+}
 
-/* ========================================= */
-/* 7. REELS (9:16) PREMIUM NEON              */
-/* ========================================= */
-.tpl-reels { width: 540px; height: 960px; background: #000;}
-.brand-glow-reels { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at 50% 30%, rgba(255,87,34,0.6) 0%, transparent 70%); mix-blend-mode: screen; z-index: 1;}
-.rl-header { position: absolute; top: 110px; width: 100%; text-align: center; z-index: 10; }
-.rl-tag { font-family: 'Barlow', sans-serif; font-style: italic; font-weight: 900; font-size: 48px; line-height: 1; margin-bottom: 5px;}
-.rl-name { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 38px; text-transform: uppercase; color: #fff; text-shadow: 0 0 10px rgba(0,0,0,0.8);}
-.rl-player { position: absolute; bottom: 220px; left: 50%; transform: translateX(-50%); height: 680px; z-index: 5; object-fit: contain; filter: drop-shadow(0 20px 40px rgba(0,0,0,1)); }
-.rl-stats { position: absolute; bottom: 60px; left: 50%; transform: translateX(-50%); width: 92%; display: flex; justify-content: space-evenly; z-index: 10; padding: 25px 0; border-radius: 20px;}
-.rl-stat { text-align: center; width: 33%; }
-.rl-stat h2 { font-family: 'Barlow', sans-serif; font-weight: 900; font-size: 55px; line-height: 1; text-shadow: 0 0 20px var(--primary);}
-.rl-stat span { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 15px; color: #ccc; text-transform: uppercase; letter-spacing: 1px; text-shadow: 1px 1px 2px #000;}
+.istatistik-kutu .etiket {
+    color: #ff6600;
+    font-size: 12px;
+    text-transform: uppercase;
+    font-weight: bold;
+}
 
-::-webkit-scrollbar { width: 12px; height: 12px; }
-::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 6px; border: 3px solid var(--gray); }
-::-webkit-scrollbar-track { background: #000; }
+/* Alt Bilgi */
+.sa-footer {
+    background-color: #ff6600;
+    color: #000000;
+    text-align: center;
+    padding: 10px;
+    font-weight: bold;
+    font-size: 14px;
+    letter-spacing: 1px;
+}
