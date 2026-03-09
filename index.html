@@ -3,55 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Skor Ağı - Şablon Üretici</title>
+    <title>Skor Ağı - Maç Günü</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Teko:wght@500;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
 
     <div class="match-card" id="capture-area">
-        <div class="header">
-            <span class="league">TÜRKİYE SÜPER LİG</span>
-            <span class="brand">SKOR<span class="highlight">/AĞI</span></span>
-        </div>
-        
-        <div class="scoreboard">
+        <div class="bg-overlay"></div>
+
+        <div class="match-info">
             <div class="team">
-                <div class="logo-placeholder" id="home-logo">GS</div>
-                <h2 id="home-name">GALATASARAY</h2>
+                <img src="https://media.api-sports.io/football/teams/11.png" alt="Galatasaray" class="logo" id="home-logo">
+                <span class="team-name" id="home-name">GALATASARAY</span>
             </div>
             
-            <div class="score-container">
-                <span class="time">MAÇ SONUCU</span>
-                <div class="score">
-                    <span id="home-score">2</span>
-                    <span class="divider">-</span>
-                    <span id="away-score">1</span>
-                </div>
+            <div class="center-details">
+                <div class="time" id="match-time">19:00</div>
+                <div class="venue" id="match-venue">RAMS Park</div>
             </div>
             
             <div class="team">
-                <div class="logo-placeholder" id="away-logo">FB</div>
-                <h2 id="away-name">FENERBAHÇE</h2>
+                <img src="https://media.api-sports.io/football/teams/9.png" alt="Fenerbahçe" class="logo" id="away-logo">
+                <span class="team-name" id="away-name">FENERBAHÇE</span>
             </div>
         </div>
 
-        <div class="footer">
-            <p>@skoragi_tr</p>
+        <div class="bottom-section">
+            <div class="score-predictor">
+                <span>SCORE PREDICTOR</span> <span class="highlight">2 - 2</span>
+            </div>
+            <h1 class="main-title">MAÇ GÜNÜ</h1>
+            <div class="footer">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" class="social-icon" alt="IG">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/c/ce/X_logo_2023.svg" class="social-icon x-icon" alt="X">
+                <span>@skoragi_tr</span>
+            </div>
         </div>
     </div>
 
     <div style="text-align: center; margin-top: 20px;">
-        <button id="downloadBtn" style="padding: 15px 30px; background-color: #FF5722; color: white; border: none; border-radius: 8px; font-size: 18px; cursor: pointer; font-weight: bold;">
-            📸 Şablonu PNG Olarak İndir
-        </button>
+        <button id="downloadBtn" class="download-btn">📸 Şablonu PNG Olarak İndir</button>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="app.js"></script>
-</body>
-</html>
-
-
 </body>
 </html>
