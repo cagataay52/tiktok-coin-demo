@@ -1,128 +1,188 @@
-// ==========================================
-// 1. MANUEL GİRİŞLERİ ŞABLONLARA DAĞITMA
-// ==========================================
-const inputs = [
-    { id: 'inp-home-name', targetClasses: '.out-home-name', upper: true },
-    { id: 'inp-away-name', targetClasses: '.out-away-name', upper: true },
-    { id: 'inp-home-score', targetClasses: '.out-home-score', upper: false },
-    { id: 'inp-away-score', targetClasses: '.out-away-score', upper: false },
-    { id: 'inp-player-name', targetClasses: '.out-player-name', upper: true },
-    { id: 'inp-news-title', targetClasses: '.out-news-title', upper: false }
-];
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skor Ağı - Orijinal Marka Stüdyosu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,700;0,900;1,800;1,900&family=Montserrat:wght@400;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
-inputs.forEach(input => {
-    document.getElementById(input.id).addEventListener('input', function(e) {
-        let value = input.upper ? e.target.value.toUpperCase() : e.target.value;
-        document.querySelectorAll(input.targetClasses).forEach(target => {
-            target.innerHTML = value.replace(/\n/g, '<br>');
-        });
-    });
-});
-
-// YENİ: Gol Atanlar Motoru (Satır atlamalarını HTML'e çevirir)
-document.getElementById('inp-home-scorers').addEventListener('input', function(e) {
-    document.querySelector('.out-home-scorers').innerHTML = e.target.value.replace(/\n/g, '<br>');
-});
-document.getElementById('inp-away-scorers').addEventListener('input', function(e) {
-    document.querySelector('.out-away-scorers').innerHTML = e.target.value.replace(/\n/g, '<br>');
-});
-
-// İlk 11 Kadrosu Oluşturucu Motoru
-document.getElementById('inp-lineup').addEventListener('input', function(e) {
-    const listContainer = document.getElementById('out-lineup-list');
-    listContainer.innerHTML = ''; 
-    
-    // Satır satır (Enter'a basılarak) ayrılan isimleri al
-    const players = e.target.value.split('\n').map(p => p.trim()).filter(p => p !== '');
-    
-    // Maksimum 11 oyuncuyu listeye ekle
-    players.slice(0, 11).forEach((player, index) => {
-        const item = document.createElement('div');
-        item.className = 'kadro-item';
-        item.innerHTML = `<span class="kadro-item-num">${index + 1}</span> ${player.toUpperCase()}`;
-        listContainer.appendChild(item);
-    });
-});
-document.getElementById('inp-lineup').dispatchEvent(new Event('input'));
-
-// ==========================================
-// 2. FOTOĞRAF VE ÖZEL LOGO YÜKLEME SİSTEMİ
-// ==========================================
-document.getElementById('upload-bg').addEventListener('change', function(e) {
-    const file = e.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(event) {
-            document.getElementById('bg-mac-gunu').style.backgroundImage = `url('${event.target.result}')`;
-            document.getElementById('bg-mac-sonucu').style.backgroundImage = `url('${event.target.result}')`;
-            document.getElementById('bg-reels').style.backgroundImage = `url('${event.target.result}')`;
-        }
-        reader.readAsDataURL(file);
-    }
-});
-
-document.getElementById('upload-player').addEventListener('change', function(e) {
-    const file = e.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(event) {
-            document.querySelectorAll('.out-player-img').forEach(img => {
-                img.src = event.target.result;
-            });
-        }
-        reader.readAsDataURL(file);
-    }
-});
-
-document.getElementById('upload-home-logo').addEventListener('change', function(e) {
-    const file = e.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(event) {
-            document.querySelectorAll('.out-home-logo').forEach(img => {
-                img.src = event.target.result;
-            });
-        }
-        reader.readAsDataURL(file);
-    }
-});
-
-document.getElementById('upload-away-logo').addEventListener('change', function(e) {
-    const file = e.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(event) {
-            document.querySelectorAll('.out-away-logo').forEach(img => {
-                img.src = event.target.result;
-            });
-        }
-        reader.readAsDataURL(file);
-    }
-});
-
-// ==========================================
-// 3. ULTRA YÜKSEK ÇÖZÜNÜRLÜKLÜ İNDİRME
-// ==========================================
-function downloadTpl(elementId, fileName) {
-    const captureArea = document.getElementById(elementId);
-    const originalTransform = captureArea.style.transform;
-    captureArea.style.transform = "scale(1)";
-    
-    html2canvas(captureArea, {
-        scale: 3, 
-        backgroundColor: "#111",
-        useCORS: true,
-        allowTaint: true,
-        logging: false
-    }).then(canvas => {
-        captureArea.style.transform = originalTransform || "scale(0.6)";
+    <div class="control-panel">
+        <h2>🎛️ SKOR AĞI PANELİ</h2>
         
-        const imageURL = canvas.toDataURL("image/jpeg", 0.95);
-        const downloadLink = document.createElement('a');
-        downloadLink.href = imageURL;
-        downloadLink.download = `skoragi-${fileName}.jpg`;
-        document.body.appendChild(downloadLink);
-        downloadLink.click();
-        document.body.removeChild(downloadLink);
-    });
-}
+        <div class="input-group">
+            <label>Ev Sahibi (İsim, Skor)</label>
+            <div style="display: flex; gap: 5px;">
+                <input type="text" id="inp-home-name" value="FENERBAHÇE" style="flex: 3;">
+                <input type="number" id="inp-home-score" value="2" style="flex: 1;">
+            </div>
+            <input type="file" id="upload-home-logo" accept="image/*" title="Ev Sahibi Logosu Yükle" style="margin-top: 5px;">
+        </div>
+
+        <div class="input-group">
+            <label>Deplasman (İsim, Skor)</label>
+            <div style="display: flex; gap: 5px;">
+                <input type="text" id="inp-away-name" value="GALATASARAY" style="flex: 3;">
+                <input type="number" id="inp-away-score" value="1" style="flex: 1;">
+            </div>
+            <input type="file" id="upload-away-logo" accept="image/*" title="Deplasman Logosu Yükle" style="margin-top: 5px;">
+        </div>
+
+        <div class="input-group">
+            <label>Gol Atanlar (Her Satıra 1 Oyuncu)</label>
+            <textarea id="inp-home-scorers" rows="4" placeholder="Ev Sahibi Golleri (Alt alta yazın)&#10;Dzeko 12'&#10;Szymanski 45'&#10;Tadic 89'"></textarea>
+            <textarea id="inp-away-scorers" rows="4" placeholder="Deplasman Golleri (Alt alta yazın)&#10;Icardi 34'"></textarea>
+        </div>
+
+        <div class="input-group">
+            <label>Medya & Haber</label>
+            <input type="text" id="inp-player-name" value="EDİN DZEKO" placeholder="Oyuncu Adı" style="margin-bottom: 5px;">
+            <input type="text" id="inp-news-title" value="Derbinin Kazananı Belli Oldu!" placeholder="Haber Başlığı" style="margin-bottom: 5px;">
+            <input type="file" id="upload-player" accept="image/*" title="Oyuncu Dekupe (PNG) Yükle" style="margin-bottom: 5px;">
+            <input type="file" id="upload-bg" accept="image/*" title="Arka Plan Fotoğrafı Yükle">
+        </div>
+        
+        <div class="input-group">
+            <label>İlk 11 Kadrosu (Alt alta yazın)</label>
+            <textarea id="inp-lineup" rows="6" placeholder="Kadro...">Livakovic&#10;Osayi&#10;Becao&#10;Djiku&#10;Ferdi&#10;Fred&#10;İsmail&#10;İrfan Can&#10;Szymanski&#10;Tadic&#10;Dzeko</textarea>
+        </div>
+    </div>
+
+    <div class="templates-container">
+        
+        <div class="template-wrapper">
+            <div class="match-card tpl-macgunu" id="tpl-mac-gunu">
+                <div class="bg-layer" id="bg-mac-gunu"></div>
+                <div class="brand-gradient"></div>
+                
+                <div class="mg-content">
+                    <div class="mg-teams">
+                        <div class="mg-team">
+                            <img src="https://media.api-sports.io/football/teams/9.png" class="mg-logo out-home-logo">
+                            <span class="mg-name out-home-name">FENERBAHÇE</span>
+                        </div>
+                        <div class="mg-center">
+                            <div class="mg-time">20:00</div>
+                            <div class="mg-venue">RAMS PARK</div>
+                        </div>
+                        <div class="mg-team">
+                            <img src="https://media.api-sports.io/football/teams/11.png" class="mg-logo out-away-logo">
+                            <span class="mg-name out-away-name">GALATASARAY</span>
+                        </div>
+                    </div>
+                    
+                    <div class="mg-bottom">
+                        <div class="mg-predictor">SCORE PREDICTOR <span class="hl out-home-score">2</span><span class="hl">-</span><span class="hl out-away-score">1</span></div>
+                        <h1 class="mg-title">MAÇ GÜNÜ</h1>
+                    </div>
+                </div>
+                <div class="card-footer">@skoragi</div>
+            </div>
+            <button class="download-btn" onclick="downloadTpl('tpl-mac-gunu', 'mac-gunu')">İNDİR</button>
+        </div>
+
+        <div class="template-wrapper">
+            <div class="match-card tpl-macsonucu" id="tpl-mac-sonucu">
+                <div class="bg-layer" id="bg-mac-sonucu" style="opacity: 0.3;"></div>
+                <div class="brand-gradient-bottom"></div>
+                
+                <div class="ms-content">
+                    <div class="ft-scoreboard">
+                        <div class="ft-team">
+                            <img src="https://media.api-sports.io/football/teams/9.png" class="out-home-logo">
+                            <span class="out-home-name">FENERBAHÇE</span>
+                        </div>
+                        <div class="ft-score">
+                            <span class="out-home-score">2</span> - <span class="out-away-score">1</span>
+                        </div>
+                        <div class="ft-team">
+                            <img src="https://media.api-sports.io/football/teams/11.png" class="out-away-logo">
+                            <span class="out-away-name">GALATASARAY</span>
+                        </div>
+                    </div>
+                    
+                    <div class="ft-scorers-container">
+                        <div class="scorer-list home out-home-scorers">Dzeko 12'<br>Szymanski 45'<br>Tadic 89'</div>
+                        <div class="scorer-icon">⚽</div>
+                        <div class="scorer-list away out-away-scorers">Icardi 34'</div>
+                    </div>
+
+                    <div class="mg-bottom" style="margin-top: 0;">
+                        <h1 class="mg-title">MAÇ SONUCU</h1>
+                    </div>
+                </div>
+                <div class="card-footer">@skoragi</div>
+            </div>
+            <button class="download-btn" onclick="downloadTpl('tpl-mac-sonucu', 'mac-sonucu')">İNDİR</button>
+        </div>
+
+        <div class="template-wrapper">
+            <div class="match-card tpl-sondakika" id="tpl-son-dakika">
+                <div class="sd-pattern"></div>
+                <div class="sd-big-text">
+                    <h1>SON<br>DAKİKA</h1>
+                </div>
+                <div class="sd-box">
+                    <div class="sd-box-left">
+                        <img src="https://creazilla-store.fra1.digitaloceanspaces.com/cliparts/3133642/soccer-player-clipart-xl.png" id="sd-player-img" class="out-player-img">
+                    </div>
+                    <div class="sd-box-right">
+                        <h2 class="out-news-title">Derbinin<br>Kazananı<br>Belli Oldu!</h2>
+                        <div class="sd-x">X</div>
+                    </div>
+                </div>
+                <div class="card-footer">@skoragi</div>
+            </div>
+            <button class="download-btn" onclick="downloadTpl('tpl-son-dakika', 'son-dakika')">İNDİR</button>
+        </div>
+
+        <div class="template-wrapper">
+            <div class="match-card tpl-kadro" id="tpl-kadro">
+                <div class="pitch-bg"></div>
+                <div class="brand-gradient-center"></div>
+                
+                <div class="kadro-header">
+                    <img src="https://media.api-sports.io/football/teams/9.png" class="kadro-logo out-home-logo">
+                    <h1 class="kadro-title">İLK 11 KADROSU</h1>
+                </div>
+                
+                <div class="kadro-list" id="out-lineup-list">
+                    </div>
+                
+                <div class="card-footer">@skoragi</div>
+            </div>
+            <button class="download-btn" onclick="downloadTpl('tpl-kadro', 'ilk-11')">İNDİR</button>
+        </div>
+
+        <div class="template-wrapper">
+            <div class="match-card tpl-reels" id="tpl-reels">
+                <div class="bg-layer" id="bg-reels"></div>
+                <div class="brand-gradient-reels"></div>
+                
+                <div class="rl-header">
+                    <div class="rl-icon">▶</div>
+                    <h2 class="rl-tag">HAFTANIN<br>OYUNCUSU:</h2>
+                    <h1 class="rl-name out-player-name">EDİN DZEKO</h1>
+                </div>
+                
+                <img src="https://creazilla-store.fra1.digitaloceanspaces.com/cliparts/3133642/soccer-player-clipart-xl.png" class="rl-player out-player-img">
+                
+                <div class="rl-stats">
+                    <div class="rl-stat"><h2>6</h2><span>Goals</span></div>
+                    <div class="rl-stat"><h2>1</h2><span>Assists</span></div>
+                    <div class="rl-stat"><h2>25%</h2><span>Pass %</span></div>
+                </div>
+                
+                <div class="card-footer" style="bottom: 20px;">@skoragi</div>
+            </div>
+            <button class="download-btn" onclick="downloadTpl('tpl-reels', 'reels')">İNDİR</button>
+        </div>
+
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
