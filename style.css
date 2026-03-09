@@ -47,11 +47,9 @@ body { background-color: #080808; color: var(--text); font-family: 'Montserrat',
 /* ========================================= */
 .mg-content, .ms-content { position: absolute; bottom: 80px; left: 0; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; z-index: 10;}
 .mg-teams, .ft-scoreboard { display: flex; justify-content: center; align-items: center; gap: 30px; margin-bottom: 20px; width: 100%; }
-.mg-team, .ft-team { display: flex; flex-direction: column; align-items: center; width: 220px; } /* Genişlik artırıldı ki uzun isimler sığsın */
+.mg-team, .ft-team { display: flex; flex-direction: column; align-items: center; width: 220px; } 
 
-/* 🌟 DÜZELTME: KUSURSUZ LOGO HİZALAMASI 🌟 */
-/* Hem genişlik hem yükseklik sabitlendi. object-fit: contain sayesinde logolar sündürülmeden bu kareye tam ortalanır. */
-.mg-logo, .ft-team img { 
+.mg-logo, .ft-team img, .stat-logo { 
     width: 150px; 
     height: 150px; 
     object-fit: contain; 
@@ -63,7 +61,6 @@ body { background-color: #080808; color: var(--text); font-family: 'Montserrat',
 .mg-center { display: flex; flex-direction: column; align-items: center; margin-top: -30px; }
 .mg-time { font-family: 'Barlow', sans-serif; font-weight: 900; font-size: 70px; line-height: 1; text-shadow: 0 0 30px rgba(0,0,0,0.9); }
 
-/* 🌟 DÜZELTME: YENİ STADYUM İSMİ TASARIMI 🌟 */
 .mg-venue { 
     font-size: 15px; 
     font-weight: 800; 
@@ -76,20 +73,19 @@ body { background-color: #080808; color: var(--text); font-family: 'Montserrat',
     margin-top: 10px;
     text-align: center;
     width: 100%;
-    max-width: 280px; /* Uzun isimler için genişletildi */
-    word-wrap: break-word; /* Çok uzunsa alt satıra geçer */
+    max-width: 280px;
+    word-wrap: break-word;
     text-shadow: 1px 1px 3px #000;
 }
 
-/* 🌟 DÜZELTME: MAÇ SONUCU SKOR SİYAH KONTRAST 🌟 */
 .ft-score { 
     font-family: 'Barlow', sans-serif; 
     font-style: italic; 
     font-weight: 900; 
     font-size: 140px; 
     color: var(--primary); 
-    -webkit-text-stroke: 4px #000; /* Kalın siyah çerçeve eklendi */
-    text-shadow: 6px 6px 0 #000, 0 0 40px rgba(255,87,34,0.6); /* Siyah derinlik ve parlama */
+    -webkit-text-stroke: 4px #000; 
+    text-shadow: 6px 6px 0 #000, 0 0 40px rgba(255,87,34,0.6); 
     padding: 0 20px; 
     line-height: 1; 
     margin-top: -30px;
@@ -104,6 +100,26 @@ body { background-color: #080808; color: var(--text); font-family: 'Montserrat',
 .mg-bottom { display: flex; flex-direction: column; align-items: center; }
 .mg-title { font-family: 'Barlow', sans-serif; font-style: italic; font-weight: 900; font-size: 140px; margin: 0; letter-spacing: -2px; text-shadow: 0 0 50px rgba(255,87,34,0.6); line-height: 1;}
 .ft-main-title { font-family: 'Barlow', sans-serif; font-style: italic; font-weight: 900; font-size: 115px; margin: 0; letter-spacing: -2px; text-shadow: 0 0 50px rgba(255,87,34,0.6); line-height: 1; margin-bottom: 10px; } 
+
+/* ========================================= */
+/* YENİ: İLK YARI SONUCU (HT)                */
+/* ========================================= */
+.iy-badge { background: var(--primary); color: #000; font-family: 'Barlow'; font-weight: 900; font-style: italic; font-size: 30px; padding: 5px 30px; border-radius: 5px; margin-bottom: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.8); }
+
+/* ========================================= */
+/* YENİ: İSTATİSTİK ŞABLONU                  */
+/* ========================================= */
+.stat-header { position: absolute; top: 60px; width: 100%; display: flex; justify-content: center; align-items: center; gap: 30px; z-index: 10;}
+.stat-main-title { font-family: 'Barlow'; font-style: italic; font-weight: 900; font-size: 65px; color: #fff; text-shadow: 0 0 30px var(--primary); letter-spacing: 2px;}
+.stat-container { position: absolute; top: 250px; left: 50%; transform: translateX(-50%); width: 85%; display: flex; flex-direction: column; gap: 30px; z-index: 10;}
+.stat-row { display: flex; align-items: center; justify-content: space-between; position: relative; flex-wrap: wrap;}
+.stat-center { width: 100%; text-align: center; font-family: 'Montserrat'; font-weight: 900; font-size: 20px; letter-spacing: 2px; color: #ccc; margin-bottom: 8px;}
+.stat-num { font-family: 'Barlow'; font-weight: 900; font-style: italic; font-size: 35px; color: #fff; text-shadow: 2px 2px 0 #000;}
+.stat-num.home { color: var(--primary); }
+.stat-bar-container { width: 100%; height: 12px; background: #222; border-radius: 6px; display: flex; overflow: hidden; box-shadow: inset 0 2px 5px #000;}
+.stat-bar { height: 100%; transition: width 0.3s ease; }
+.stat-bar.home { background: var(--primary); }
+.stat-bar.away { background: #555; }
 
 /* 3. SON DAKİKA */
 .tpl-sondakika { background-color: var(--gray); }
@@ -121,7 +137,7 @@ body { background-color: #080808; color: var(--text); font-family: 'Montserrat',
 .tpl-kadro { background: #0a0a0a; }
 .pitch-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: repeating-linear-gradient(0deg, transparent, transparent 40px, rgba(255,255,255,0.03) 40px, rgba(255,255,255,0.03) 80px); opacity: 0.8; z-index: 2;}
 .kadro-header { position: absolute; top: 40px; left: 50%; transform: translateX(-50%); text-align: center; z-index: 10; width: 100%;} 
-.kadro-logo { width: 80px; height: 80px; object-fit: contain; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.8)); margin-bottom: 5px;} /* Hizalama eklendi */
+.kadro-logo { width: 80px; height: 80px; object-fit: contain; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.8)); margin-bottom: 5px;}
 .kadro-title { font-family: 'Barlow'; font-weight: 900; font-style: italic; font-size: 50px; line-height: 0.9; text-shadow: 0 0 20px var(--primary); letter-spacing: -1px; color: #fff;}
 .kadro-list { position: absolute; top: 200px; left: 50%; transform: translateX(-50%); width: 70%; display: flex; flex-direction: column; gap: 6px; z-index: 10;} 
 .kadro-item { background: linear-gradient(90deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.4) 100%); border-left: 5px solid var(--primary); padding: 8px 15px; font-family: 'Barlow'; font-weight: 800; font-size: 21px; letter-spacing: 1px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); display: flex; align-items: center;} 
