@@ -1,7 +1,7 @@
 // ==========================================
 // 1. OTOMATİK API MOTORU (SÜPER LİG FİKSTÜRÜ)
 // ==========================================
-const API_KEY = "04db3f3ab39909d9196da5c859dcd046"; 
+const API_KEY = "387077a621a58f5c5cde81cb20db5721"; 
 let allMatches = []; // Verileri hafızada tutmak için
 
 // 1. Aşama: Süper Lig Maçlarını Yükle
