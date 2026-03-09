@@ -1,7 +1,6 @@
 // ==========================================
 // YARDIMCI FONKSİYONLAR
 // ==========================================
-// Metin Güncelleme Fonksiyonu
 function bindText(inputId, targetClass, isUpper = true, isHtml = false) {
     const input = document.getElementById(inputId);
     if (!input) return;
@@ -15,7 +14,6 @@ function bindText(inputId, targetClass, isUpper = true, isHtml = false) {
     });
 }
 
-// Resim Yükleme Fonksiyonu
 function bindImage(inputId, targetIdOrClass, isBackground = false) {
     const input = document.getElementById(inputId);
     if (!input) return;
@@ -42,8 +40,6 @@ function bindImage(inputId, targetIdOrClass, isBackground = false) {
 // ==========================================
 bindText('mg-home-name', '.out-mg-home-name');
 bindText('mg-away-name', '.out-mg-away-name');
-bindText('mg-home-score', '.out-mg-home-score', false);
-bindText('mg-away-score', '.out-mg-away-score', false);
 bindText('mg-time', '.out-mg-time', false);
 bindText('mg-venue', '.out-mg-venue');
 bindImage('mg-home-logo', 'out-mg-home-logo');
@@ -68,11 +64,13 @@ bindImage('ms-bg', 'bg-mac-sonucu', true);
 // ==========================================
 bindText('sd-news-title', '.out-sd-title', false, true);
 bindImage('sd-player-img', 'out-sd-player');
+bindImage('sd-bg', 'bg-sondakika', true); // Son Dakika Arka plan eklendi
 
 // ==========================================
 // 4. İLK 11 MODÜLÜ BAĞLANTILARI
 // ==========================================
 bindImage('k-logo', 'out-k-logo');
+bindImage('k-bg', 'bg-kadro', true); // Kadro Arka plan eklendi
 document.getElementById('k-lineup').addEventListener('input', function(e) {
     const listContainer = document.getElementById('out-k-lineup');
     listContainer.innerHTML = ''; 
@@ -84,7 +82,7 @@ document.getElementById('k-lineup').addEventListener('input', function(e) {
         listContainer.appendChild(item);
     });
 });
-document.getElementById('k-lineup').dispatchEvent(new Event('input')); // Başlangıçta çalıştır
+document.getElementById('k-lineup').dispatchEvent(new Event('input'));
 
 // ==========================================
 // 5. REELS MODÜLÜ BAĞLANTILARI
@@ -94,24 +92,21 @@ bindImage('r-player-img', 'out-r-player');
 bindImage('r-bg', 'bg-reels', true);
 
 // ==========================================
-// HD İNDİRME MOTORU (Ölçekleme Sorunsuz)
+// HD İNDİRME MOTORU
 // ==========================================
 function downloadTpl(elementId, fileName) {
     const captureArea = document.getElementById(elementId);
     
-    // HTML2Canvas'ın CSS transform (0.5 küçültme) ile kafasının karışmasını önlemek için
-    // İndirme anında kartı orijinal %100 boyutuna (800x800) çekiyoruz
     const originalTransform = captureArea.style.transform;
     captureArea.style.transform = "scale(1)";
     
     html2canvas(captureArea, {
-        scale: 3, // Orijinal 800x800 resmi 2400x2400 Ultra HD olarak kaydeder
+        scale: 3, 
         backgroundColor: "#111",
         useCORS: true,
         allowTaint: true,
         logging: false
     }).then(canvas => {
-        // İşlem bitince kartı eski görünümüne (0.5) geri alıyoruz
         captureArea.style.transform = originalTransform;
         
         const imageURL = canvas.toDataURL("image/jpeg", 0.95);
