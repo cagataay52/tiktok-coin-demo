@@ -200,31 +200,35 @@ window.addEventListener('load', () => {
 });
 
 // ==========================================
-// HD İNDİRME MOTORU (BASIKLAŞMAYI ÖNLEYEN GÜNCEL KOD)
+// 🌟 GÜVENLİ VE KUSURSUZ İNDİRME MOTORU 🌟
 // ==========================================
 function downloadTpl(elementId, fileName) {
     const captureArea = document.getElementById(elementId);
+    const wrapper = captureArea.parentElement;
     
-    // 1. Önce kartın mevcut küçültülmüş halini hafızaya al
+    const btn = event.target;
+    const originalBtnText = btn.innerText;
+    btn.innerText = "İNDİRİLİYOR...";
+    btn.style.backgroundColor = "#555";
+
     const originalTransform = captureArea.style.transform;
-    
-    // 2. İndirme kalitesi için kartı anlık olarak orijinal tam boyutuna çek
+    const originalOverflow = wrapper.style.overflow;
+
+    // Kesilme ve taşmaları engellemek için kutuyu geçici olarak serbest bırak
+    wrapper.style.overflow = "visible";
     captureArea.style.transform = "scale(1)";
-    
-    // 3. Tarayıcının, logoların ve fotoğrafların esnemesini engelleyip
-    // yeni boyuta göre pürüzsüzce hizalaması için ona 250 milisaniye zaman tanıyoruz.
+
+    // Tarayıcının hizalamaları (özellikle resim basıklığını) düzeltmesi için 0.3 saniye bekle
     setTimeout(() => {
         html2canvas(captureArea, { 
-            scale: 3, // Ultra HD kalitesi
+            scale: 3, 
             backgroundColor: "#111", 
-            useCORS: true, 
-            allowTaint: true, 
+            useCORS: true, // allowTaint kaldırıldı, güvenlik duvarı aşılıyor
             logging: false 
         }).then(canvas => {
-            // 4. Fotoğraf çekildikten sonra sitedeki kartı tekrar eski küçük haline gizlice geri döndür
             captureArea.style.transform = originalTransform;
+            wrapper.style.overflow = originalOverflow;
             
-            // 5. Cam gibi sündürülmemiş görseli cihaza indir
             const imageURL = canvas.toDataURL("image/jpeg", 0.95);
             const downloadLink = document.createElement('a');
             downloadLink.href = imageURL; 
@@ -232,6 +236,16 @@ function downloadTpl(elementId, fileName) {
             document.body.appendChild(downloadLink); 
             downloadLink.click(); 
             document.body.removeChild(downloadLink);
+
+            btn.innerText = originalBtnText;
+            btn.style.backgroundColor = "";
+        }).catch(err => {
+            console.error("İndirme Hatası:", err);
+            alert("İndirme sırasında bir hata oluştu. Lütfen sayfayı yenileyip tekrar deneyin.");
+            captureArea.style.transform = originalTransform;
+            wrapper.style.overflow = originalOverflow;
+            btn.innerText = originalBtnText;
+            btn.style.backgroundColor = "";
         });
-    }, 250); 
+    }, 300); 
 }
