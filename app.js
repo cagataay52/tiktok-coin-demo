@@ -1,46 +1,79 @@
-// 1. API VERİ ÇEKME FONKSİYONU (İleride kullanmak için hazır)
-const apiKey = "SENIN_API_ANAHTARIN"; 
-const matchId = "1040523"; 
+// SOL PANELDEN GİRİLEN VERİLERİ SAĞDAKİ ŞABLONLARA ANINDA (CANLI) AKTARMA
+const inputs = [
+    { id: 'inp-home-name', targetClasses: '.out-home-name' },
+    { id: 'inp-away-name', targetClasses: '.out-away-name' },
+    { id: 'inp-home-score', targetClasses: '.out-home-score' },
+    { id: 'inp-away-score', targetClasses: '.out-away-score' },
+    { id: 'inp-news-title', targetClasses: '.out-news-title' },
+    { id: 'inp-player-name', targetClasses: '.out-player-name' },
+    { id: 'inp-time', targetClasses: '.out-time' },
+    { id: 'inp-venue', targetClasses: '.out-venue' }
+];
 
-function macVerisiniCek() {
-    fetch(`https://v3.football.api-sports.io/fixtures?id=${matchId}`, {
-        method: "GET",
-        headers: {
-            "x-rapidapi-host": "v3.football.api-sports.io",
-            "x-rapidapi-key": apiKey
+// Her input'u dinle, yazı yazıldıkça şablonları güncelle
+inputs.forEach(input => {
+    document.getElementById(input.id).addEventListener('input', function(e) {
+        const value = e.target.value.toUpperCase();
+        const targets = document.querySelectorAll(input.targetClasses);
+        targets.forEach(target => {
+            target.innerText = value;
+        });
+    });
+});
+
+// ARKA PLAN GÖRSELİ YÜKLEME (Maç Günü ve Reels için)
+document.getElementById('upload-bg').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            document.getElementById('bg-mac-gunu').style.backgroundImage = `url('${event.target.result}')`;
+            // Reels için arka planı biraz daha koyu yapıp ekleyelim
+            document.getElementById('bg-reels').style.background = `linear-gradient(to top, #000 0%, transparent 60%), radial-gradient(circle at center, var(--primary) 0%, transparent 50%), url('${event.target.result}')`;
+            document.getElementById('bg-reels').style.backgroundSize = "cover";
+            document.getElementById('bg-reels').style.backgroundPosition = "center";
         }
-    })
-    .then(response => response.json())
-    .then(data => {
-        const mac = data.response[0];
-        const evSahibi = mac.teams.home;
-        const deplasman = mac.teams.away;
+        reader.readAsDataURL(file);
+    }
+});
 
-        document.getElementById('home-name').innerText = evSahibi.name.toUpperCase();
-        document.getElementById('away-name').innerText = deplasman.name.toUpperCase();
-        document.getElementById('home-logo').src = evSahibi.logo;
-        document.getElementById('away-logo').src = deplasman.logo;
-    })
-    .catch(error => console.error("Veri çekilirken hata oluştu:", error));
-}
+// OYUNCU FOTOĞRAFI YÜKLEME (Son Dakika ve Reels için)
+document.getElementById('upload-player').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            document.getElementById('sd-player-img').src = event.target.result;
+            document.getElementById('reels-player-img').src = event.target.result;
+        }
+        reader.readAsDataURL(file);
+    }
+});
 
-// 2. ŞABLONU PNG OLARAK İNDİRME İŞLEMİ
-const downloadBtn = document.getElementById('downloadBtn');
-const captureArea = document.getElementById('capture-area');
-
-downloadBtn.addEventListener('click', () => {
+// PNG OLARAK İNDİRME FONKSİYONU
+// Hangi şablonun altındaki butona basarsan, o şablonu yüksek kalitede indirir
+function downloadTpl(elementId, fileName) {
+    const captureArea = document.getElementById(elementId);
+    
+    // Geçici olarak scale'i kaldıralım ki tam boyutta fotoğraf çeksin
+    const originalTransform = captureArea.style.transform;
+    captureArea.style.transform = "scale(1)";
+    
     html2canvas(captureArea, {
-        scale: 2, 
+        scale: 2, // 2x kalite (Retina / Instagram standartları için)
         backgroundColor: "#121212",
-        useCORS: true, // Logoların ve resimlerin siyah çıkmasını engeller
+        useCORS: true,
         allowTaint: true
     }).then(canvas => {
+        // İndirme işlemi bitince scale'i geri eski haline getir
+        captureArea.style.transform = originalTransform || "scale(0.6)";
+        
         const imageURL = canvas.toDataURL("image/png");
         const downloadLink = document.createElement('a');
         downloadLink.href = imageURL;
-        downloadLink.download = 'skoragi-mac-gunu.png';
+        downloadLink.download = `skoragi-${fileName}.png`;
         document.body.appendChild(downloadLink);
         downloadLink.click();
         document.body.removeChild(downloadLink);
     });
-});
+}
