@@ -1,17 +1,23 @@
 // ==========================================
-// 1. OTOMATİK API MOTORU (SÜPER LİG FİKSTÜRÜ)
+// 1. OTOMATİK API MOTORU (GÜNCEL FİKSTÜR)
 // ==========================================
 const API_KEY = "387077a621a58f5c5cde81cb20db5721"; 
 let allMatches = []; 
 
-// 1. Aşama: Süper Lig Maçlarını Yükle
+// Sistemin güncel yılı ve sezonu otomatik hesaplaması
+const bugun = new Date();
+const guncelYil = bugun.getFullYear();
+const guncelAy = bugun.getMonth() + 1; // 1'den 12'ye kadar aylar
+// Süper Lig Ağustos'ta başlar. Eğer Ağustos'tan (8. ay) önceysek, sezon bir önceki yılın adıyla anılır.
+const aktifSezon = guncelAy >= 8 ? guncelYil : guncelYil - 1;
+
 document.getElementById('btn-load-fixtures').addEventListener('click', () => {
     const btn = document.getElementById('btn-load-fixtures');
     btn.innerText = "YÜKLENİYOR...";
     btn.style.backgroundColor = "#555";
 
-    // API-Sports: Süper Lig (ID: 203) - 2025/2026 Sezonu İstediği
-    fetch(`https://v3.football.api-sports.io/fixtures?league=203&season=2025`, {
+    // API-Sports: Otomatik hesaplanan güncel sezonu çeker
+    fetch(`https://v3.football.api-sports.io/fixtures?league=203&season=${aktifSezon}`, {
         method: "GET",
         headers: {
             "x-apisports-key": API_KEY 
@@ -19,16 +25,16 @@ document.getElementById('btn-load-fixtures').addEventListener('click', () => {
     })
     .then(response => response.json())
     .then(data => {
-        // YENİ DEDEKTİF SİSTEMİ: API'nin fırlattığı gerçek hatayı ekrana basar
+        // Hata Dedektifi
         if (data.errors && Object.keys(data.errors).length > 0) {
-            alert("API'DEN GELEN HATA: \n" + JSON.stringify(data.errors));
+            alert("API HESABINIZ ONAYLI DEĞİL!\nLütfen e-posta adresinize gidip api-sports.io'dan gelen aktivasyon linkine tıklayın.");
             btn.innerText = "1. MAÇLARI YÜKLE";
             btn.style.backgroundColor = "#111";
             return;
         }
 
         if (!data.response || data.response.length === 0) {
-            alert("API bağlantısı başarılı ama Süper Lig verisi boş geldi!");
+            alert("Güncel sezon verisi boş geldi!");
             btn.innerText = "1. MAÇLARI YÜKLE";
             btn.style.backgroundColor = "#111";
             return;
@@ -67,13 +73,15 @@ document.getElementById('btn-load-fixtures').addEventListener('click', () => {
     })
     .catch(error => {
         console.error("Hata:", error);
-        alert("İnternet veya Tarayıcı Engellemesi! (CORS Hatası olabilir)");
+        alert("Bağlantı Hatası!");
         btn.innerText = "1. MAÇLARI YÜKLE";
         btn.style.backgroundColor = "#111";
     });
 });
 
-// 2. Aşama: Seçilen Maçı Şablonlara Aktar
+// ==========================================
+// 2. SEÇİLEN MAÇI ŞABLONLARA AKTARMA
+// ==========================================
 document.getElementById('btn-apply-match').addEventListener('click', () => {
     const matchId = document.getElementById('select-match').value;
     
@@ -120,7 +128,7 @@ document.getElementById('btn-apply-match').addEventListener('click', () => {
 });
 
 // ==========================================
-// 2. MANUEL GİRİŞLERİ ŞABLONA DAĞITMA
+// 3. MANUEL GİRİŞLERİ ŞABLONA DAĞITMA
 // ==========================================
 const inputs = [
     { id: 'inp-home-name', targetClasses: '.out-home-name' },
@@ -142,7 +150,7 @@ inputs.forEach(input => {
 });
 
 // ==========================================
-// 3. FOTOĞRAF YÜKLEME VE İNDİRME İŞLEMLERİ
+// 4. FOTOĞRAF YÜKLEME VE İNDİRME İŞLEMLERİ
 // ==========================================
 document.getElementById('upload-bg').addEventListener('change', function(e) {
     const file = e.target.files[0];
