@@ -17,18 +17,12 @@
                 <h2>1. MAÇ GÜNÜ ŞABLONU</h2>
                 <div class="input-group">
                     <label>Ev Sahibi</label>
-                    <div style="display: flex; gap: 5px;">
-                        <input type="text" id="mg-home-name" value="FENERBAHÇE" style="flex: 3;">
-                        <input type="number" id="mg-home-score" value="2" style="flex: 1;">
-                    </div>
+                    <input type="text" id="mg-home-name" value="FENERBAHÇE">
                     <input type="file" id="mg-home-logo" accept="image/*" title="Ev Sahibi Logosu">
                 </div>
                 <div class="input-group">
                     <label>Deplasman</label>
-                    <div style="display: flex; gap: 5px;">
-                        <input type="text" id="mg-away-name" value="GALATASARAY" style="flex: 3;">
-                        <input type="number" id="mg-away-score" value="1" style="flex: 1;">
-                    </div>
+                    <input type="text" id="mg-away-name" value="GALATASARAY">
                     <input type="file" id="mg-away-logo" accept="image/*" title="Deplasman Logosu">
                 </div>
                 <div class="input-group">
@@ -66,13 +60,12 @@
                                 </div>
                             </div>
                             <div class="mg-bottom">
-                                <div class="mg-predictor" style="font-size: 26px;"><span class="hl out-mg-home-score">2</span> <span class="hl">-</span> <span class="hl out-mg-away-score">1</span></div>
                                 <h1 class="mg-title">MAÇ GÜNÜ</h1>
                             </div>
                         </div>
                         <div class="card-footer">@skoragi</div>
                     </div>
-                    </div>
+                </div>
             </div>
         </div>
 
@@ -132,7 +125,7 @@
                                 <div class="scorer-list away out-ms-away-scorers">Icardi 34'</div>
                             </div>
                             <div class="mg-bottom" style="margin-top: 0;">
-                                <h1 class="mg-title">MAÇ SONUCU</h1>
+                                <h1 class="ft-main-title">MAÇ SONUCU</h1>
                             </div>
                         </div>
                         <div class="card-footer">@skoragi</div>
@@ -152,17 +145,22 @@
                     <label>Oyuncu Resmi (Dekupe PNG)</label>
                     <input type="file" id="sd-player-img" accept="image/*">
                 </div>
+                <div class="input-group">
+                    <label>Arka Plan Fotoğrafı</label>
+                    <input type="file" id="sd-bg" accept="image/*">
+                </div>
                 <button class="download-btn" onclick="downloadTpl('tpl-son-dakika', 'son-dakika')">GÖRSELİ İNDİR</button>
             </div>
             
             <div class="module-preview">
                 <div class="preview-wrapper">
                     <div class="match-card tpl-sondakika" id="tpl-son-dakika">
+                        <div class="bg-layer" id="bg-sondakika" style="opacity: 0.2;"></div>
                         <div class="sd-pattern"></div>
                         <div class="sd-big-text"><h1>SON<br>DAKİKA</h1></div>
                         <div class="sd-box">
                             <div class="sd-box-left">
-                                <img src="https://creazilla-store.fra1.digitaloceanspaces.com/cliparts/3133642/soccer-player-clipart-xl.png" id="out-sd-player">
+                                <img src="https://creazilla-store.fra1.digitaloceanspaces.com/cliparts/3133642/soccer-player-clipart-xl.png" id="out-sd-player" class="auto-resize-img">
                             </div>
                             <div class="sd-box-right">
                                 <h2 class="out-sd-title">Derbinin<br>Kazananı<br>Belli Oldu!</h2>
@@ -186,12 +184,17 @@
                     <label>Kadro (Her Satıra 1 Oyuncu)</label>
                     <textarea id="k-lineup" rows="8">Livakovic&#10;Osayi&#10;Becao&#10;Djiku&#10;Ferdi&#10;Fred&#10;İsmail&#10;İrfan Can&#10;Szymanski&#10;Tadic&#10;Dzeko</textarea>
                 </div>
+                <div class="input-group">
+                    <label>Arka Plan Fotoğrafı</label>
+                    <input type="file" id="k-bg" accept="image/*">
+                </div>
                 <button class="download-btn" onclick="downloadTpl('tpl-kadro', 'ilk-11')">GÖRSELİ İNDİR</button>
             </div>
             
             <div class="module-preview">
                 <div class="preview-wrapper">
                     <div class="match-card tpl-kadro" id="tpl-kadro">
+                        <div class="bg-layer" id="bg-kadro" style="opacity: 0.4;"></div>
                         <div class="pitch-bg"></div>
                         <div class="brand-gradient-center"></div>
                         <div class="kadro-header">
@@ -229,7 +232,6 @@
                         <div class="bg-layer" id="bg-reels"></div>
                         <div class="brand-gradient-reels"></div>
                         <div class="rl-header">
-                            <div class="rl-icon">▶</div>
                             <h2 class="rl-tag">HAFTANIN<br>OYUNCUSU:</h2>
                             <h1 class="rl-name out-r-name">EDİN DZEKO</h1>
                         </div>
