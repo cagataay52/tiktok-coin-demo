@@ -18,12 +18,12 @@
                 <div class="input-group">
                     <label>Ev Sahibi</label>
                     <input type="text" id="mg-home-name" value="FENERBAHÇE">
-                    <input type="file" id="mg-home-logo" accept="image/*" title="Ev Sahibi Logosu">
+                    <input type="file" id="mg-home-logo" accept="image/*">
                 </div>
                 <div class="input-group">
                     <label>Deplasman</label>
                     <input type="text" id="mg-away-name" value="GALATASARAY">
-                    <input type="file" id="mg-away-logo" accept="image/*" title="Deplasman Logosu">
+                    <input type="file" id="mg-away-logo" accept="image/*">
                 </div>
                 <div class="input-group">
                     <label>Maç Bilgileri</label>
@@ -45,11 +45,10 @@
                         <div class="bg-layer" id="bg-mac-gunu"></div>
                         <div class="brand-glow"></div>
                         <div class="black-fade"></div>
-                        
                         <div class="mg-content">
                             <div class="mg-teams">
                                 <div class="mg-team">
-                                    <img src="https://media.api-sports.io/football/teams/9.png" class="mg-logo" id="out-mg-home-logo">
+                                    <img src="https://media.api-sports.io/football/teams/9.png" class="mg-logo out-mg-home-logo">
                                     <span class="mg-name out-mg-home-name">FENERBAHÇE</span>
                                 </div>
                                 <div class="mg-center">
@@ -57,7 +56,7 @@
                                     <div class="mg-venue out-mg-venue">RAMS PARK</div>
                                 </div>
                                 <div class="mg-team">
-                                    <img src="https://media.api-sports.io/football/teams/11.png" class="mg-logo" id="out-mg-away-logo">
+                                    <img src="https://media.api-sports.io/football/teams/11.png" class="mg-logo out-mg-away-logo">
                                     <span class="mg-name out-mg-away-name">GALATASARAY</span>
                                 </div>
                             </div>
@@ -73,7 +72,65 @@
 
         <div class="studio-module">
             <div class="module-panel">
-                <h2>2. MAÇ SONUCU ŞABLONU</h2>
+                <h2>2. İLK YARI SONUCU (HT)</h2>
+                <div class="input-group">
+                    <label>Ev Sahibi</label>
+                    <div style="display: flex; gap: 5px;">
+                        <input type="text" id="iy-home-name" value="FENERBAHÇE" style="flex: 3;">
+                        <input type="number" id="iy-home-score" value="1" style="flex: 1;">
+                    </div>
+                    <input type="file" id="iy-home-logo" accept="image/*">
+                </div>
+                <div class="input-group">
+                    <label>Deplasman</label>
+                    <div style="display: flex; gap: 5px;">
+                        <input type="text" id="iy-away-name" value="GALATASARAY" style="flex: 3;">
+                        <input type="number" id="iy-away-score" value="0" style="flex: 1;">
+                    </div>
+                    <input type="file" id="iy-away-logo" accept="image/*">
+                </div>
+                <div class="input-group">
+                    <label>Arka Plan Fotoğrafı</label>
+                    <input type="file" id="iy-bg" accept="image/*">
+                </div>
+                <button class="download-btn" onclick="downloadTpl('tpl-ilk-yari', 'ilk-yari')">GÖRSELİ İNDİR</button>
+            </div>
+            
+            <div class="module-preview">
+                <div class="preview-wrapper">
+                    <div class="match-card" id="tpl-ilk-yari">
+                        <div class="bg-layer" id="bg-ilk-yari" style="opacity: 0.3;"></div>
+                        <div class="brand-glow"></div>
+                        <div class="brand-gradient-bottom"></div>
+
+                        <div class="ms-content">
+                            <div class="iy-badge">45'</div>
+                            <div class="ft-scoreboard" style="margin-top: 10px;">
+                                <div class="ft-team">
+                                    <img src="https://media.api-sports.io/football/teams/9.png" class="mg-logo out-iy-home-logo">
+                                    <span class="mg-name out-iy-home-name">FENERBAHÇE</span>
+                                </div>
+                                <div class="ft-score">
+                                    <span class="out-iy-home-score">1</span> - <span class="out-iy-away-score">0</span>
+                                </div>
+                                <div class="ft-team">
+                                    <img src="https://media.api-sports.io/football/teams/11.png" class="mg-logo out-iy-away-logo">
+                                    <span class="mg-name out-iy-away-name">GALATASARAY</span>
+                                </div>
+                            </div>
+                            <div class="mg-bottom" style="margin-top: 20px;">
+                                <h1 class="ft-main-title" style="font-size: 90px;">İLK YARI SONUCU</h1>
+                            </div>
+                        </div>
+                        <div class="card-footer">@skoragi</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="studio-module">
+            <div class="module-panel">
+                <h2>3. MAÇ SONUCU ŞABLONU</h2>
                 <div class="input-group">
                     <label>Ev Sahibi</label>
                     <div style="display: flex; gap: 5px;">
@@ -92,8 +149,8 @@
                 </div>
                 <div class="input-group">
                     <label>Gol Atanlar (Her Satıra 1 Oyuncu)</label>
-                    <textarea id="ms-home-scorers" rows="3" placeholder="Ev Sahibi Golleri">Dzeko 12'&#10;Szymanski 45'&#10;Tadic 89'</textarea>
-                    <textarea id="ms-away-scorers" rows="3" placeholder="Deplasman Golleri" style="margin-top: 5px;">Icardi 34'</textarea>
+                    <textarea id="ms-home-scorers" rows="3">Dzeko 12'&#10;Szymanski 45'&#10;Tadic 89'</textarea>
+                    <textarea id="ms-away-scorers" rows="3" style="margin-top: 5px;">Icardi 34'</textarea>
                 </div>
                 <div class="input-group">
                     <label>Arka Plan Fotoğrafı</label>
@@ -112,14 +169,14 @@
                         <div class="ms-content">
                             <div class="ft-scoreboard">
                                 <div class="ft-team">
-                                    <img src="https://media.api-sports.io/football/teams/9.png" class="mg-logo" id="out-ms-home-logo">
+                                    <img src="https://media.api-sports.io/football/teams/9.png" class="mg-logo out-ms-home-logo">
                                     <span class="mg-name out-ms-home-name">FENERBAHÇE</span>
                                 </div>
                                 <div class="ft-score">
                                     <span class="out-ms-home-score">2</span> - <span class="out-ms-away-score">1</span>
                                 </div>
                                 <div class="ft-team">
-                                    <img src="https://media.api-sports.io/football/teams/11.png" class="mg-logo" id="out-ms-away-logo">
+                                    <img src="https://media.api-sports.io/football/teams/11.png" class="mg-logo out-ms-away-logo">
                                     <span class="mg-name out-ms-away-name">GALATASARAY</span>
                                 </div>
                             </div>
@@ -140,7 +197,98 @@
 
         <div class="studio-module">
             <div class="module-panel">
-                <h2>3. SON DAKİKA ŞABLONU</h2>
+                <h2>4. MAÇ İSTATİSTİKLERİ</h2>
+                <div class="input-group">
+                    <label>Topla Oynama (%)</label>
+                    <div style="display: flex; gap: 5px;">
+                        <input type="number" id="stat-pos-home" value="60" style="flex: 1;">
+                        <input type="number" id="stat-pos-away" value="40" style="flex: 1;">
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>İsabetli Şut</label>
+                    <div style="display: flex; gap: 5px;">
+                        <input type="number" id="stat-shot-home" value="7" style="flex: 1;">
+                        <input type="number" id="stat-shot-away" value="3" style="flex: 1;">
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Korner</label>
+                    <div style="display: flex; gap: 5px;">
+                        <input type="number" id="stat-cor-home" value="8" style="flex: 1;">
+                        <input type="number" id="stat-cor-away" value="4" style="flex: 1;">
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Faul</label>
+                    <div style="display: flex; gap: 5px;">
+                        <input type="number" id="stat-foul-home" value="12" style="flex: 1;">
+                        <input type="number" id="stat-foul-away" value="15" style="flex: 1;">
+                    </div>
+                </div>
+                <button class="download-btn" onclick="downloadTpl('tpl-istatistik', 'istatistik')">GÖRSELİ İNDİR</button>
+            </div>
+            
+            <div class="module-preview">
+                <div class="preview-wrapper">
+                    <div class="match-card" id="tpl-istatistik">
+                        <div class="bg-layer" id="bg-istatistik" style="opacity: 0.15;"></div>
+                        <div class="brand-glow" style="opacity: 0.6;"></div>
+                        <div class="brand-gradient-bottom"></div>
+
+                        <div class="stat-header">
+                            <img src="https://media.api-sports.io/football/teams/9.png" class="stat-logo out-ms-home-logo">
+                            <h1 class="stat-main-title">İSTATİSTİKLER</h1>
+                            <img src="https://media.api-sports.io/football/teams/11.png" class="stat-logo out-ms-away-logo">
+                        </div>
+
+                        <div class="stat-container">
+                            <div class="stat-row">
+                                <div class="stat-num home out-stat-pos-home">60%</div>
+                                <div class="stat-center">TOPLA OYNAMA</div>
+                                <div class="stat-num away out-stat-pos-away">40%</div>
+                                <div class="stat-bar-container">
+                                    <div class="stat-bar home" id="bar-pos-home" style="width: 60%;"></div>
+                                    <div class="stat-bar away" id="bar-pos-away" style="width: 40%;"></div>
+                                </div>
+                            </div>
+                            <div class="stat-row">
+                                <div class="stat-num home out-stat-shot-home">7</div>
+                                <div class="stat-center">İSABETLİ ŞUT</div>
+                                <div class="stat-num away out-stat-shot-away">3</div>
+                                <div class="stat-bar-container">
+                                    <div class="stat-bar home" id="bar-shot-home" style="width: 70%;"></div>
+                                    <div class="stat-bar away" id="bar-shot-away" style="width: 30%;"></div>
+                                </div>
+                            </div>
+                            <div class="stat-row">
+                                <div class="stat-num home out-stat-cor-home">8</div>
+                                <div class="stat-center">KORNER</div>
+                                <div class="stat-num away out-stat-cor-away">4</div>
+                                <div class="stat-bar-container">
+                                    <div class="stat-bar home" id="bar-cor-home" style="width: 66%;"></div>
+                                    <div class="stat-bar away" id="bar-cor-away" style="width: 33%;"></div>
+                                </div>
+                            </div>
+                            <div class="stat-row">
+                                <div class="stat-num home out-stat-foul-home">12</div>
+                                <div class="stat-center">FAUL</div>
+                                <div class="stat-num away out-stat-foul-away">15</div>
+                                <div class="stat-bar-container">
+                                    <div class="stat-bar home" id="bar-foul-home" style="width: 44%;"></div>
+                                    <div class="stat-bar away" id="bar-foul-away" style="width: 55%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">@skoragi</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="studio-module">
+            <div class="module-panel">
+                <h2>5. SON DAKİKA ŞABLONU</h2>
                 <div class="input-group">
                     <label>Haber Başlığı</label>
                     <input type="text" id="sd-news-title" value="Derbinin Kazananı Belli Oldu!">
@@ -181,7 +329,7 @@
 
         <div class="studio-module">
             <div class="module-panel">
-                <h2>4. İLK 11 ŞABLONU</h2>
+                <h2>6. İLK 11 ŞABLONU</h2>
                 <div class="input-group">
                     <label>Takım Logosu</label>
                     <input type="file" id="k-logo" accept="image/*">
@@ -217,7 +365,7 @@
 
         <div class="studio-module">
             <div class="module-panel">
-                <h2>5. REELS / HAFTANIN OYUNCUSU</h2>
+                <h2>7. REELS / HAFTANIN OYUNCUSU</h2>
                 <div class="input-group">
                     <label>Oyuncu Adı</label>
                     <input type="text" id="r-player-name" value="EDİN DZEKO">
