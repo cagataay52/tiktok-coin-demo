@@ -3,32 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Skor Ağı - Birebir Klon Stüdyo</title>
+    <title>Skor Ağı - Ultra Premium Manuel Stüdyo</title>
     <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,700;0,900;1,800;1,900&family=Montserrat:wght@400;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <div class="control-panel">
-        <h2>🎛️ SKOR AĞI PANELİ</h2>
-
-        <div class="input-group" style="background: #2a1610; padding: 15px; border-radius: 8px; border: 1px solid #FF5722;">
-            <label style="color: #FF5722; font-size: 14px; margin-bottom: 15px;">⚡ Canlı Süper Lig Fikstürü</label>
-            
-            <button id="btn-load-fixtures" style="width: 100%; padding: 10px; background: #111; color: #fff; border: 1px solid #FF5722; cursor: pointer; border-radius: 4px; font-family: 'Barlow'; font-size: 16px; margin-bottom: 10px; transition: 0.3s;">1. MAÇLARI YÜKLE</button>
-            
-            <select id="select-match" style="width: 100%; padding: 12px; background: #000; border: 1px solid #FF5722; color: white; border-radius: 4px; font-family: 'Montserrat'; font-weight: bold; margin-bottom: 10px; display: none;">
-                <option value="">Maç Seçin...</option>
-            </select>
-            
-            <button id="btn-apply-match" style="width: 100%; padding: 12px; background: #FF5722; color: white; border: none; font-weight: bold; cursor: pointer; border-radius: 4px; font-family: 'Barlow'; font-size: 18px; display: none;">2. ŞABLONA AKTAR</button>
-        </div>
-        <hr style="border: 0; border-top: 1px solid #333; margin-bottom: 20px;">
+        <h2>🎛️ SKOR AĞI PRO PANEL</h2>
         
         <div class="input-group">
             <label>Ev Sahibi & Skor</label>
             <div style="display: flex; gap: 10px;">
-                <input type="text" id="inp-home-name" value="GALATASARAY">
+                <input type="text" id="inp-home-name" value="FENERBAHÇE">
                 <input type="number" id="inp-home-score" value="2">
             </div>
         </div>
@@ -36,24 +23,30 @@
         <div class="input-group">
             <label>Deplasman & Skor</label>
             <div style="display: flex; gap: 10px;">
-                <input type="text" id="inp-away-name" value="FENERBAHÇE">
+                <input type="text" id="inp-away-name" value="GALATASARAY">
                 <input type="number" id="inp-away-score" value="1">
             </div>
         </div>
 
         <div class="input-group">
-            <label>Haber / Oyuncu</label>
-            <input type="text" id="inp-news-title" value="X Oyuncusu Süper Lig Ekibinde!">
-            <input type="text" id="inp-player-name" value="Mauro Icardi" style="margin-top: 10px;">
+            <label>Gol Atanlar (Maç Sonucu Şablonu İçin)</label>
+            <input type="text" id="inp-home-scorers" value="Dzeko 45', Tadic 89'" placeholder="Ev Sahibi Golleri" style="margin-bottom: 5px;">
+            <input type="text" id="inp-away-scorers" value="Icardi 12'" placeholder="Deplasman Golleri">
         </div>
 
         <div class="input-group">
-            <label>Arka Plan Seç</label>
+            <label>Haber Başlığı / Oyuncu Adı</label>
+            <input type="text" id="inp-news-title" value="X Oyuncusu Süper Lig Ekibinde!">
+            <input type="text" id="inp-player-name" value="Edin Dzeko" style="margin-top: 10px;">
+        </div>
+
+        <div class="input-group">
+            <label>Arka Plan Fotoğrafı Yükle</label>
             <input type="file" id="upload-bg" accept="image/*">
         </div>
         
         <div class="input-group">
-            <label>Oyuncu Dekupe Seç</label>
+            <label>Oyuncu Dekupe (PNG) Yükle</label>
             <input type="file" id="upload-player" accept="image/*">
         </div>
     </div>
@@ -68,16 +61,16 @@
                 <div class="mg-content">
                     <div class="mg-teams">
                         <div class="mg-team">
-                            <img src="https://media.api-sports.io/football/teams/11.png" class="mg-logo out-home-logo">
-                            <span class="mg-name out-home-name">GALATASARAY</span>
+                            <img src="https://media.api-sports.io/football/teams/9.png" class="mg-logo">
+                            <span class="mg-name out-home-name">FENERBAHÇE</span>
                         </div>
                         <div class="mg-center">
-                            <div class="mg-time out-match-time">15:00</div>
-                            <div class="mg-venue out-match-venue">RAMS Park</div>
+                            <div class="mg-time">20:00</div>
+                            <div class="mg-venue">Şükrü Saracoğlu</div>
                         </div>
                         <div class="mg-team">
-                            <img src="https://media.api-sports.io/football/teams/9.png" class="mg-logo out-away-logo">
-                            <span class="mg-name out-away-name">FENERBAHÇE</span>
+                            <img src="https://media.api-sports.io/football/teams/11.png" class="mg-logo">
+                            <span class="mg-name out-away-name">GALATASARAY</span>
                         </div>
                     </div>
                     
@@ -89,6 +82,39 @@
                 <div class="card-footer">@skoragi</div>
             </div>
             <button class="download-btn" onclick="downloadTpl('tpl-mac-gunu', 'mac-gunu')">İNDİR</button>
+        </div>
+
+        <div class="template-wrapper">
+            <div class="match-card tpl-macsonucu" id="tpl-mac-sonucu">
+                <div class="bg-layer" id="bg-mac-sonucu" style="background-image: url('https://images.unsplash.com/photo-1518605368461-1ee7c684e2a6?q=80&w=1000'); opacity: 0.3;"></div>
+                <div class="ms-ft-gradient"></div>
+                
+                <h2 class="ft-top-tag">SÜPER LİG 15. HAFTA</h2>
+                
+                <div class="ft-scoreboard">
+                    <div class="ft-team">
+                        <img src="https://media.api-sports.io/football/teams/9.png">
+                        <span class="out-home-name">FENERBAHÇE</span>
+                    </div>
+                    <div class="ft-score">
+                        <span class="out-home-score">2</span> - <span class="out-away-score">1</span>
+                    </div>
+                    <div class="ft-team">
+                        <img src="https://media.api-sports.io/football/teams/11.png">
+                        <span class="out-away-name">GALATASARAY</span>
+                    </div>
+                </div>
+                
+                <div class="ft-scorers">
+                    <div class="ft-scorer-left out-home-scorers">Dzeko 45', Tadic 89'</div>
+                    <div class="ft-scorer-icon">⚽</div>
+                    <div class="ft-scorer-right out-away-scorers">Icardi 12'</div>
+                </div>
+
+                <h1 class="ft-main-title">MAÇ SONUCU</h1>
+                <div class="card-footer">@skoragi</div>
+            </div>
+            <button class="download-btn" onclick="downloadTpl('tpl-mac-sonucu', 'mac-sonucu')">İNDİR</button>
         </div>
 
         <div class="template-wrapper">
@@ -112,13 +138,44 @@
         </div>
 
         <div class="template-wrapper">
+            <div class="match-card tpl-puandurumu" id="tpl-puan-durumu">
+                <div class="pd-gradient"></div>
+                
+                <h1 class="pd-title">GÜNCEL<br>PUAN DURUMU</h1>
+                
+                <div class="pd-table">
+                    <div class="pd-row pd-first">
+                        <div class="pd-rank">1</div>
+                        <img src="https://media.api-sports.io/football/teams/9.png" class="pd-logo">
+                        <div class="pd-name out-home-name">FENERBAHÇE</div>
+                        <div class="pd-pts">85 P</div>
+                    </div>
+                    <div class="pd-row">
+                        <div class="pd-rank">2</div>
+                        <img src="https://media.api-sports.io/football/teams/11.png" class="pd-logo">
+                        <div class="pd-name out-away-name">GALATASARAY</div>
+                        <div class="pd-pts">82 P</div>
+                    </div>
+                    <div class="pd-row">
+                        <div class="pd-rank">3</div>
+                        <img src="https://media.api-sports.io/football/teams/10.png" class="pd-logo">
+                        <div class="pd-name">BEŞİKTAŞ</div>
+                        <div class="pd-pts">75 P</div>
+                    </div>
+                </div>
+                <div class="card-footer">@skoragi</div>
+            </div>
+            <button class="download-btn" onclick="downloadTpl('tpl-puan-durumu', 'puan-durumu')">İNDİR</button>
+        </div>
+
+        <div class="template-wrapper">
             <div class="match-card tpl-istatistik" id="tpl-istatistik">
                 <div class="ms-gradient"></div>
                 <h1 class="ms-title">MAÇ SONU<br>İSTATİSTİKLERİ</h1>
                 
                 <div class="ms-radar-section">
                     <div class="ms-ratings left">
-                        <div class="ms-rate">5.5</div><div class="ms-rate">3.0</div><div class="ms-rate">4.8</div>
+                        <div class="ms-rate">5.5</div><div class="ms-rate">8.0</div><div class="ms-rate">7.8</div>
                     </div>
                     <div class="ms-radar">
                         <svg viewBox="0 0 100 100">
@@ -129,48 +186,28 @@
                         </svg>
                     </div>
                     <div class="ms-ratings right">
-                        <div class="ms-rate">5.0</div><div class="ms-rate">2.0</div><div class="ms-rate">2.5</div>
+                        <div class="ms-rate">5.0</div><div class="ms-rate">6.2</div><div class="ms-rate">5.5</div>
                     </div>
                 </div>
                 
                 <div class="ms-score-line">
-                    <img src="https://media.api-sports.io/football/teams/11.png" class="out-home-logo">
-                    <span class="out-home-name">BEŞİKTAŞ</span>
+                    <img src="https://media.api-sports.io/football/teams/9.png">
+                    <span class="out-home-name">FENERBAHÇE</span>
                     <div class="score"><span class="out-home-score">2</span> - <span class="out-away-score">1</span></div>
-                    <span class="out-away-name">TRABZONSPOR</span>
-                    <img src="https://media.api-sports.io/football/teams/9.png" class="out-away-logo">
+                    <span class="out-away-name">GALATASARAY</span>
+                    <img src="https://media.api-sports.io/football/teams/11.png">
                 </div>
                 
                 <div class="ms-top-scorer">
                     <div class="ts-img"><img src="https://creazilla-store.fra1.digitaloceanspaces.com/cliparts/3133642/soccer-player-clipart-xl.png"></div>
                     <div class="ts-info">
                         <div class="ts-label">TOP SCORER</div>
-                        <div class="ts-name out-player-name">MAURO ICARDI</div>
+                        <div class="ts-name out-player-name">EDIN DZEKO</div>
                     </div>
                 </div>
                 <div class="card-footer">@skoragi</div>
             </div>
             <button class="download-btn" onclick="downloadTpl('tpl-istatistik', 'istatistik')">İNDİR</button>
-        </div>
-
-        <div class="template-wrapper">
-            <div class="match-card tpl-reels" id="tpl-reels">
-                <div class="rl-bg" id="bg-reels"></div>
-                <div class="rl-gradient"></div>
-                <div class="rl-header">
-                    <div class="rl-icon">▶</div>
-                    <h2 class="rl-tag">HAFTANIN<br>OYUNCUSU:</h2>
-                    <h1 class="rl-name out-player-name">Mauro Icardi</h1>
-                </div>
-                <img src="https://creazilla-store.fra1.digitaloceanspaces.com/cliparts/3133642/soccer-player-clipart-xl.png" class="rl-player" id="reels-player-img">
-                <div class="rl-stats">
-                    <div class="rl-stat"><h2>6</h2><span>Goals</span></div>
-                    <div class="rl-stat"><h2>1</h2><span>Assists</span></div>
-                    <div class="rl-stat"><h2>25%</h2><span>Pass %</span></div>
-                </div>
-                <div class="card-footer" style="bottom: 20px;">@skoragi</div>
-            </div>
-            <button class="download-btn" onclick="downloadTpl('tpl-reels', 'reels')">İNDİR</button>
         </div>
 
     </div>
