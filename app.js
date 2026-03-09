@@ -38,7 +38,6 @@ function bindText(inputId, targetClass, isUpper = true, isHtml = false) {
     });
 }
 
-// 🌟 DÜZELTİLEN GÖRSEL MOTORU: Artık class (.) ve id fark etmeksizin saniyesinde basar! 🌟
 function bindImage(inputId, targetIdOrClass, isBackground = false) {
     const input = document.getElementById(inputId);
     if (!input) return;
@@ -48,13 +47,11 @@ function bindImage(inputId, targetIdOrClass, isBackground = false) {
             const reader = new FileReader();
             reader.onload = function(event) {
                 if (targetIdOrClass.startsWith('.')) {
-                    // Class ise tüm eşleşenleri bul
                     document.querySelectorAll(targetIdOrClass).forEach(el => {
                         if (isBackground) el.style.backgroundImage = `url('${event.target.result}')`;
                         else el.src = event.target.result;
                     });
                 } else {
-                    // ID ise tek bir tane bul
                     const el = document.getElementById(targetIdOrClass);
                     if (el) {
                         if (isBackground) el.style.backgroundImage = `url('${event.target.result}')`;
@@ -203,17 +200,38 @@ window.addEventListener('load', () => {
 });
 
 // ==========================================
-// HD İNDİRME MOTORU
+// HD İNDİRME MOTORU (BASIKLAŞMAYI ÖNLEYEN GÜNCEL KOD)
 // ==========================================
 function downloadTpl(elementId, fileName) {
     const captureArea = document.getElementById(elementId);
+    
+    // 1. Önce kartın mevcut küçültülmüş halini hafızaya al
     const originalTransform = captureArea.style.transform;
+    
+    // 2. İndirme kalitesi için kartı anlık olarak orijinal tam boyutuna çek
     captureArea.style.transform = "scale(1)";
-    html2canvas(captureArea, { scale: 3, backgroundColor: "#111", useCORS: true, allowTaint: true, logging: false }).then(canvas => {
-        captureArea.style.transform = originalTransform;
-        const imageURL = canvas.toDataURL("image/jpeg", 0.95);
-        const downloadLink = document.createElement('a');
-        downloadLink.href = imageURL; downloadLink.download = `skoragi-${fileName}.jpg`;
-        document.body.appendChild(downloadLink); downloadLink.click(); document.body.removeChild(downloadLink);
-    });
+    
+    // 3. Tarayıcının, logoların ve fotoğrafların esnemesini engelleyip
+    // yeni boyuta göre pürüzsüzce hizalaması için ona 250 milisaniye zaman tanıyoruz.
+    setTimeout(() => {
+        html2canvas(captureArea, { 
+            scale: 3, // Ultra HD kalitesi
+            backgroundColor: "#111", 
+            useCORS: true, 
+            allowTaint: true, 
+            logging: false 
+        }).then(canvas => {
+            // 4. Fotoğraf çekildikten sonra sitedeki kartı tekrar eski küçük haline gizlice geri döndür
+            captureArea.style.transform = originalTransform;
+            
+            // 5. Cam gibi sündürülmemiş görseli cihaza indir
+            const imageURL = canvas.toDataURL("image/jpeg", 0.95);
+            const downloadLink = document.createElement('a');
+            downloadLink.href = imageURL; 
+            downloadLink.download = `skoragi-${fileName}.jpg`;
+            document.body.appendChild(downloadLink); 
+            downloadLink.click(); 
+            document.body.removeChild(downloadLink);
+        });
+    }, 250); 
 }
