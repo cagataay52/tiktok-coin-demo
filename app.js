@@ -1,4 +1,23 @@
 // ==========================================
+// 🌟 YENİ: AVRUPA LİGLERİ TEMA MOTORU 🌟
+// ==========================================
+const themeBtns = document.querySelectorAll('.ts-btn');
+themeBtns.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        const theme = e.target.getAttribute('data-theme');
+        // Body'e tema class'ını ekle, değişkenler anında değişsin
+        document.body.className = theme === 'default' ? '' : `theme-${theme}`;
+        
+        // Butonların aktiflik durumunu güncelle
+        themeBtns.forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+        
+        // Temayı hafızaya kaydet
+        localStorage.setItem('skoragi_theme', theme);
+    });
+});
+
+// ==========================================
 // YAPAY ZEKA METİN KÜÇÜLTME MOTORU (Auto-Scaler)
 // ==========================================
 function autoScaleText() {
@@ -24,9 +43,6 @@ function autoScaleSimpleText() {
     });
 }
 
-// ==========================================
-// BAĞLANTI (BIND) FONKSİYONLARI
-// ==========================================
 function bindText(inputId, targetClass, isUpper = true, isHtml = false) {
     const input = document.getElementById(inputId);
     if (!input) return;
@@ -64,28 +80,21 @@ function bindImage(inputId, targetIdOrClass, isBackground = false) {
     });
 }
 
-// ==========================================
-// 1 & 2 & 3. MAÇ GÜNÜ, HT, MS MODÜLLERİ
-// ==========================================
+// 1. MG & 2. HT & 3. MS
 bindText('mg-home-name', '.out-mg-home-name'); bindText('mg-away-name', '.out-mg-away-name');
 bindText('mg-time', '.out-mg-time', false); bindText('mg-venue', '.out-mg-venue');
-bindImage('mg-home-logo', '.out-mg-home-logo'); bindImage('mg-away-logo', '.out-mg-away-logo'); 
-bindImage('mg-bg', 'bg-mac-gunu', true);
+bindImage('mg-home-logo', '.out-mg-home-logo'); bindImage('mg-away-logo', '.out-mg-away-logo'); bindImage('mg-bg', 'bg-mac-gunu', true);
 
 bindText('iy-home-name', '.out-iy-home-name'); bindText('iy-away-name', '.out-iy-away-name');
 bindText('iy-home-score', '.out-iy-home-score', false); bindText('iy-away-score', '.out-iy-away-score', false);
-bindImage('iy-home-logo', '.out-iy-home-logo'); bindImage('iy-away-logo', '.out-iy-away-logo'); 
-bindImage('iy-bg', 'bg-ilk-yari', true);
+bindImage('iy-home-logo', '.out-iy-home-logo'); bindImage('iy-away-logo', '.out-iy-away-logo'); bindImage('iy-bg', 'bg-ilk-yari', true);
 
 bindText('ms-home-name', '.out-ms-home-name'); bindText('ms-away-name', '.out-ms-away-name');
 bindText('ms-home-score', '.out-ms-home-score', false); bindText('ms-away-score', '.out-ms-away-score', false);
 bindText('ms-home-scorers', '.out-ms-home-scorers', false, true); bindText('ms-away-scorers', '.out-ms-away-scorers', false, true);
-bindImage('ms-home-logo', '.out-ms-home-logo'); bindImage('ms-away-logo', '.out-ms-away-logo'); 
-bindImage('ms-bg', 'bg-mac-sonucu', true);
+bindImage('ms-home-logo', '.out-ms-home-logo'); bindImage('ms-away-logo', '.out-ms-away-logo'); bindImage('ms-bg', 'bg-mac-sonucu', true);
 
-// ==========================================
 // 4. İSTATİSTİK
-// ==========================================
 function bindStat(idHome, idAway, outHome, outAway, barHome, barAway, isPercent = false) {
     const iHome = document.getElementById(idHome); const iAway = document.getElementById(idAway);
     function updateStats() {
@@ -103,9 +112,7 @@ bindStat('stat-shot-home', 'stat-shot-away', '.out-stat-shot-home', '.out-stat-s
 bindStat('stat-cor-home', 'stat-cor-away', '.out-stat-cor-home', '.out-stat-cor-away', 'bar-cor-home', 'bar-cor-away');
 bindStat('stat-foul-home', 'stat-foul-away', '.out-stat-foul-home', '.out-stat-foul-away', 'bar-foul-home', 'bar-foul-away');
 
-// ==========================================
-// 5. İLK 11 KADROSU
-// ==========================================
+// 5. İLK 11
 bindImage('k-logo', '.out-k-logo'); bindImage('k-bg', 'bg-kadro', true); 
 document.getElementById('k-lineup').addEventListener('input', function(e) {
     const listContainer = document.getElementById('out-k-lineup'); listContainer.innerHTML = ''; 
@@ -117,9 +124,7 @@ document.getElementById('k-lineup').addEventListener('input', function(e) {
     });
 });
 
-// ==========================================
-// 6. TRANSFER MERKEZİ
-// ==========================================
+// 6. TRANSFER
 bindText('tr-name', '.out-tr-name');
 bindImage('tr-logo', '.out-tr-logo'); bindImage('tr-img', '.out-tr-img');
 const trProbInput = document.getElementById('tr-prob');
@@ -138,50 +143,23 @@ if (trProbInput) {
     });
 }
 
-// ==========================================
-// 7. FLAŞ AÇIKLAMA
-// ==========================================
-bindText('qt-author', '.out-qt-author');
-bindText('qt-text', '.out-qt-text', false); 
-bindImage('qt-img', '.out-qt-img');
-
-// ==========================================
-// 8. OYUNCU KARŞILAŞTIRMA (H2H)
-// ==========================================
-bindText('h2h-p1-name', '.out-h2h-p1-name'); bindText('h2h-p2-name', '.out-h2h-p2-name');
-bindText('h2h-p1-stat', '.out-h2h-p1-stat', false); bindText('h2h-p2-stat', '.out-h2h-p2-stat', false);
-bindImage('h2h-p1-img', '.out-h2h-p1-img'); bindImage('h2h-p2-img', '.out-h2h-p2-img');
-
-// ==========================================
-// 9. ZİRVE PUAN DURUMU
-// ==========================================
+// 7. QUOTE
+bindText('qt-author', '.out-qt-author'); bindText('qt-text', '.out-qt-text', false); bindImage('qt-img', '.out-qt-img');
+// 8. H2H
+bindText('h2h-p1-name', '.out-h2h-p1-name'); bindText('h2h-p2-name', '.out-h2h-p2-name'); bindText('h2h-p1-stat', '.out-h2h-p1-stat', false); bindText('h2h-p2-stat', '.out-h2h-p2-stat', false); bindImage('h2h-p1-img', '.out-h2h-p1-img'); bindImage('h2h-p2-img', '.out-h2h-p2-img');
+// 9. STANDINGS
 bindText('pd-t1-name', '.out-pd-t1-name'); bindText('pd-t1-pts', '.out-pd-t1-pts', false); bindImage('pd-t1-logo', '.out-pd-t1-logo');
 bindText('pd-t2-name', '.out-pd-t2-name'); bindText('pd-t2-pts', '.out-pd-t2-pts', false); bindImage('pd-t2-logo', '.out-pd-t2-logo');
 bindText('pd-t3-name', '.out-pd-t3-name'); bindText('pd-t3-pts', '.out-pd-t3-pts', false); bindImage('pd-t3-logo', '.out-pd-t3-logo');
-
-// ==========================================
-// 10. MAÇIN HAKEMİ
-// ==========================================
-bindText('ref-name', '.out-ref-name');
-bindImage('ref-img', '.out-ref-img');
-bindImage('ref-logo-home', '.out-ref-logo-home'); bindImage('ref-logo-away', '.out-ref-logo-away');
-
-// ==========================================
+// 10. REFEREE
+bindText('ref-name', '.out-ref-name'); bindImage('ref-img', '.out-ref-img'); bindImage('ref-logo-home', '.out-ref-logo-home'); bindImage('ref-logo-away', '.out-ref-logo-away');
 // 11. SON DAKİKA
-// ==========================================
-bindText('sd-news-title', '.out-sd-title', false, true);
-bindImage('sd-player-img', '.out-sd-player');
-bindImage('sd-bg', 'bg-sondakika', true);
-
-// ==========================================
+bindText('sd-news-title', '.out-sd-title', false, true); bindImage('sd-player-img', '.out-sd-player'); bindImage('sd-bg', 'bg-sondakika', true);
 // 12. REELS
-// ==========================================
-bindText('r-player-name', '.out-r-name');
-bindImage('r-player-img', '.out-r-player');
-bindImage('r-bg', 'bg-reels', true);
+bindText('r-player-name', '.out-r-name'); bindImage('r-player-img', '.out-r-player'); bindImage('r-bg', 'bg-reels', true);
 
 // ==========================================
-// 💾 OTOMATİK KAYIT (AUTO-SAVE) 💾
+// 💾 OTOMATİK KAYIT VE TEMA YÜKLEME 💾
 // ==========================================
 const savedData = JSON.parse(localStorage.getItem('skoragi_data')) || {};
 document.querySelectorAll('input[type="text"], input[type="number"], textarea').forEach(el => {
@@ -193,14 +171,20 @@ document.querySelectorAll('input[type="text"], input[type="number"], textarea').
 });
 
 window.addEventListener('load', () => {
-    document.querySelectorAll('input[type="text"], input[type="number"], textarea').forEach(el => {
-        el.dispatchEvent(new Event('input'));
-    });
+    document.querySelectorAll('input[type="text"], input[type="number"], textarea').forEach(el => { el.dispatchEvent(new Event('input')); });
     autoScaleText(); setTimeout(autoScaleSimpleText, 100);
+    
+    // Temayı Yükle
+    const savedTheme = localStorage.getItem('skoragi_theme') || 'default';
+    if (savedTheme !== 'default') {
+        document.body.className = `theme-${savedTheme}`;
+        document.querySelector(`[data-theme="${savedTheme}"]`).classList.add('active');
+        document.querySelector(`[data-theme="default"]`).classList.remove('active');
+    }
 });
 
 // ==========================================
-// 🌟 GÜVENLİ VE KUSURSUZ İNDİRME MOTORU 🌟
+// 🌟 GÜVENLİ VE KESİLMEYEN İNDİRME MOTORU 🌟
 // ==========================================
 function downloadTpl(elementId, fileName) {
     const captureArea = document.getElementById(elementId);
@@ -218,12 +202,12 @@ function downloadTpl(elementId, fileName) {
     wrapper.style.overflow = "visible";
     captureArea.style.transform = "scale(1)";
 
-    // Tarayıcının hizalamaları (özellikle resim basıklığını) düzeltmesi için 0.3 saniye bekle
+    // Tarayıcının resim basıklığını düzeltmesi için 0.3 saniye bekle
     setTimeout(() => {
         html2canvas(captureArea, { 
             scale: 3, 
             backgroundColor: "#111", 
-            useCORS: true, // allowTaint kaldırıldı, güvenlik duvarı aşılıyor
+            useCORS: true, 
             logging: false 
         }).then(canvas => {
             captureArea.style.transform = originalTransform;
