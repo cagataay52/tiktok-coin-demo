@@ -5,7 +5,9 @@ const themeBtns = document.querySelectorAll('.ts-btn:not(#btn-watermark)');
 themeBtns.forEach(btn => {
     btn.addEventListener('click', (e) => {
         const theme = e.target.getAttribute('data-theme');
+        // Eski temayı sil
         document.body.className = document.body.className.replace(/theme-\w+/g, '').trim();
+        // Yeni temayı ekle (default değilse)
         if(theme !== 'default') document.body.classList.add(`theme-${theme}`);
         
         themeBtns.forEach(b => b.classList.remove('active'));
@@ -180,7 +182,6 @@ bindImage('fix3-logo', '.out-fix3-logo'); bindText('fix3-date', '.out-fix3-date'
 // 16. HEALTH
 bindText('hlt-name', '.out-hlt-name'); bindImage('hlt-img', '.out-hlt-img'); bindText('hlt-type', '.out-hlt-type'); bindText('hlt-date', '.out-hlt-date');
 
-
 // ==========================================
 // 💾 OTOMATİK KAYIT VE AYAR YÜKLEME 💾
 // ==========================================
@@ -197,6 +198,7 @@ window.addEventListener('load', () => {
     document.querySelectorAll('input[type="text"], input[type="number"], textarea').forEach(el => { el.dispatchEvent(new Event('input')); });
     autoScaleText(); setTimeout(autoScaleSimpleText, 100);
     
+    // Temayı Yükle
     const savedTheme = localStorage.getItem('skoragi_theme') || 'default';
     if (savedTheme !== 'default') {
         document.body.classList.add(`theme-${savedTheme}`);
@@ -204,6 +206,7 @@ window.addEventListener('load', () => {
         document.querySelector(`[data-theme="default"]`).classList.remove('active');
     }
     
+    // Filigranı Yükle
     if (localStorage.getItem('skoragi_wm') === 'on') {
         document.body.classList.add('watermark-on');
         btnWatermark.innerText = "🛡️ FİLİGRAN: AÇIK";
