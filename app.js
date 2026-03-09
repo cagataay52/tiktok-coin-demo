@@ -10,17 +10,25 @@ document.getElementById('btn-load-fixtures').addEventListener('click', () => {
     btn.innerText = "YÜKLENİYOR...";
     btn.style.backgroundColor = "#555";
 
-    // API-Sports: Süper Lig (ID: 203) - 2025/2026 Sezonu
+    // API-Sports: Süper Lig (ID: 203) - 2025/2026 Sezonu İstediği
     fetch(`https://v3.football.api-sports.io/fixtures?league=203&season=2025`, {
         method: "GET",
         headers: {
-            "x-apisports-key": API_KEY // BURASI DÜZELTİLDİ
+            "x-apisports-key": API_KEY 
         }
     })
     .then(response => response.json())
     .then(data => {
+        // YENİ DEDEKTİF SİSTEMİ: API'nin fırlattığı gerçek hatayı ekrana basar
+        if (data.errors && Object.keys(data.errors).length > 0) {
+            alert("API'DEN GELEN HATA: \n" + JSON.stringify(data.errors));
+            btn.innerText = "1. MAÇLARI YÜKLE";
+            btn.style.backgroundColor = "#111";
+            return;
+        }
+
         if (!data.response || data.response.length === 0) {
-            alert("Veri çekilemedi. API anahtarınızı kontrol edin.");
+            alert("API bağlantısı başarılı ama Süper Lig verisi boş geldi!");
             btn.innerText = "1. MAÇLARI YÜKLE";
             btn.style.backgroundColor = "#111";
             return;
@@ -59,8 +67,9 @@ document.getElementById('btn-load-fixtures').addEventListener('click', () => {
     })
     .catch(error => {
         console.error("Hata:", error);
-        alert("Bağlantı Hatası! Lütfen internetinizi kontrol edin.");
+        alert("İnternet veya Tarayıcı Engellemesi! (CORS Hatası olabilir)");
         btn.innerText = "1. MAÇLARI YÜKLE";
+        btn.style.backgroundColor = "#111";
     });
 });
 
