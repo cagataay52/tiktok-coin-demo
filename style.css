@@ -1,30 +1,39 @@
 :root {
     --primary: #FF5722;
     --dark: #0f0f0f;
-    --gray: #212121;
+    --gray: #1a1a1a;
     --light-gray: #f5f5f5;
     --text: #ffffff;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-body { background-color: #111; color: var(--text); font-family: 'Montserrat', sans-serif; display: flex; height: 100vh; overflow: hidden; }
+/* Taşma sorunu body'deki overflow kuralları değiştirilerek çözüldü */
+body { background-color: #080808; color: var(--text); font-family: 'Montserrat', sans-serif; overflow-x: hidden; }
 
-/* PANEL */
-.control-panel { width: 380px; background-color: var(--gray); padding: 30px; border-right: 2px solid var(--primary); z-index: 10; overflow-y: auto; }
-.control-panel h2 { font-family: 'Barlow', sans-serif; font-style: italic; font-weight: 900; color: white; margin-bottom: 25px; text-align: center; text-shadow: 2px 2px 0 var(--primary);}
-.input-group { margin-bottom: 20px; background: #1a1a1a; padding: 15px; border-radius: 8px; border-left: 3px solid var(--primary);}
-.input-group label { font-size: 11px; color: #aaa; font-weight: 800; text-transform: uppercase; margin-bottom: 8px; display: block; }
-.input-group input[type="text"], .input-group input[type="number"], .input-group textarea { width: 100%; padding: 10px; background: #000; border: 1px solid #333; color: white; border-radius: 4px; font-family: 'Montserrat', font-weight: 700; resize: none;}
+.app-container { max-width: 1400px; margin: 0 auto; padding: 40px 20px; }
+.main-header { font-family: 'Barlow', sans-serif; font-style: italic; font-weight: 900; color: white; text-align: center; font-size: 40px; text-shadow: 2px 2px 0 var(--primary); margin-bottom: 50px; }
 
-/* ŞABLON ALANI */
-.templates-container { flex: 1; padding: 40px; display: flex; gap: 50px; overflow-x: auto; background: #141414; align-items: flex-start; }
-.template-wrapper { display: flex; flex-direction: column; gap: 15px; }
-.download-btn { padding: 15px; background: var(--primary); color: white; font-family: 'Barlow'; font-weight: 900; font-size: 20px; border: none; border-radius: 5px; cursor: pointer; transition: 0.3s; box-shadow: 0 5px 15px rgba(255,87,34,0.4);}
-.download-btn:hover { background: white; color: var(--primary); transform: translateY(-2px);}
+/* MODÜL TASARIMI */
+.studio-module { display: flex; background: var(--gray); border-radius: 12px; margin-bottom: 50px; border: 1px solid #333; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+.module-panel { width: 35%; padding: 40px; background: #111; border-right: 3px solid var(--primary); }
+.module-panel h2 { font-family: 'Barlow'; font-weight: 900; font-style: italic; color: var(--primary); margin-bottom: 30px; font-size: 24px; border-bottom: 1px solid #333; padding-bottom: 10px;}
+.module-preview { width: 65%; display: flex; justify-content: center; align-items: center; padding: 40px; background: #0a0a0a; background-image: radial-gradient(circle at center, #1a1a1a 0%, #0a0a0a 100%);}
+
+/* INPUT TASARIMLARI */
+.input-group { margin-bottom: 20px; }
+.input-group label { font-size: 12px; color: #aaa; font-weight: 800; text-transform: uppercase; margin-bottom: 8px; display: block; }
+.input-group input[type="text"], .input-group input[type="number"], .input-group textarea { width: 100%; padding: 12px; background: #000; border: 1px solid #444; color: white; border-radius: 6px; font-family: 'Montserrat', font-weight: 700; resize: none; }
+.input-group input[type="file"] { margin-top: 8px; font-size: 12px; color: #ccc; }
+.download-btn { width: 100%; padding: 15px; background: var(--primary); color: white; font-family: 'Barlow'; font-weight: 900; font-size: 22px; border: none; border-radius: 6px; cursor: pointer; transition: 0.3s; margin-top: 20px; box-shadow: 0 5px 15px rgba(255,87,34,0.3);}
+.download-btn:hover { background: white; color: var(--primary); transform: translateY(-3px);}
+
+/* GÖRSEL DÖNÜŞÜM VE KESİM (Ekrandan Taşmayı Önleyen Özel Kapsayıcı) */
+.preview-wrapper { width: 400px; height: 400px; position: relative; box-shadow: 0 15px 40px rgba(0,0,0,0.9); }
+.reels-wrapper { width: 270px; height: 480px; }
 
 /* ORTAK KART (Hizalamalar standartlaştı) */
-.match-card { width: 800px; height: 800px; background-color: var(--dark); position: relative; overflow: hidden; transform: scale(0.6); transform-origin: top left; margin-bottom: -320px; box-shadow: 0 15px 40px rgba(0,0,0,0.9); }
+.match-card { width: 800px; height: 800px; background-color: var(--dark); position: absolute; top: 0; left: 0; transform: scale(0.5); transform-origin: top left; overflow: hidden; }
 .card-footer { position: absolute; bottom: 20px; width: 100%; text-align: center; font-size: 14px; color: rgba(255,255,255,0.4); font-weight: 900; z-index: 50; letter-spacing: 2px; }
 .bg-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: url('https://images.unsplash.com/photo-1518605368461-1ee7c684e2a6?q=80&w=1000'); background-size: cover; background-position: center; opacity: 0.6; }
 
@@ -44,7 +53,7 @@ body { background-color: #111; color: var(--text); font-family: 'Montserrat', sa
 .mg-venue { font-size: 16px; font-weight: 800; letter-spacing: 1px; color: #ddd; background: rgba(0,0,0,0.5); padding: 5px 15px; border-radius: 20px; margin-top: 5px;}
 .ft-score { font-family: 'Barlow', sans-serif; font-style: italic; font-weight: 900; font-size: 140px; color: var(--primary); text-shadow: 0 0 40px rgba(255,87,34,0.6); padding: 0 20px; line-height: 1; margin-top: -30px;}
 
-/* ÇOKLU GOL ATANLAR KUTUSU (6-7 Oyuncu Desteği) */
+/* ÇOKLU GOL ATANLAR KUTUSU */
 .ft-scorers-container { display: flex; justify-content: space-between; align-items: stretch; width: 85%; margin-bottom: 30px; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,87,34,0.3); border-radius: 10px; padding: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.5);}
 .scorer-list { flex: 1; font-family: 'Montserrat'; font-size: 16px; color: #eee; font-weight: 700; line-height: 1.6;}
 .scorer-list.home { text-align: right; padding-right: 20px; border-right: 2px solid rgba(255,87,34,0.5); }
@@ -52,8 +61,8 @@ body { background-color: #111; color: var(--text); font-family: 'Montserrat', sa
 .scorer-icon { display: flex; align-items: center; justify-content: center; font-size: 24px; padding: 0 15px; opacity: 0.8;}
 
 .mg-bottom { display: flex; flex-direction: column; align-items: center; }
-.mg-predictor { background: #000; padding: 8px 25px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.2); font-size: 14px; font-weight: 900; color: #fff; display: inline-block; margin-bottom: -25px; z-index: 2; position: relative; box-shadow: 0 10px 20px rgba(0,0,0,0.5);}
-.mg-predictor .hl { color: var(--primary); margin: 0 3px; font-size: 18px; }
+.mg-predictor { background: #000; padding: 8px 35px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.2); font-weight: 900; color: #fff; display: inline-block; margin-bottom: -25px; z-index: 2; position: relative; box-shadow: 0 10px 20px rgba(0,0,0,0.5);}
+.mg-predictor .hl { color: var(--primary); margin: 0 8px; font-family: 'Barlow'; }
 .mg-title { font-family: 'Barlow', sans-serif; font-style: italic; font-weight: 900; font-size: 140px; margin: 0; letter-spacing: -2px; text-shadow: 0 0 50px rgba(255,87,34,0.6); line-height: 1;}
 
 /* 3. SON DAKİKA */
@@ -79,7 +88,7 @@ body { background-color: #111; color: var(--text); font-family: 'Montserrat', sa
 .kadro-item-num { color: var(--primary); font-size: 20px; margin-right: 15px; width: 30px; font-style: italic;}
 
 /* 5. REELS (9:16) */
-.tpl-reels { width: 540px; height: 960px; margin-bottom: -400px; background: #000;}
+.tpl-reels { width: 540px; height: 960px; background: #000;}
 .brand-gradient-reels { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.8) 60%, rgba(0,0,0,1) 100%); z-index: 2; }
 .rl-header { position: absolute; top: 80px; width: 100%; text-align: center; z-index: 10; }
 .rl-icon { background: white; color: var(--primary); display: inline-block; padding: 5px 10px; border-radius: 5px; font-size: 20px; margin-bottom: 10px; }
@@ -91,6 +100,6 @@ body { background-color: #111; color: var(--text); font-family: 'Montserrat', sa
 .rl-stat h2 { font-family: 'Barlow', sans-serif; font-weight: 900; font-size: 50px; line-height: 1; color: var(--primary);}
 .rl-stat span { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 14px; color: #ccc; }
 
-::-webkit-scrollbar { width: 8px; height: 8px; }
-::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 4px; }
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 5px; }
 ::-webkit-scrollbar-track { background: #111; }
