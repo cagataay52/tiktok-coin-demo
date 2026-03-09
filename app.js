@@ -1,16 +1,13 @@
-// SOL PANELDEN GİRİLEN VERİLERİ SAĞDAKİ ŞABLONLARA ANINDA (CANLI) AKTARMA
+// SOL PANELDEN GELEN VERİLERİ ŞABLONLARA DAĞITMA
 const inputs = [
     { id: 'inp-home-name', targetClasses: '.out-home-name' },
     { id: 'inp-away-name', targetClasses: '.out-away-name' },
     { id: 'inp-home-score', targetClasses: '.out-home-score' },
     { id: 'inp-away-score', targetClasses: '.out-away-score' },
     { id: 'inp-news-title', targetClasses: '.out-news-title' },
-    { id: 'inp-player-name', targetClasses: '.out-player-name' },
-    { id: 'inp-time', targetClasses: '.out-time' },
-    { id: 'inp-venue', targetClasses: '.out-venue' }
+    { id: 'inp-player-name', targetClasses: '.out-player-name' }
 ];
 
-// Her input'u dinle, yazı yazıldıkça şablonları güncelle
 inputs.forEach(input => {
     document.getElementById(input.id).addEventListener('input', function(e) {
         const value = e.target.value.toUpperCase();
@@ -21,23 +18,20 @@ inputs.forEach(input => {
     });
 });
 
-// ARKA PLAN GÖRSELİ YÜKLEME (Maç Günü ve Reels için)
+// ARKA PLAN FOTOĞRAFI YÜKLEME
 document.getElementById('upload-bg').addEventListener('change', function(e) {
     const file = e.target.files[0];
     if (file) {
         const reader = new FileReader();
         reader.onload = function(event) {
             document.getElementById('bg-mac-gunu').style.backgroundImage = `url('${event.target.result}')`;
-            // Reels için arka planı biraz daha koyu yapıp ekleyelim
-            document.getElementById('bg-reels').style.background = `linear-gradient(to top, #000 0%, transparent 60%), radial-gradient(circle at center, var(--primary) 0%, transparent 50%), url('${event.target.result}')`;
-            document.getElementById('bg-reels').style.backgroundSize = "cover";
-            document.getElementById('bg-reels').style.backgroundPosition = "center";
+            document.getElementById('bg-reels').style.backgroundImage = `url('${event.target.result}')`;
         }
         reader.readAsDataURL(file);
     }
 });
 
-// OYUNCU FOTOĞRAFI YÜKLEME (Son Dakika ve Reels için)
+// OYUNCU FOTOĞRAFI (DEKUPE) YÜKLEME
 document.getElementById('upload-player').addEventListener('change', function(e) {
     const file = e.target.files[0];
     if (file) {
@@ -50,28 +44,29 @@ document.getElementById('upload-player').addEventListener('change', function(e) 
     }
 });
 
-// PNG OLARAK İNDİRME FONKSİYONU
-// Hangi şablonun altındaki butona basarsan, o şablonu yüksek kalitede indirir
+// ULTRA YÜKSEK KALİTE PNG İNDİRME MOTORU
 function downloadTpl(elementId, fileName) {
     const captureArea = document.getElementById(elementId);
     
-    // Geçici olarak scale'i kaldıralım ki tam boyutta fotoğraf çeksin
+    // Geçici olarak scale'i sıfırlıyoruz ki kalite düşmesin
     const originalTransform = captureArea.style.transform;
     captureArea.style.transform = "scale(1)";
     
+    // Butona basıldığında yavaşlama hissi normaldir, 3 katı kalitede render alıyor.
     html2canvas(captureArea, {
-        scale: 2, // 2x kalite (Retina / Instagram standartları için)
-        backgroundColor: "#121212",
+        scale: 3, // Maksimum kalite (Orijinal görseldeki o keskinliği verir)
+        backgroundColor: "#050505",
         useCORS: true,
-        allowTaint: true
+        allowTaint: true,
+        logging: false
     }).then(canvas => {
-        // İndirme işlemi bitince scale'i geri eski haline getir
+        // İşlem bitince arayüzü eski boyutuna küçült
         captureArea.style.transform = originalTransform || "scale(0.6)";
         
-        const imageURL = canvas.toDataURL("image/png");
+        const imageURL = canvas.toDataURL("image/jpeg", 0.95); // Yüksek kaliteli JPEG olarak indir (Boyutu optimize etmek için)
         const downloadLink = document.createElement('a');
         downloadLink.href = imageURL;
-        downloadLink.download = `skoragi-${fileName}.png`;
+        downloadLink.download = `skoragi-${fileName}.jpg`;
         document.body.appendChild(downloadLink);
         downloadLink.click();
         document.body.removeChild(downloadLink);
