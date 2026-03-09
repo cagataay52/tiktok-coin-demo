@@ -1,24 +1,35 @@
 // ==========================================
-// 🌟 YENİ: AVRUPA LİGLERİ TEMA MOTORU 🌟
+// TEMA VE FİLİGRAN KONTROL MOTORU
 // ==========================================
-const themeBtns = document.querySelectorAll('.ts-btn');
+const themeBtns = document.querySelectorAll('.ts-btn:not(#btn-watermark)');
 themeBtns.forEach(btn => {
     btn.addEventListener('click', (e) => {
         const theme = e.target.getAttribute('data-theme');
-        // Body'e tema class'ını ekle, değişkenler anında değişsin
-        document.body.className = theme === 'default' ? '' : `theme-${theme}`;
+        document.body.className = document.body.className.replace(/theme-\w+/g, '').trim();
+        if(theme !== 'default') document.body.classList.add(`theme-${theme}`);
         
-        // Butonların aktiflik durumunu güncelle
         themeBtns.forEach(b => b.classList.remove('active'));
         e.target.classList.add('active');
-        
-        // Temayı hafızaya kaydet
         localStorage.setItem('skoragi_theme', theme);
     });
 });
 
+const btnWatermark = document.getElementById('btn-watermark');
+btnWatermark.addEventListener('click', () => {
+    document.body.classList.toggle('watermark-on');
+    if(document.body.classList.contains('watermark-on')) {
+        btnWatermark.innerText = "🛡️ FİLİGRAN: AÇIK";
+        btnWatermark.style.background = "#ff003c";
+        localStorage.setItem('skoragi_wm', 'on');
+    } else {
+        btnWatermark.innerText = "🛡️ FİLİGRAN: KAPALI";
+        btnWatermark.style.background = "#2a0000";
+        localStorage.setItem('skoragi_wm', 'off');
+    }
+});
+
 // ==========================================
-// YAPAY ZEKA METİN KÜÇÜLTME MOTORU (Auto-Scaler)
+// YARDIMCI FONKSİYONLAR
 // ==========================================
 function autoScaleText() {
     document.querySelectorAll('.auto-scale').forEach(el => {
@@ -80,7 +91,7 @@ function bindImage(inputId, targetIdOrClass, isBackground = false) {
     });
 }
 
-// 1. MG & 2. HT & 3. MS
+// 1, 2, 3. MG, HT, MS
 bindText('mg-home-name', '.out-mg-home-name'); bindText('mg-away-name', '.out-mg-away-name');
 bindText('mg-time', '.out-mg-time', false); bindText('mg-venue', '.out-mg-venue');
 bindImage('mg-home-logo', '.out-mg-home-logo'); bindImage('mg-away-logo', '.out-mg-away-logo'); bindImage('mg-bg', 'bg-mac-gunu', true);
@@ -125,8 +136,7 @@ document.getElementById('k-lineup').addEventListener('input', function(e) {
 });
 
 // 6. TRANSFER
-bindText('tr-name', '.out-tr-name');
-bindImage('tr-logo', '.out-tr-logo'); bindImage('tr-img', '.out-tr-img');
+bindText('tr-name', '.out-tr-name'); bindImage('tr-logo', '.out-tr-logo'); bindImage('tr-img', '.out-tr-img');
 const trProbInput = document.getElementById('tr-prob');
 if (trProbInput) {
     trProbInput.addEventListener('input', function(e) {
@@ -143,23 +153,36 @@ if (trProbInput) {
     });
 }
 
-// 7. QUOTE
+// 7-12 Modülleri
 bindText('qt-author', '.out-qt-author'); bindText('qt-text', '.out-qt-text', false); bindImage('qt-img', '.out-qt-img');
-// 8. H2H
 bindText('h2h-p1-name', '.out-h2h-p1-name'); bindText('h2h-p2-name', '.out-h2h-p2-name'); bindText('h2h-p1-stat', '.out-h2h-p1-stat', false); bindText('h2h-p2-stat', '.out-h2h-p2-stat', false); bindImage('h2h-p1-img', '.out-h2h-p1-img'); bindImage('h2h-p2-img', '.out-h2h-p2-img');
-// 9. STANDINGS
 bindText('pd-t1-name', '.out-pd-t1-name'); bindText('pd-t1-pts', '.out-pd-t1-pts', false); bindImage('pd-t1-logo', '.out-pd-t1-logo');
 bindText('pd-t2-name', '.out-pd-t2-name'); bindText('pd-t2-pts', '.out-pd-t2-pts', false); bindImage('pd-t2-logo', '.out-pd-t2-logo');
 bindText('pd-t3-name', '.out-pd-t3-name'); bindText('pd-t3-pts', '.out-pd-t3-pts', false); bindImage('pd-t3-logo', '.out-pd-t3-logo');
-// 10. REFEREE
 bindText('ref-name', '.out-ref-name'); bindImage('ref-img', '.out-ref-img'); bindImage('ref-logo-home', '.out-ref-logo-home'); bindImage('ref-logo-away', '.out-ref-logo-away');
-// 11. SON DAKİKA
 bindText('sd-news-title', '.out-sd-title', false, true); bindImage('sd-player-img', '.out-sd-player'); bindImage('sd-bg', 'bg-sondakika', true);
-// 12. REELS
 bindText('r-player-name', '.out-r-name'); bindImage('r-player-img', '.out-r-player'); bindImage('r-bg', 'bg-reels', true);
 
+// 13. MOTM
+bindText('motm-name', '.out-motm-name'); bindImage('motm-img', '.out-motm-img'); bindImage('motm-logo', '.out-motm-logo');
+bindText('motm-s1-lbl', '.out-motm-s1-lbl'); bindText('motm-s1-val', '.out-motm-s1-val', false);
+bindText('motm-s2-lbl', '.out-motm-s2-lbl'); bindText('motm-s2-val', '.out-motm-s2-val', false);
+
+// 14. MILESTONE
+bindText('mil-name', '.out-mil-name'); bindText('mil-num', '.out-mil-num', false); bindText('mil-text', '.out-mil-text'); bindImage('mil-img', '.out-mil-img');
+
+// 15. FIXTURE
+bindImage('fix-img', '.out-fix-img');
+bindImage('fix1-logo', '.out-fix1-logo'); bindText('fix1-date', '.out-fix1-date'); bindText('fix1-tour', '.out-fix1-tour');
+bindImage('fix2-logo', '.out-fix2-logo'); bindText('fix2-date', '.out-fix2-date'); bindText('fix2-tour', '.out-fix2-tour');
+bindImage('fix3-logo', '.out-fix3-logo'); bindText('fix3-date', '.out-fix3-date'); bindText('fix3-tour', '.out-fix3-tour');
+
+// 16. HEALTH
+bindText('hlt-name', '.out-hlt-name'); bindImage('hlt-img', '.out-hlt-img'); bindText('hlt-type', '.out-hlt-type'); bindText('hlt-date', '.out-hlt-date');
+
+
 // ==========================================
-// 💾 OTOMATİK KAYIT VE TEMA YÜKLEME 💾
+// 💾 OTOMATİK KAYIT VE AYAR YÜKLEME 💾
 // ==========================================
 const savedData = JSON.parse(localStorage.getItem('skoragi_data')) || {};
 document.querySelectorAll('input[type="text"], input[type="number"], textarea').forEach(el => {
@@ -174,12 +197,17 @@ window.addEventListener('load', () => {
     document.querySelectorAll('input[type="text"], input[type="number"], textarea').forEach(el => { el.dispatchEvent(new Event('input')); });
     autoScaleText(); setTimeout(autoScaleSimpleText, 100);
     
-    // Temayı Yükle
     const savedTheme = localStorage.getItem('skoragi_theme') || 'default';
     if (savedTheme !== 'default') {
-        document.body.className = `theme-${savedTheme}`;
+        document.body.classList.add(`theme-${savedTheme}`);
         document.querySelector(`[data-theme="${savedTheme}"]`).classList.add('active');
         document.querySelector(`[data-theme="default"]`).classList.remove('active');
+    }
+    
+    if (localStorage.getItem('skoragi_wm') === 'on') {
+        document.body.classList.add('watermark-on');
+        btnWatermark.innerText = "🛡️ FİLİGRAN: AÇIK";
+        btnWatermark.style.background = "#ff003c";
     }
 });
 
@@ -198,11 +226,9 @@ function downloadTpl(elementId, fileName) {
     const originalTransform = captureArea.style.transform;
     const originalOverflow = wrapper.style.overflow;
 
-    // Kesilme ve taşmaları engellemek için kutuyu geçici olarak serbest bırak
     wrapper.style.overflow = "visible";
     captureArea.style.transform = "scale(1)";
 
-    // Tarayıcının resim basıklığını düzeltmesi için 0.3 saniye bekle
     setTimeout(() => {
         html2canvas(captureArea, { 
             scale: 3, 
@@ -225,7 +251,7 @@ function downloadTpl(elementId, fileName) {
             btn.style.backgroundColor = "";
         }).catch(err => {
             console.error("İndirme Hatası:", err);
-            alert("İndirme sırasında bir hata oluştu. Lütfen sayfayı yenileyip tekrar deneyin.");
+            alert("İndirme sırasında hata oluştu. Sayfayı yenileyin.");
             captureArea.style.transform = originalTransform;
             wrapper.style.overflow = originalOverflow;
             btn.innerText = originalBtnText;
