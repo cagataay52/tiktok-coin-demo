@@ -23,9 +23,9 @@
 
         <div class="studio-module"><div class="module-panel">
             <h2>1. MAÇ GÜNÜ</h2>
-            <div class="input-group"><label>Ev</label><input type="text" id="mg-home-name" value="FENERBAHÇE"><input type="file" id="mg-home-logo"></div>
-            <div class="input-group"><label>Dep</label><input type="text" id="mg-away-name" value="GALATASARAY"><input type="file" id="mg-away-logo"></div>
-            <div class="input-group"><label>Bilgi</label><div style="display:flex;gap:5px;"><input type="text" id="mg-time" value="20:00" style="flex:1;"><input type="text" id="mg-venue" value="ŞÜKRÜ SARACOĞLU" style="flex:3;"></div></div>
+            <div class="input-group"><label>Ev Sahibi</label><input type="text" id="mg-home-name" value="FENERBAHÇE"><input type="file" id="mg-home-logo"></div>
+            <div class="input-group"><label>Deplasman</label><input type="text" id="mg-away-name" value="GALATASARAY"><input type="file" id="mg-away-logo"></div>
+            <div class="input-group"><label>Maç Bilgileri</label><div style="display:flex;gap:5px;"><input type="text" id="mg-time" value="20:00" style="flex:1;"><input type="text" id="mg-venue" value="ŞÜKRÜ SARACOĞLU" style="flex:3;"></div></div>
             <div class="input-group"><label>Arka Plan</label><input type="file" id="mg-bg"></div>
             <button class="download-btn" onclick="downloadTpl('tpl-mac-gunu', 'mac-gunu')">İNDİR</button>
         </div><div class="module-preview"><div class="preview-wrapper"><div class="match-card" id="tpl-mac-gunu">
@@ -48,7 +48,7 @@
         </div><div class="module-preview"><div class="preview-wrapper"><div class="match-card" id="tpl-ilk-yari">
             <div class="bg-layer" id="bg-ilk-yari" style="opacity:0.3;"></div><div class="brand-glow"></div><div class="brand-gradient-bottom"></div>
             <div class="ms-content">
-                <div class="iy-badge crystal-panel neon-glow">45' HT</div>
+                <div class="iy-badge crystal-panel neon-glow">İLK YARI</div>
                 <div class="ft-scoreboard" style="margin-top:10px;">
                     <div class="ft-team"><div class="premium-logo-container"><img src="https://media.api-sports.io/football/teams/9.png" class="mg-logo out-iy-home-logo"></div><span class="mg-name out-iy-home-name auto-text">FENERBAHÇE</span></div>
                     <div class="ft-score neon-text"><span class="out-iy-home-score">1</span> - <span class="out-iy-away-score">0</span></div>
@@ -67,13 +67,13 @@
         </div><div class="module-preview"><div class="preview-wrapper"><div class="match-card" id="tpl-mac-sonucu">
             <div class="bg-layer" id="bg-mac-sonucu" style="opacity:0.3;"></div><div class="brand-glow"></div><div class="brand-gradient-bottom"></div>
             <div class="ms-content">
-                <div class="iy-badge crystal-panel neon-glow" style="font-size:20px;letter-spacing:2px;">FULL TIME</div>
+                <div class="iy-badge crystal-panel neon-glow" style="font-size:20px;letter-spacing:2px;">MAÇ SONUCU</div>
                 <div class="ft-scoreboard" style="margin-top:-10px;">
                     <div class="ft-team"><div class="premium-logo-container"><img src="https://media.api-sports.io/football/teams/9.png" class="mg-logo out-ms-home-logo"></div><span class="mg-name out-ms-home-name auto-text">FENERBAHÇE</span></div>
                     <div class="ft-score neon-text"><span class="out-ms-home-score">2</span> - <span class="out-ms-away-score">1</span></div>
                     <div class="ft-team"><div class="premium-logo-container"><img src="https://media.api-sports.io/football/teams/11.png" class="mg-logo out-ms-away-logo"></div><span class="mg-name out-ms-away-name auto-text">GALATASARAY</span></div>
                 </div>
-                <div class="ft-scorers-container crystal-panel neon-border"><div class="scorer-list home out-ms-home-scorers auto-text">Dzeko 12'<br>Szymanski 45'</div><div class="scorer-icon neon-text-color">•</div><div class="scorer-list away out-ms-away-scorers auto-text">Icardi 34'</div></div>
+                <div class="ft-scorers-container crystal-panel neon-border"><div class="scorer-list home out-ms-home-scorers auto-text">Dzeko 12'<br>Szymanski 45'</div><div class="scorer-icon neon-text-color">⚽</div><div class="scorer-list away out-ms-away-scorers auto-text">Icardi 34'</div></div>
                 <div class="mg-bottom" style="margin-top:0;"><h1 class="ft-main-title">MAÇ SONUCU</h1></div>
             </div><div class="card-footer">@skoragi</div>
         </div></div></div></div>
@@ -103,7 +103,7 @@
         <div class="studio-module"><div class="module-panel">
             <h2>5. İLK 11 KADROSU</h2>
             <div class="input-group"><label>Logo</label><input type="file" id="k-logo"></div>
-            <div class="input-group"><label>Kadro</label><textarea id="k-lineup" rows="11">Livakovic&#10;Osayi&#10;Becao&#10;Djiku&#10;Ferdi&#10;Fred&#10;İsmail&#10;İrfan Can&#10;Szymanski&#10;Tadic&#10;Dzeko</textarea></div>
+            <div class="input-group"><label>Kadro (Alt Alta Yazın)</label><textarea id="k-lineup" rows="11">Livakovic&#10;Osayi&#10;Becao&#10;Djiku&#10;Ferdi&#10;Fred&#10;İsmail&#10;İrfan Can&#10;Szymanski&#10;Tadic&#10;Dzeko</textarea></div>
             <div class="input-group"><label>Arka Plan</label><input type="file" id="k-bg"></div>
             <button class="download-btn" onclick="downloadTpl('tpl-kadro', 'ilk-11')">İNDİR</button>
         </div><div class="module-preview"><div class="preview-wrapper"><div class="match-card tpl-kadro" id="tpl-kadro">
@@ -126,7 +126,7 @@
             <div class="tr-bottom crystal-panel neon-border">
                 <h1 class="tr-title out-tr-name auto-text">ANDERSON TALISCA</h1>
                 <div id="tr-prob-container"><div class="tr-bar-bg"><div class="tr-bar-fill neon-glow" id="out-tr-bar" style="width: 85%;"></div></div><h3 class="tr-prob-text">TRANSFER İHTİMALİ: <span class="neon-text-color out-tr-prob">%85</span></h3></div>
-                <div id="tr-done-container" style="display:none;"><div class="tr-done-stamp neon-glow">ANLAŞMA TAMAM</div></div>
+                <div id="tr-done-container" style="display:none;"><div class="tr-done-stamp neon-glow">🤝 ANLAŞMA TAMAM</div></div>
             </div><div class="card-footer">@skoragi</div>
         </div></div></div></div>
 
@@ -148,8 +148,8 @@
 
         <div class="studio-module"><div class="module-panel">
             <h2>8. KARŞILAŞTIRMA ⚔️</h2>
-            <div class="input-group"><label>Sol (İsim, Foto, Stat)</label><div style="display:flex;gap:5px;"><input type="text" id="h2h-p1-name" value="DZEKO" style="flex:2;"><input type="number" id="h2h-p1-stat" value="15" style="flex:1;"></div><input type="file" id="h2h-p1-img"></div>
-            <div class="input-group"><label>Sağ (İsim, Foto, Stat)</label><div style="display:flex;gap:5px;"><input type="text" id="h2h-p2-name" value="ICARDI" style="flex:2;"><input type="number" id="h2h-p2-stat" value="14" style="flex:1;"></div><input type="file" id="h2h-p2-img"></div>
+            <div class="input-group"><label>Sol (İsim, Foto, Gol)</label><div style="display:flex;gap:5px;"><input type="text" id="h2h-p1-name" value="DZEKO" style="flex:2;"><input type="number" id="h2h-p1-stat" value="15" style="flex:1;"></div><input type="file" id="h2h-p1-img"></div>
+            <div class="input-group"><label>Sağ (İsim, Foto, Gol)</label><div style="display:flex;gap:5px;"><input type="text" id="h2h-p2-name" value="ICARDI" style="flex:2;"><input type="number" id="h2h-p2-stat" value="14" style="flex:1;"></div><input type="file" id="h2h-p2-img"></div>
             <button class="download-btn" onclick="downloadTpl('tpl-h2h', 'karsilastirma')">İNDİR</button>
         </div><div class="module-preview"><div class="preview-wrapper"><div class="match-card tpl-h2h" id="tpl-h2h">
             <div class="h2h-bg-left"></div><div class="h2h-bg-right"></div>
@@ -195,7 +195,9 @@
             <div class="input-group"><label>Arka Plan</label><input type="file" id="sd-bg"></div>
             <button class="download-btn" onclick="downloadTpl('tpl-son-dakika', 'son-dakika')">İNDİR</button>
         </div><div class="module-preview"><div class="preview-wrapper"><div class="match-card tpl-sondakika" id="tpl-son-dakika">
-            <div class="bg-layer" id="bg-sondakika" style="opacity:0.2;"></div><div class="brand-glow" style="background: radial-gradient(circle at top left, var(--bg-grad-1) 0%, transparent 80%);"></div><div class="sd-pattern"></div>
+            <div class="bg-layer" id="bg-sondakika" style="opacity:0.2;"></div>
+            <div class="brand-glow" style="background: radial-gradient(circle at top left, var(--bg-grad-1) 0%, transparent 80%);"></div>
+            <div class="sd-pattern"></div>
             <div class="sd-big-text"><h1>SON<br>DAKİKA</h1></div>
             <div class="sd-box crystal-panel neon-border">
                 <div class="sd-box-left"><img src="https://creazilla-store.fra1.digitaloceanspaces.com/cliparts/3133642/soccer-player-clipart-xl.png" id="out-sd-player" class="auto-resize-img"></div>
@@ -213,15 +215,15 @@
             <div class="bg-layer" id="bg-reels" style="opacity: 0.6;"></div><div class="brand-glow"></div><div class="reels-fade"></div>
             <div class="rl-header"><h2 class="rl-tag neon-text">HAFTANIN<br>OYUNCUSU:</h2><h1 class="rl-name out-r-name auto-text">EDİN DZEKO</h1></div>
             <img src="https://creazilla-store.fra1.digitaloceanspaces.com/cliparts/3133642/soccer-player-clipart-xl.png" class="rl-player" id="out-r-player">
-            <div class="rl-stats crystal-panel neon-border"><div class="rl-stat"><h2>6</h2><span>Goals</span></div><div class="rl-stat"><h2>1</h2><span>Assists</span></div><div class="rl-stat"><h2>25%</h2><span>Pass %</span></div></div>
+            <div class="rl-stats crystal-panel neon-border"><div class="rl-stat"><h2>6</h2><span>GOL</span></div><div class="rl-stat"><h2>1</h2><span>ASİST</span></div><div class="rl-stat"><h2>25%</h2><span>PAS %</span></div></div>
             <div class="card-footer" style="bottom: 20px;">@skoragi</div>
         </div></div></div></div>
 
         <div class="studio-module"><div class="module-panel">
-            <h2>13. MAÇIN ADAMI (MOTM) 🏆</h2>
+            <h2>13. MAÇIN ADAMI 🏆</h2>
             <div class="input-group"><label>Oyuncu Adı</label><input type="text" id="motm-name" value="DUSAN TADIC"></div>
-            <div class="input-group"><label>Oyuncu Fotoğrafı</label><input type="file" id="motm-img"></div>
-            <div class="input-group"><label>Arka Plan Takım Logosu</label><input type="file" id="motm-logo"></div>
+            <div class="input-group"><label>Fotoğraf</label><input type="file" id="motm-img"></div>
+            <div class="input-group"><label>Arka Plan Logosu</label><input type="file" id="motm-logo"></div>
             <div class="input-group"><label>İstatistik 1 (Başlık - Değer)</label><div style="display:flex;gap:5px;"><input type="text" id="motm-s1-lbl" value="REYTING" style="flex:2;"><input type="text" id="motm-s1-val" value="9.2" style="flex:1;"></div></div>
             <div class="input-group"><label>İstatistik 2 (Başlık - Değer)</label><div style="display:flex;gap:5px;"><input type="text" id="motm-s2-lbl" value="ASİST" style="flex:2;"><input type="text" id="motm-s2-val" value="2" style="flex:1;"></div></div>
             <button class="download-btn" onclick="downloadTpl('tpl-motm', 'motm')">İNDİR</button>
@@ -230,7 +232,7 @@
             <img src="https://media.api-sports.io/football/teams/9.png" class="motm-bg-logo out-motm-logo">
             <img src="https://creazilla-store.fra1.digitaloceanspaces.com/cliparts/3133642/soccer-player-clipart-xl.png" class="tr-player-img out-motm-img" style="max-height: 650px; bottom: 120px;">
             <div class="motm-panel crystal-panel neon-border">
-                <h3 class="neon-text-color">MAN OF THE MATCH</h3>
+                <h3 class="neon-text-color">MAÇIN ADAMI</h3>
                 <h1 class="out-motm-name auto-text">DUSAN TADIC</h1>
                 <div class="motm-stats">
                     <div class="m-stat"><span class="out-motm-s1-lbl">REYTING</span><h2 class="out-motm-s1-val">9.2</h2></div>
@@ -243,8 +245,8 @@
             <h2>14. REKOR / DALYA 🚀</h2>
             <div class="input-group"><label>Oyuncu Adı</label><input type="text" id="mil-name" value="FERDİ KADIOĞLU"></div>
             <div class="input-group"><label>Büyük Sayı (100, 50 vb.)</label><input type="text" id="mil-num" value="100"></div>
-            <div class="input-group"><label>Kutlama Metni</label><input type="text" id="mil-text" value="SÜPER LİG MAÇI"></div>
-            <div class="input-group"><label>Oyuncu Fotoğrafı</label><input type="file" id="mil-img"></div>
+            <div class="input-group"><label>Metin</label><input type="text" id="mil-text" value="SÜPER LİG MAÇI"></div>
+            <div class="input-group"><label>Fotoğraf</label><input type="file" id="mil-img"></div>
             <button class="download-btn" onclick="downloadTpl('tpl-milestone', 'rekor')">İNDİR</button>
         </div><div class="module-preview"><div class="preview-wrapper"><div class="match-card tpl-milestone" id="tpl-milestone">
             <div class="brand-glow" style="opacity: 0.8;"></div>
@@ -257,11 +259,11 @@
         </div></div></div></div>
 
         <div class="studio-module"><div class="module-panel">
-            <h2>15. GELECEK FİKSTÜR 🗓️</h2>
-            <div class="input-group"><label>Sol Kısım Fotoğrafı (Hoca/Oyuncu)</label><input type="file" id="fix-img"></div>
+            <h2>15. FİKSTÜR 🗓️</h2>
+            <div class="input-group"><label>Sol Kısım (Hoca/Oyuncu)</label><input type="file" id="fix-img"></div>
             <div class="input-group" style="background:#111;"><label style="color:var(--primary);">Maç 1 (Logo - Tarih - Turnuva)</label><input type="file" id="fix1-logo"><div style="display:flex;gap:5px;"><input type="text" id="fix1-date" value="24 EKİM 20:00" style="flex:2;"><input type="text" id="fix1-tour" value="SÜPER LİG" style="flex:2;"></div></div>
-            <div class="input-group" style="background:#111;"><label style="color:var(--primary);">Maç 2 (Logo - Tarih - Turnuva)</label><input type="file" id="fix2-logo"><div style="display:flex;gap:5px;"><input type="text" id="fix2-date" value="28 EKİM 21:00" style="flex:2;"><input type="text" id="fix2-tour" value="AVRUPA LİGİ" style="flex:2;"></div></div>
-            <div class="input-group" style="background:#111;"><label style="color:var(--primary);">Maç 3 (Logo - Tarih - Turnuva)</label><input type="file" id="fix3-logo"><div style="display:flex;gap:5px;"><input type="text" id="fix3-date" value="02 KASIM 19:00" style="flex:2;"><input type="text" id="fix3-tour" value="SÜPER LİG" style="flex:2;"></div></div>
+            <div class="input-group" style="background:#111;"><label style="color:var(--primary);">Maç 2</label><input type="file" id="fix2-logo"><div style="display:flex;gap:5px;"><input type="text" id="fix2-date" value="28 EKİM 21:00" style="flex:2;"><input type="text" id="fix2-tour" value="AVRUPA LİGİ" style="flex:2;"></div></div>
+            <div class="input-group" style="background:#111;"><label style="color:var(--primary);">Maç 3</label><input type="file" id="fix3-logo"><div style="display:flex;gap:5px;"><input type="text" id="fix3-date" value="02 KASIM 19:00" style="flex:2;"><input type="text" id="fix3-tour" value="SÜPER LİG" style="flex:2;"></div></div>
             <button class="download-btn" onclick="downloadTpl('tpl-fixture', 'gelecek-fikstur')">İNDİR</button>
         </div><div class="module-preview"><div class="preview-wrapper"><div class="match-card tpl-fixture" id="tpl-fixture">
             <div class="brand-glow" style="background: radial-gradient(circle at right, var(--bg-grad-1) 0%, transparent 80%);"></div>
@@ -277,9 +279,9 @@
         <div class="studio-module"><div class="module-panel">
             <h2>16. SAĞLIK RAPORU 🏥</h2>
             <div class="input-group"><label>Oyuncu Adı</label><input type="text" id="hlt-name" value="FRED"></div>
-            <div class="input-group"><label>Oyuncu Fotoğrafı (Siyah Beyaz Olur)</label><input type="file" id="hlt-img"></div>
-            <div class="input-group"><label>Sakatlık Türü</label><input type="text" id="hlt-type" value="KAS YIRTIĞI"></div>
-            <div class="input-group"><label>Tahmini Dönüş</label><input type="text" id="hlt-date" value="3 HAFTA"></div>
+            <div class="input-group"><label>Siyah/Beyaz Fotoğrafı</label><input type="file" id="hlt-img"></div>
+            <div class="input-group"><label>Sakatlık</label><input type="text" id="hlt-type" value="KAS YIRTIĞI"></div>
+            <div class="input-group"><label>Dönüş</label><input type="text" id="hlt-date" value="3 HAFTA"></div>
             <button class="download-btn" onclick="downloadTpl('tpl-health', 'saglik-raporu')">İNDİR</button>
         </div><div class="module-preview"><div class="preview-wrapper"><div class="match-card tpl-health" id="tpl-health">
             <div class="hlt-glow"></div>
