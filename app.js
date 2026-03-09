@@ -2,7 +2,7 @@
 // 1. OTOMATİK API MOTORU (SÜPER LİG FİKSTÜRÜ)
 // ==========================================
 const API_KEY = "387077a621a58f5c5cde81cb20db5721"; 
-let allMatches = []; // Verileri hafızada tutmak için
+let allMatches = []; 
 
 // 1. Aşama: Süper Lig Maçlarını Yükle
 document.getElementById('btn-load-fixtures').addEventListener('click', () => {
@@ -10,12 +10,11 @@ document.getElementById('btn-load-fixtures').addEventListener('click', () => {
     btn.innerText = "YÜKLENİYOR...";
     btn.style.backgroundColor = "#555";
 
-    // API-Sports: Süper Lig (ID: 203) - 2025/2026 Sezonu İstediği
+    // API-Sports: Süper Lig (ID: 203) - 2025/2026 Sezonu
     fetch(`https://v3.football.api-sports.io/fixtures?league=203&season=2025`, {
         method: "GET",
         headers: {
-            "x-rapidapi-host": "v3.football.api-sports.io",
-            "x-rapidapi-key": API_KEY
+            "x-apisports-key": API_KEY // BURASI DÜZELTİLDİ
         }
     })
     .then(response => response.json())
@@ -31,7 +30,7 @@ document.getElementById('btn-load-fixtures').addEventListener('click', () => {
         const select = document.getElementById('select-match');
         select.innerHTML = '<option value="">Maç Seçin...</option>';
 
-        // Maçları tarihe göre sırala (En yakın tarihliler üstte olsun diye tersten sıralıyoruz)
+        // Maçları tarihe göre sırala
         allMatches.sort((a, b) => new Date(b.fixture.date) - new Date(a.fixture.date));
 
         allMatches.forEach(match => {
@@ -42,7 +41,6 @@ document.getElementById('btn-load-fixtures').addEventListener('click', () => {
             const timeStr = dateObj.toLocaleTimeString('tr-TR', {hour: '2-digit', minute:'2-digit'});
             const status = match.fixture.status.short;
             
-            // Eğer maç bitmişse (FT) skoru göster, bitmediyse saati göster
             const scoreOrTime = (status === 'FT' || status === 'PEN') 
                 ? `${match.goals.home} - ${match.goals.away}` 
                 : timeStr;
@@ -53,7 +51,6 @@ document.getElementById('btn-load-fixtures').addEventListener('click', () => {
             select.appendChild(option);
         });
 
-        // Butonu yeşil yap ve diğer menüleri görünür hale getir
         btn.innerText = "FİKSTÜR GÜNCELLENDİ ✔";
         btn.style.backgroundColor = "#28a745";
         
@@ -76,30 +73,24 @@ document.getElementById('btn-apply-match').addEventListener('click', () => {
         return;
     }
 
-    // Seçilen maçı hafızadaki listeden bul (Tekrar API'ye gitmiyoruz!)
     const match = allMatches.find(m => m.fixture.id == matchId);
     if(!match) return;
 
-    // Temel veriler
     const homeTeam = match.teams.home;
     const awayTeam = match.teams.away;
     const goals = match.goals;
     
-    // Saat ve Stadyum
     const matchTime = new Date(match.fixture.date).toLocaleTimeString('tr-TR', {hour: '2-digit', minute:'2-digit'});
     const matchVenue = match.fixture.venue.name || "Stadyum Belirsiz";
 
-    // Paneldeki input kutularını doldur
     document.getElementById('inp-home-name').value = homeTeam.name.toUpperCase();
     document.getElementById('inp-away-name').value = awayTeam.name.toUpperCase();
     document.getElementById('inp-home-score').value = goals.home !== null ? goals.home : 0;
     document.getElementById('inp-away-score').value = goals.away !== null ? goals.away : 0;
 
-    // Saat ve Stadyumu doğrudan HTML'e yaz
     document.querySelectorAll('.out-match-time').forEach(el => el.innerText = matchTime);
     document.querySelectorAll('.out-match-venue').forEach(el => el.innerText = matchVenue.toUpperCase());
 
-    // Inputları tetikle ki şablondaki yazılar anında güncellensin
     inputs.forEach(input => {
         const el = document.getElementById(input.id);
         if(el) {
@@ -107,11 +98,9 @@ document.getElementById('btn-apply-match').addEventListener('click', () => {
         }
     });
 
-    // Logoları HTML'e yaz
     document.querySelectorAll('.out-home-logo').forEach(img => img.src = homeTeam.logo);
     document.querySelectorAll('.out-away-logo').forEach(img => img.src = awayTeam.logo);
     
-    // Aktarma butonunu yeşil yakıp söndür
     const btnApply = document.getElementById('btn-apply-match');
     btnApply.innerText = "AKTARILDI ✔";
     btnApply.style.backgroundColor = "#28a745";
