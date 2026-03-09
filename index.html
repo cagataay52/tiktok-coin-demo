@@ -13,9 +13,15 @@
         <h2>🎛️ SKOR AĞI PANELİ</h2>
 
         <div class="input-group" style="background: #2a1610; padding: 15px; border-radius: 8px; border: 1px solid #FF5722;">
-            <label style="color: #FF5722;">⚡ Canlı API Verisi Çek</label>
-            <input type="text" id="inp-match-id" placeholder="Maç ID'si (Örn: 1040523)" style="margin-bottom: 10px; border-color: #FF5722;">
-            <button id="btn-fetch-api" style="width: 100%; padding: 12px; background: #FF5722; color: white; border: none; font-weight: bold; cursor: pointer; border-radius: 4px; font-family: 'Barlow'; font-size: 16px;">VERİLERİ GETİR</button>
+            <label style="color: #FF5722; font-size: 14px; margin-bottom: 15px;">⚡ Canlı Süper Lig Fikstürü</label>
+            
+            <button id="btn-load-fixtures" style="width: 100%; padding: 10px; background: #111; color: #fff; border: 1px solid #FF5722; cursor: pointer; border-radius: 4px; font-family: 'Barlow'; font-size: 16px; margin-bottom: 10px; transition: 0.3s;">1. MAÇLARI YÜKLE</button>
+            
+            <select id="select-match" style="width: 100%; padding: 12px; background: #000; border: 1px solid #FF5722; color: white; border-radius: 4px; font-family: 'Montserrat'; font-weight: bold; margin-bottom: 10px; display: none;">
+                <option value="">Maç Seçin...</option>
+            </select>
+            
+            <button id="btn-apply-match" style="width: 100%; padding: 12px; background: #FF5722; color: white; border: none; font-weight: bold; cursor: pointer; border-radius: 4px; font-family: 'Barlow'; font-size: 18px; display: none;">2. ŞABLONA AKTAR</button>
         </div>
         <hr style="border: 0; border-top: 1px solid #333; margin-bottom: 20px;">
         
@@ -66,8 +72,8 @@
                             <span class="mg-name out-home-name">GALATASARAY</span>
                         </div>
                         <div class="mg-center">
-                            <div class="mg-time">15:00</div>
-                            <div class="mg-venue">RAMS Park</div>
+                            <div class="mg-time out-match-time">15:00</div>
+                            <div class="mg-venue out-match-venue">RAMS Park</div>
                         </div>
                         <div class="mg-team">
                             <img src="https://media.api-sports.io/football/teams/9.png" class="mg-logo out-away-logo">
