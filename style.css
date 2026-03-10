@@ -1,5 +1,5 @@
 /* ========================================= */
-/* 🌟 NİHAİ DİNAMİK AVRUPA TEMA MOTORU 🌟      */
+/* 🌟 GLASSMORPHISM & ALTIN ORAN CSS 🌟        */
 /* ========================================= */
 :root {
     --primary: #FF5722; 
@@ -51,9 +51,9 @@ body { background-color: var(--gray); color: var(--text); font-family: 'Montserr
 .studio-module { display: flex; background: var(--gray); border-radius: 16px; margin-bottom: 50px; border: 1px solid #222; box-shadow: 0 40px 80px rgba(0,0,0,1); transition: background 0.5s;}
 .module-panel { width: 35%; padding: 40px; background: rgba(0,0,0,0.8); border-right: 3px solid var(--primary); transition: 0.5s; }
 .module-panel h2 { font-family: 'Barlow'; font-weight: 900; font-style: italic; color: #fff; margin-bottom: 30px; font-size: 26px; border-bottom: 1px solid #222; padding-bottom: 10px;}
-.module-preview { width: 65%; display: flex; justify-content: center; align-items: center; padding: 30px; background: var(--gray); transition: 0.5s;}
+.module-preview { width: 65%; display: flex; justify-content: center; align-items: center; padding: 30px; background: var(--gray); background-image: radial-gradient(circle at center, rgba(255,255,255,0.02) 0%, transparent 100%); transition: 0.5s;}
 
-/* 🚨 4:5 VERTIKAL KART YAPISI 🚨 */
+/* 🚨 4:5 VERTIKAL KART YAPISI (1080x1350) 🚨 */
 .preview-wrapper { width: 360px; height: 450px; position: relative; box-shadow: 0 20px 60px rgba(0,0,0,1); overflow: visible; } 
 .match-card { width: 1080px; height: 1350px; background-color: var(--dark); position: absolute; top: 0; left: 0; transform: scale(0.33333); transform-origin: top left; overflow: hidden; backface-visibility: hidden; border: 1px solid #111; transition: background-color 0.5s;}
 .preview-wrapper.reels-wrapper { width: 253px; height: 450px; } 
@@ -70,18 +70,18 @@ body.watermark-on .match-card::after { content: ""; position: absolute; top: 0; 
 .glass-orb-2 { width: 500px; height: 500px; bottom: -50px; right: -50px; background: var(--primary); opacity: 0.3;}
 
 .glass-panel {
-    background: rgba(20, 20, 25, 0.4); /* Gerçekçi yarı saydam koyu taban */
+    background: rgba(20, 20, 25, 0.4); 
     backdrop-filter: blur(25px) saturate(180%);
     -webkit-backdrop-filter: blur(25px) saturate(180%);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-top: 1px solid rgba(255, 255, 255, 0.2); /* Üst ışık yansıması */
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
     border-left: 1px solid rgba(255, 255, 255, 0.15);
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(255, 255, 255, 0.02);
     border-radius: 24px;
-    z-index: 10; /* Kürelerin üstünde durur */
+    z-index: 10;
 }
 
-/* 📐 AKILLI FLEXBOX LAYOUT MİMARİSİ (Çarpmayı ve Kaymayı Önler) 📐 */
+/* 📐 AKILLI FLEXBOX LAYOUT MİMARİSİ (Çarpmayı Önler) 📐 */
 .card-layout { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: space-between; padding: 100px 60px 120px 60px; z-index: 10;}
 .card-header { display: flex; justify-content: center; align-items: center; width: 100%;}
 .card-body { display: flex; flex: 1; align-items: center; justify-content: center; width: 100%; position: relative;}
@@ -104,7 +104,6 @@ body.watermark-on .match-card::after { content: ""; position: absolute; top: 0; 
 .input-group input[type="text"], .input-group input[type="number"], .input-group textarea { width: 100%; padding: 14px; background: #050505; border: 1px solid #1a1a1a; color: white; border-radius: 8px; font-family: 'Montserrat', font-weight: 700; resize: none; transition: 0.3s;}
 .input-group input:focus, .input-group textarea:focus { border-color: var(--primary); outline: none; background: #080808;}
 .download-btn { width: 100%; padding: 18px; background: var(--primary); color: #000; font-family: 'Barlow'; font-weight: 900; font-size: 22px; border: none; border-radius: 8px; cursor: pointer; transition: 0.3s; margin-top: 20px;}
-.download-btn:hover { background: white; color: var(--primary); transform: translateY(-3px);}
 
 /* 📸 ORTAK GÖRSEL KORUMALARI */
 .hero-player-img { max-height: 1000px; max-width: 100%; width: auto !important; height: auto !important; filter: drop-shadow(0 30px 60px rgba(0,0,0,0.8)); z-index: 5;}
@@ -116,14 +115,19 @@ body.watermark-on .match-card::after { content: ""; position: absolute; top: 0; 
 .logo-box-small img { max-width: 100%; max-height: 100%; width: auto !important; height: auto !important; }
 
 /* ========================================= */
-/* MODÜL İÇERİKLERİ (FLEXBOX UYUMLU)         */
+/* MODÜL İÇERİKLERİ (ESNEK KORUMALI)         */
 /* ========================================= */
 .main-title { font-family: 'Barlow', sans-serif; font-style: italic; font-weight: 900; font-size: 140px; margin: 0; letter-spacing: -2px; line-height: 1; text-align: center;}
-.team-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 25px; }
-.team-name { font-family: 'Barlow', sans-serif; font-weight: 900; font-size: 50px; letter-spacing: 2px; text-shadow: 2px 2px 8px #000; text-align: center; text-wrap: balance;}
-.score-col { flex: 1; display: flex; justify-content: center; align-items: center; }
-.score-text { font-family: 'Barlow', sans-serif; font-style: italic; font-weight: 900; font-size: 220px; line-height: 1; white-space: nowrap; -webkit-text-stroke: 4px var(--dark);}
-.info-pill { font-size: 28px; font-weight: 800; letter-spacing: 4px; color: #fff; border-radius: 50px; padding: 20px 60px; text-align: center;}
+
+/* TAKIM KOLONLARI VE İSİMLERİ SIKIŞMAZ */
+.team-col { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 20px; }
+.name-wrapper { width: 100%; display: flex; justify-content: center; overflow: hidden; }
+.name-wrapper-lg { width: 90%; margin: 0 auto; display: flex; justify-content: center; overflow: hidden; }
+.team-name { font-family: 'Barlow', sans-serif; font-weight: 900; font-size: 50px; letter-spacing: 2px; text-shadow: 2px 2px 8px #000; text-align: center; white-space: nowrap; width: 100%;}
+
+.score-col { flex: 1.2; display: flex; justify-content: center; align-items: center; }
+.score-text { font-family: 'Barlow', sans-serif; font-style: italic; font-weight: 900; font-size: 200px; line-height: 1; white-space: nowrap; -webkit-text-stroke: 4px var(--dark);}
+.info-pill { font-size: 28px; font-weight: 800; letter-spacing: 4px; color: #fff; border-radius: 50px; padding: 20px 60px; text-align: center; max-width: 90%; overflow: hidden; white-space: nowrap;}
 .badge-pill { font-family: 'Barlow'; font-weight: 900; font-style: italic; font-size: 60px; padding: 20px 80px; border-radius: 60px;}
 
 .scorer-panel { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 30px 40px;}
@@ -141,35 +145,38 @@ body.watermark-on .match-card::after { content: ""; position: absolute; top: 0; 
 .stat-bar-bg { width: 100%; height: 20px; background: rgba(0,0,0,0.5); border-radius: 10px; display: flex; overflow: hidden; box-shadow: inset 0 4px 8px #000;}
 .stat-bar-fill { height: 100%; transition: 0.6s; box-shadow: 0 0 15px var(--primary);}
 
-/* İLK 11 */
-.kadro-grid { width: 100%; display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(4, 1fr); gap: 20px; z-index: 10;}
-.player-card-vertical { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 15px; gap: 10px; transition: 0.5s;}
-.pc-logo-container { width: 100px; height: 100px; border-radius: 50%; background: #000; border: 2px solid rgba(255,255,255,0.1); display: flex; justify-content: center; align-items: center; overflow: hidden; filter: drop-shadow(0 10px 20px #000);}
+/* 🚨 YENİ 4-3-3 İLK 11 SAHA DİZİLİMİ CSS 🚨 */
+.pitch-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; overflow: hidden; perspective: 1200px;}
+.pitch-lines { width: 100%; height: 160%; background-image: repeating-linear-gradient(0deg, transparent, transparent 40px, rgba(255,255,255,0.04) 40px, rgba(255,255,255,0.04) 80px); border: 3px solid rgba(255,255,255,0.1); transform: rotateX(62deg) translateY(-20%); transform-origin: top center;}
+.kadro-pitch { width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: space-evenly; align-items: center; padding: 40px 0;}
+.kadro-row { display: flex; justify-content: center; gap: 30px; width: 100%;}
+.player-card-vertical { width: 180px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 15px; gap: 10px; transition: 0.5s;}
+.pc-logo-container { width: 80px; height: 80px; border-radius: 50%; background: #000; border: 2px solid rgba(255,255,255,0.1); display: flex; justify-content: center; align-items: center; overflow: hidden; filter: drop-shadow(0 10px 20px #000);}
 .pc-logo-container img { max-width: 100%; max-height: 100%; object-fit: cover; }
-.pc-name { font-family: 'Barlow'; font-weight: 800; font-size: 24px; color: #fff; text-align: center; line-height: 1.1;}
+.pc-name { font-family: 'Barlow'; font-weight: 800; font-size: 20px; color: #fff; text-align: center; line-height: 1.1;}
 .pc-meta { display: flex; align-items: center; gap: 8px; font-family: 'Montserrat'; font-weight: 900; font-size: 16px; color: #aaa;}
 .pc-meta b { color: var(--primary); font-family: 'Barlow'; font-size: 20px; font-style: italic;}
-.gk-card { grid-column: 2; grid-row: 4; align-self: end;}
 
 /* TRANSFER */
 .transfer-panel { width: 100%; padding: 50px; text-align: center; z-index: 10;}
-.transfer-name { font-family: 'Barlow'; font-weight: 900; font-style: italic; font-size: 80px; color: #fff; margin-bottom: 30px;}
+.transfer-name { font-family: 'Barlow'; font-weight: 900; font-style: italic; font-size: 80px; color: #fff; margin-bottom: 30px; width: 100%; white-space: nowrap;}
 .transfer-prob-text { font-family: 'Montserrat'; font-weight: 900; font-size: 30px; color: #aaa;}
 .done-stamp { font-family: 'Barlow'; font-weight: 900; font-style: italic; font-size: 70px; color: var(--dark); padding: 15px 50px; border-radius: 15px; transform: rotate(-5deg); background: var(--primary); display: inline-block;}
 
 /* AÇIKLAMA */
 .quote-panel { padding: 60px; text-align: center;}
 .quote-mark { font-family: 'Barlow'; font-style: italic; font-weight: 900; font-size: 250px; line-height: 0.3; margin-bottom: 30px;}
-.quote-text { font-family: 'Barlow'; font-weight: 800; font-style: italic; font-size: 55px; color: #fff; text-wrap: balance;}
+.quote-text { font-family: 'Barlow'; font-weight: 800; font-style: italic; font-size: 55px; color: #fff; text-wrap: balance; width: 100%;}
 .quote-line { width: 80px; height: 6px; margin: 40px auto 20px auto; border-radius: 3px;}
-.quote-author { font-family: 'Montserrat'; font-weight: 900; font-size: 35px; color: #aaa; letter-spacing: 2px;}
+.quote-author { font-family: 'Montserrat'; font-weight: 900; font-size: 35px; color: #aaa; letter-spacing: 2px; width: 100%; white-space: nowrap;}
 .quote-gradient-fade { position: absolute; bottom: 0; left: 0; width: 100%; height: 60%; background: linear-gradient(to top, var(--dark) 10%, transparent 100%); z-index: 3;}
 
 /* H2H */
 .h2h-players-area { align-items: flex-end; gap: 40px; z-index: 5;}
 .h2h-player { flex: 1; display: flex; flex-direction: column; align-items: center;}
 .h2h-player img { max-height: 550px; filter: drop-shadow(0 20px 30px #000); }
-.h2h-name { width: 100%; text-align: center; padding: 15px; font-family: 'Barlow'; font-weight: 900; font-style: italic; font-size: 45px; margin-top: -20px;}
+.h2h-name-box { width: 100%; padding: 15px; margin-top: -20px; }
+.h2h-name { width: 100%; text-align: center; font-family: 'Barlow'; font-weight: 900; font-style: italic; font-size: 45px; white-space: nowrap;}
 .h2h-stat-panel { padding: 40px; text-align: center;}
 .stat-header-title { font-family: 'Montserrat'; font-weight: 900; font-size: 26px; color: #aaa; letter-spacing: 6px; margin-bottom: 20px;}
 .h2h-stat-num { font-family: 'Barlow'; font-weight: 900; font-style: italic; font-size: 90px; color: #fff;}
@@ -179,13 +186,17 @@ body.watermark-on .match-card::after { content: ""; position: absolute; top: 0; 
 .st-row { padding: 30px 40px; display: flex; align-items: center; justify-content: space-between; width: 100%;}
 .leader-row { border-left-width: 8px !important; }
 .st-rank { font-family: 'Barlow'; font-weight: 900; font-size: 55px; color: #888; width: 80px;}
-.st-name { font-family: 'Barlow'; font-weight: 800; font-size: 45px; color: #fff; flex: 1; margin-left: 30px;}
+.st-name-wrap { flex: 1; margin-left: 30px; overflow: hidden; }
+.st-name { font-family: 'Barlow'; font-weight: 800; font-size: 45px; color: #fff; white-space: nowrap; width: 100%;}
 .st-pts { font-family: 'Barlow'; font-weight: 900; font-style: italic; font-size: 60px; color: #aaa;}
 
 /* HAFTANIN MAÇLARI */
 .hw-row { padding: 25px 30px; display: flex; justify-content: space-between; align-items: center; width: 100%;}
-.hw-team { display: flex; align-items: center; gap: 20px; width: 38%;}
-.hw-team span { font-family: 'Barlow'; font-weight: 800; font-size: 38px; color: #fff;}
+.hw-team { display: flex; align-items: center; gap: 15px; width: 38%;}
+.hw-home { justify-content: flex-end; text-align: right;}
+.hw-away { justify-content: flex-start; text-align: left;}
+.hw-name-wrap { overflow: hidden; max-width: 250px;}
+.hw-team span { font-family: 'Barlow'; font-weight: 800; font-size: 38px; color: #fff; white-space: nowrap; width: 100%;}
 .hw-score { font-family: 'Barlow'; font-weight: 900; font-style: italic; font-size: 40px; padding: 10px 20px; border-radius: 12px; min-width: 120px; text-align: center; letter-spacing: 2px;}
 
 ::-webkit-scrollbar { width: 12px; height: 12px; }
