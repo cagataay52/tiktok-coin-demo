@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Skor Ağı - Kusursuz Medya İmparatorluğu</title>
+    <title>Skor Ağı - Orijinal Tasarım Stüdyosu</title>
     <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,700;0,900;1,800;1,900&family=Montserrat:wght@400;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -33,10 +33,7 @@
             <div class="mg-content">
                 <div class="mg-teams">
                     <div class="mg-team"><div class="premium-logo-container"><img src="https://media.api-sports.io/football/teams/9.png" class="mg-logo out-mg-home-logo"></div><span class="mg-name out-mg-home-name auto-text">FENERBAHÇE</span></div>
-                    <div class="mg-center">
-                        <div class="mg-time out-mg-time">20:00</div>
-                        <div class="mg-venue crystal-panel out-mg-venue auto-text">ŞÜKRÜ SARACOĞLU</div>
-                    </div>
+                    <div class="mg-center"><div class="mg-time out-mg-time">20:00</div><div class="vs-badge neon-glow">VS</div><div class="mg-venue out-mg-venue auto-text">ŞÜKRÜ SARACOĞLU</div></div>
                     <div class="mg-team"><div class="premium-logo-container"><img src="https://media.api-sports.io/football/teams/11.png" class="mg-logo out-mg-away-logo"></div><span class="mg-name out-mg-away-name auto-text">GALATASARAY</span></div>
                 </div><div class="mg-bottom"><h1 class="mg-title">MAÇ GÜNÜ</h1></div>
             </div><div class="card-footer">@skoragi</div>
@@ -50,13 +47,13 @@
             <button class="download-btn" onclick="downloadTpl('tpl-ilk-yari', 'ilk-yari')">İNDİR</button>
         </div><div class="module-preview"><div class="preview-wrapper"><div class="match-card" id="tpl-ilk-yari">
             <div class="bg-layer" id="bg-ilk-yari" style="opacity:0.3;"></div><div class="brand-glow"></div><div class="brand-gradient-bottom"></div>
-            <div class="mg-content">
+            <div class="ms-content">
                 <div class="iy-badge crystal-panel neon-glow">İLK YARI</div>
-                <div class="mg-teams" style="margin-top:20px;">
-                    <div class="mg-team"><div class="premium-logo-container"><img src="https://media.api-sports.io/football/teams/9.png" class="mg-logo out-iy-home-logo"></div><span class="mg-name out-iy-home-name auto-text">FENERBAHÇE</span></div>
+                <div class="ft-scoreboard" style="margin-top:10px;">
+                    <div class="ft-team"><div class="premium-logo-container"><img src="https://media.api-sports.io/football/teams/9.png" class="mg-logo out-iy-home-logo"></div><span class="mg-name out-iy-home-name auto-text">FENERBAHÇE</span></div>
                     <div class="ft-score neon-text"><span class="out-iy-home-score">1</span> - <span class="out-iy-away-score">0</span></div>
-                    <div class="mg-team"><div class="premium-logo-container"><img src="https://media.api-sports.io/football/teams/11.png" class="mg-logo out-iy-away-logo"></div><span class="mg-name out-iy-away-name auto-text">GALATASARAY</span></div>
-                </div><div class="mg-bottom"><h1 class="ft-main-title" style="font-size:100px;text-align:center;">İLK YARI SONUCU</h1></div>
+                    <div class="ft-team"><div class="premium-logo-container"><img src="https://media.api-sports.io/football/teams/11.png" class="mg-logo out-iy-away-logo"></div><span class="mg-name out-iy-away-name auto-text">GALATASARAY</span></div>
+                </div><div class="mg-bottom" style="margin-top:20px;"><h1 class="ft-main-title" style="font-size:85px;">İLK YARI SONUCU</h1></div>
             </div><div class="card-footer">@skoragi</div>
         </div></div></div></div>
 
@@ -69,11 +66,12 @@
             <button class="download-btn" onclick="downloadTpl('tpl-mac-sonucu', 'mac-sonucu')">İNDİR</button>
         </div><div class="module-preview"><div class="preview-wrapper"><div class="match-card" id="tpl-mac-sonucu">
             <div class="bg-layer" id="bg-mac-sonucu" style="opacity:0.3;"></div><div class="brand-glow"></div><div class="brand-gradient-bottom"></div>
-            <div class="mg-content">
-                <div class="mg-teams" style="margin-top: 50px;">
-                    <div class="mg-team"><div class="premium-logo-container"><img src="https://media.api-sports.io/football/teams/9.png" class="mg-logo out-ms-home-logo"></div><span class="mg-name out-ms-home-name auto-text">FENERBAHÇE</span></div>
+            <div class="ms-content">
+                <div class="iy-badge crystal-panel neon-glow" style="font-size:20px;letter-spacing:2px;">MAÇ SONUCU</div>
+                <div class="ft-scoreboard" style="margin-top:-10px;">
+                    <div class="ft-team"><div class="premium-logo-container"><img src="https://media.api-sports.io/football/teams/9.png" class="mg-logo out-ms-home-logo"></div><span class="mg-name out-ms-home-name auto-text">FENERBAHÇE</span></div>
                     <div class="ft-score neon-text"><span class="out-ms-home-score">2</span> - <span class="out-ms-away-score">1</span></div>
-                    <div class="mg-team"><div class="premium-logo-container"><img src="https://media.api-sports.io/football/teams/11.png" class="mg-logo out-ms-away-logo"></div><span class="mg-name out-ms-away-name auto-text">GALATASARAY</span></div>
+                    <div class="ft-team"><div class="premium-logo-container"><img src="https://media.api-sports.io/football/teams/11.png" class="mg-logo out-ms-away-logo"></div><span class="mg-name out-ms-away-name auto-text">GALATASARAY</span></div>
                 </div>
                 <div class="ft-scorers-container crystal-panel neon-border"><div class="scorer-list home out-ms-home-scorers auto-text">Dzeko 12'<br>Szymanski 45'</div><div class="scorer-icon neon-text-color">⚽</div><div class="scorer-list away out-ms-away-scorers auto-text">Icardi 34'</div></div>
                 <div class="mg-bottom" style="margin-top:0;"><h1 class="ft-main-title">MAÇ SONUCU</h1></div>
@@ -90,9 +88,9 @@
         </div><div class="module-preview"><div class="preview-wrapper"><div class="match-card" id="tpl-istatistik">
             <div class="bg-layer" id="bg-istatistik" style="opacity:0.15;"></div><div class="brand-glow" style="opacity:0.6;"></div><div class="brand-gradient-bottom"></div>
             <div class="stat-header">
-                <div class="stat-logo-wrapper"><img src="https://media.api-sports.io/football/teams/9.png" class="stat-logo out-ms-home-logo"></div>
+                <div class="premium-logo-container stat-logo-wrapper"><img src="https://media.api-sports.io/football/teams/9.png" class="stat-logo out-ms-home-logo"></div>
                 <h1 class="stat-main-title neon-text">İSTATİSTİKLER</h1>
-                <div class="stat-logo-wrapper"><img src="https://media.api-sports.io/football/teams/11.png" class="stat-logo out-ms-away-logo"></div>
+                <div class="premium-logo-container stat-logo-wrapper"><img src="https://media.api-sports.io/football/teams/11.png" class="stat-logo out-ms-away-logo"></div>
             </div>
             <div class="stat-container crystal-panel neon-border">
                 <div class="stat-item"><div class="stat-labels"><div class="stat-num home out-stat-pos-home neon-text-color">60%</div><div class="stat-center">TOPLA OYNAMA</div><div class="stat-num away out-stat-pos-away">40%</div></div><div class="stat-bar-container"><div class="stat-bar home neon-glow" id="bar-pos-home" style="width:60%;"></div><div class="stat-bar away" id="bar-pos-away" style="width:40%;"></div></div></div>
@@ -105,14 +103,13 @@
         <div class="studio-module"><div class="module-panel">
             <h2>5. İLK 11 KADROSU</h2>
             <div class="input-group"><label>Logo</label><input type="file" id="k-logo"></div>
-            <div class="input-group"><label>Kadro (Alt Alta 11 İsim)</label><textarea id="k-lineup" rows="11">Livakovic&#10;Osayi&#10;Becao&#10;Djiku&#10;Ferdi&#10;Fred&#10;İsmail&#10;İrfan Can&#10;Szymanski&#10;Tadic&#10;Dzeko</textarea></div>
+            <div class="input-group"><label>Kadro (Alt Alta Yazın)</label><textarea id="k-lineup" rows="11">Livakovic&#10;Osayi&#10;Becao&#10;Djiku&#10;Ferdi&#10;Fred&#10;İsmail&#10;İrfan Can&#10;Szymanski&#10;Tadic&#10;Dzeko</textarea></div>
             <div class="input-group"><label>Arka Plan</label><input type="file" id="k-bg"></div>
             <button class="download-btn" onclick="downloadTpl('tpl-kadro', 'ilk-11')">İNDİR</button>
         </div><div class="module-preview"><div class="preview-wrapper"><div class="match-card" id="tpl-kadro">
             <div class="bg-layer" id="bg-kadro" style="opacity:0.4;"></div><div class="pitch-container"><div class="pitch-lines"></div></div><div class="brand-glow"></div>
             <div class="kadro-header"><img src="https://media.api-sports.io/football/teams/9.png" class="kadro-logo out-k-logo"><h1 class="kadro-title crystal-panel neon-glow">İLK 11 KADROSU</h1></div>
-            <div class="kadro-grid" id="out-k-lineup-cards"></div>
-            <div class="card-footer">@skoragi</div>
+            <div class="kadro-list" id="out-k-lineup"></div><div class="card-footer">@skoragi</div>
         </div></div></div></div>
 
         <div class="studio-module"><div class="module-panel">
@@ -125,7 +122,7 @@
         </div><div class="module-preview"><div class="preview-wrapper"><div class="match-card" id="tpl-transfer">
             <div class="bg-layer" style="opacity: 0.1;"></div><div class="brand-glow"></div>
             <img src="https://media.api-sports.io/football/teams/9.png" class="tr-bg-logo out-tr-logo">
-            <img src="https://creazilla-store.fra1.digitaloceanspaces.com/cliparts/3133642/soccer-player-clipart-xl.png" class="out-tr-img" style="position:absolute; bottom: 350px; left: 50%; transform: translateX(-50%); max-height: 900px; z-index: 5; filter: drop-shadow(0 30px 60px #000);">
+            <img src="https://creazilla-store.fra1.digitaloceanspaces.com/cliparts/3133642/soccer-player-clipart-xl.png" class="tr-player-img out-tr-img">
             <div class="tr-bottom crystal-panel neon-border">
                 <h1 class="tr-title out-tr-name auto-text">ANDERSON TALISCA</h1>
                 <div id="tr-prob-container"><div class="tr-bar-bg"><div class="tr-bar-fill neon-glow" id="out-tr-bar" style="width: 85%;"></div></div><h3 class="tr-prob-text">TRANSFER İHTİMALİ: <span class="neon-text-color out-tr-prob">%85</span></h3></div>
@@ -185,8 +182,8 @@
             <button class="download-btn" onclick="downloadTpl('tpl-referee', 'hakem')">İNDİR</button>
         </div><div class="module-preview"><div class="preview-wrapper"><div class="match-card" id="tpl-referee">
             <div class="bg-layer" style="opacity:0.3;"></div><div class="brand-glow" style="background: radial-gradient(circle at top, var(--bg-grad-1) 0%, transparent 60%);"></div>
-            <img src="https://creazilla-store.fra1.digitaloceanspaces.com/cliparts/3133642/soccer-player-clipart-xl.png" class="out-ref-img" style="position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); max-height: 900px; z-index: 5;">
-            <div class="ref-teams"><img src="https://media.api-sports.io/football/teams/9.png" class="ref-logo out-ref-logo-home"><div class="vs-badge neon-glow" style="margin:0 40px; padding:15px 40px; font-size:30px;">VS</div><img src="https://media.api-sports.io/football/teams/11.png" class="ref-logo out-ref-logo-away"></div>
+            <img src="https://creazilla-store.fra1.digitaloceanspaces.com/cliparts/3133642/soccer-player-clipart-xl.png" class="ref-img out-ref-img">
+            <div class="ref-teams"><img src="https://media.api-sports.io/football/teams/9.png" class="ref-logo out-ref-logo-home"><div class="vs-badge neon-glow" style="margin:0 20px; font-size:18px;">VS</div><img src="https://media.api-sports.io/football/teams/11.png" class="ref-logo out-ref-logo-away"></div>
             <div class="ref-panel crystal-panel neon-border"><h3>MAÇIN HAKEMİ</h3><h2 class="out-ref-name auto-text neon-text">HALİL UMUT MELER</h2></div>
             <div class="card-footer">@skoragi</div>
         </div></div></div></div>
@@ -204,7 +201,7 @@
             <div class="sd-big-text"><h1>SON<br>DAKİKA</h1></div>
             <div class="sd-content">
                 <img src="https://creazilla-store.fra1.digitaloceanspaces.com/cliparts/3133642/soccer-player-clipart-xl.png" id="out-sd-player" class="sd-player-img">
-                <div class="sd-box crystal-panel neon-border"><div class="sd-title-wrapper auto-scale out-sd-title">Derbinin Kazananı Belli Oldu!</div></div>
+                <div class="sd-box crystal-panel neon-border"><div class="sd-title-wrapper auto-scale out-sd-title">Derbinin Kazananı Belli Oldu!</div><span class="sd-x">X</span></div>
             </div>
             <div class="card-footer">@skoragi</div>
         </div></div></div></div>
@@ -218,7 +215,7 @@
         </div><div class="module-preview"><div class="preview-wrapper reels-wrapper"><div class="match-card tpl-reels" id="tpl-reels">
             <div class="bg-layer" id="bg-reels" style="opacity: 0.6;"></div><div class="brand-glow"></div><div class="reels-fade"></div>
             <div class="rl-header"><h2 class="rl-tag neon-text">HAFTANIN<br>OYUNCUSU:</h2><h1 class="rl-name out-r-name auto-text">EDİN DZEKO</h1></div>
-            <img src="https://creazilla-store.fra1.digitaloceanspaces.com/cliparts/3133642/soccer-player-clipart-xl.png" class="out-r-player" style="position:absolute; bottom: 220px; left: 50%; transform: translateX(-50%); max-height: 1000px; z-index: 5;">
+            <img src="https://creazilla-store.fra1.digitaloceanspaces.com/cliparts/3133642/soccer-player-clipart-xl.png" class="rl-player" id="out-r-player">
             <div class="rl-stats crystal-panel neon-border"><div class="rl-stat"><h2>6</h2><span>GOL</span></div><div class="rl-stat"><h2>1</h2><span>ASİST</span></div><div class="rl-stat"><h2>25%</h2><span>PAS %</span></div></div>
             <div class="card-footer" style="bottom: 20px;">@skoragi</div>
         </div></div></div></div>
@@ -234,7 +231,7 @@
         </div><div class="module-preview"><div class="preview-wrapper"><div class="match-card" id="tpl-motm">
             <div class="brand-glow"></div>
             <img src="https://media.api-sports.io/football/teams/9.png" class="motm-bg-logo out-motm-logo">
-            <img src="https://creazilla-store.fra1.digitaloceanspaces.com/cliparts/3133642/soccer-player-clipart-xl.png" class="out-motm-img" style="position:absolute; bottom: 250px; left: 50%; transform: translateX(-50%); max-height: 850px; z-index: 5;">
+            <img src="https://creazilla-store.fra1.digitaloceanspaces.com/cliparts/3133642/soccer-player-clipart-xl.png" class="tr-player-img out-motm-img" style="max-height: 650px; bottom: 120px;">
             <div class="motm-panel crystal-panel neon-border">
                 <h3 class="neon-text-color">MAÇIN ADAMI</h3>
                 <h1 class="out-motm-name auto-text">DUSAN TADIC</h1>
@@ -255,7 +252,7 @@
         </div><div class="module-preview"><div class="preview-wrapper"><div class="match-card" id="tpl-milestone">
             <div class="brand-glow" style="opacity: 0.8;"></div>
             <h1 class="mil-big-num out-mil-num neon-text-color">100</h1>
-            <img src="https://creazilla-store.fra1.digitaloceanspaces.com/cliparts/3133642/soccer-player-clipart-xl.png" class="out-mil-img" style="position:absolute; bottom: 250px; left: 50%; transform: translateX(-50%); max-height: 900px; z-index: 4;">
+            <img src="https://creazilla-store.fra1.digitaloceanspaces.com/cliparts/3133642/soccer-player-clipart-xl.png" class="tr-player-img out-mil-img" style="z-index: 4;">
             <div class="mil-panel crystal-panel neon-border">
                 <h1 class="out-mil-name auto-text">FERDİ KADIOĞLU</h1>
                 <h3 class="out-mil-text neon-text">SÜPER LİG MAÇI</h3>
@@ -287,9 +284,9 @@
             <div class="input-group"><label>Sakatlık</label><input type="text" id="hlt-type" value="KAS YIRTIĞI"></div>
             <div class="input-group"><label>Dönüş</label><input type="text" id="hlt-date" value="3 HAFTA"></div>
             <button class="download-btn" onclick="downloadTpl('tpl-health', 'saglik-raporu')">İNDİR</button>
-        </div><div class="module-preview"><div class="preview-wrapper"><div class="match-card tpl-health" id="tpl-health">
+        </div><div class="module-preview"><div class="preview-wrapper"><div class="match-card" id="tpl-health">
             <div class="hlt-glow"></div>
-            <img src="https://creazilla-store.fra1.digitaloceanspaces.com/cliparts/3133642/soccer-player-clipart-xl.png" class="out-hlt-img hlt-player" style="position:absolute; bottom:0; left:50%; transform:translateX(-50%); max-height:1000px; z-index:5;">
+            <img src="https://creazilla-store.fra1.digitaloceanspaces.com/cliparts/3133642/soccer-player-clipart-xl.png" class="hlt-player out-hlt-img">
             <h1 class="hlt-top-title">SAĞLIK RAPORU</h1>
             <div class="hlt-panel">
                 <h1 class="out-hlt-name auto-text">FRED</h1>
