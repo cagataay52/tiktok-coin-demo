@@ -5,9 +5,7 @@ const themeBtns = document.querySelectorAll('.ts-btn:not(#btn-watermark)');
 themeBtns.forEach(btn => {
     btn.addEventListener('click', (e) => {
         const theme = e.target.getAttribute('data-theme');
-        // Eski temayı sil
         document.body.className = document.body.className.replace(/theme-\w+/g, '').trim();
-        // Yeni temayı ekle (default değilse)
         if(theme !== 'default') document.body.classList.add(`theme-${theme}`);
         
         themeBtns.forEach(b => b.classList.remove('active'));
@@ -215,11 +213,10 @@ window.addEventListener('load', () => {
 });
 
 // ==========================================
-// 🌟 GÜVENLİ VE KESİLMEYEN İNDİRME MOTORU 🌟
+// 🌟 KUSURSUZ VE KAYMASIZ HD İNDİRME MOTORU 🌟
 // ==========================================
 function downloadTpl(elementId, fileName) {
     const captureArea = document.getElementById(elementId);
-    const wrapper = captureArea.parentElement;
     
     const btn = event.target;
     const originalBtnText = btn.innerText;
@@ -227,20 +224,31 @@ function downloadTpl(elementId, fileName) {
     btn.style.backgroundColor = "#555";
 
     const originalTransform = captureArea.style.transform;
-    const originalOverflow = wrapper.style.overflow;
+    const originalPosition = captureArea.style.position;
+    const originalTop = captureArea.style.top;
+    const originalLeft = captureArea.style.left;
+    const originalZIndex = captureArea.style.zIndex;
 
-    wrapper.style.overflow = "visible";
-    captureArea.style.transform = "scale(1)";
+    // Gizli Çekim Modu (Kartı ekrandan kopar, ezilmesini önle, düz çek)
+    captureArea.style.transform = "none"; 
+    captureArea.style.position = "fixed";
+    captureArea.style.top = "0px";
+    captureArea.style.left = "0px";
+    captureArea.style.zIndex = "-9999"; 
 
     setTimeout(() => {
         html2canvas(captureArea, { 
-            scale: 3, 
-            backgroundColor: "#111", 
+            scale: 2, 
+            backgroundColor: "#000", 
             useCORS: true, 
             logging: false 
         }).then(canvas => {
+            // Çekim bitti, eski yerine koy
             captureArea.style.transform = originalTransform;
-            wrapper.style.overflow = originalOverflow;
+            captureArea.style.position = originalPosition;
+            captureArea.style.top = originalTop;
+            captureArea.style.left = originalLeft;
+            captureArea.style.zIndex = originalZIndex;
             
             const imageURL = canvas.toDataURL("image/jpeg", 0.95);
             const downloadLink = document.createElement('a');
@@ -256,9 +264,12 @@ function downloadTpl(elementId, fileName) {
             console.error("İndirme Hatası:", err);
             alert("İndirme sırasında hata oluştu. Sayfayı yenileyin.");
             captureArea.style.transform = originalTransform;
-            wrapper.style.overflow = originalOverflow;
+            captureArea.style.position = originalPosition;
+            captureArea.style.top = originalTop;
+            captureArea.style.left = originalLeft;
+            captureArea.style.zIndex = originalZIndex;
             btn.innerText = originalBtnText;
             btn.style.backgroundColor = "";
         });
-    }, 300); 
+    }, 400); 
 }
