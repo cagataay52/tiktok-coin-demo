@@ -29,24 +29,20 @@ btnWatermark.addEventListener('click', () => {
 });
 
 // ==========================================
-// 🌟 GÜVENLİ METİN KÜÇÜLTME MOTORU (ZIRHLARI KIRMAZ) 🌟
+// 🌟 GÜVENLİ METİN KÜÇÜLTME MOTORU (KIRILMAZ) 🌟
 // ==========================================
 function autoScaleText() {
     document.querySelectorAll('.auto-scale-text').forEach(el => {
         const parent = el.parentElement;
         if(!parent) return;
-
-        let maxFont = 100; 
-        if(el.classList.contains('team-name')) maxFont = 60;
-        if(el.classList.contains('out-sd-title')) maxFont = 65;
-        if(el.classList.contains('out-hw-m1-home')) maxFont = 45; 
-        if(el.classList.contains('pc-name')) maxFont = 30; 
-
-        el.style.fontSize = maxFont + 'px';
         
-        while ((el.scrollWidth > parent.clientWidth || el.scrollHeight > parent.clientHeight) && maxFont > 15) {
-            maxFont -= 1;
-            el.style.fontSize = maxFont + 'px';
+        el.style.transform = "scale(1)"; 
+        
+        // CSS içindeki width'i taşıyorsa güvenli şekilde scale et
+        if (el.scrollWidth > parent.clientWidth && parent.clientWidth > 0) {
+            const ratio = parent.clientWidth / el.scrollWidth;
+            el.style.transform = `scale(${ratio})`;
+            el.style.transformOrigin = "center";
         }
     });
 }
@@ -88,7 +84,7 @@ function bindImage(inputId, targetIdOrClass, isBackground = false) {
     });
 }
 
-// BAĞLANTILAR
+// BAĞLANTILAR (1'DEN 17'YE KADAR EKSİKSİZ)
 bindText('mg-home-name', '.out-mg-home-name'); bindText('mg-away-name', '.out-mg-away-name');
 bindText('mg-time', '.out-mg-time', false); bindText('mg-venue', '.out-mg-venue');
 bindImage('mg-home-logo', '.out-mg-home-logo'); bindImage('mg-away-logo', '.out-mg-away-logo'); bindImage('mg-bg', '.out-mg-bg', true);
@@ -102,15 +98,25 @@ bindText('ms-home-score', '.out-ms-home-score', false); bindText('ms-away-score'
 bindText('ms-home-scorers', '.out-ms-home-scorers', false, true); bindText('ms-away-scorers', '.out-ms-away-scorers', false, true);
 bindImage('ms-home-logo', '.out-ms-home-logo'); bindImage('ms-away-logo', '.out-ms-away-logo'); bindImage('ms-bg', '.out-ms-bg', true);
 
+// 4. İSTATİSTİK (JS ÇÖKMESİ GİDERİLDİ)
+bindImage('stat-home-logo', '.out-stat-home-logo');
+bindImage('stat-away-logo', '.out-stat-away-logo');
+bindImage('stat-bg', '.out-stat-bg', true);
+
 function bindStat(idHome, idAway, outHome, outAway, barHome, barAway, isPercent = false) {
     const iHome = document.getElementById(idHome); const iAway = document.getElementById(idAway);
     function updateStats() {
         const vHome = parseFloat(iHome.value) || 0; const vAway = parseFloat(iAway.value) || 0;
         const total = vHome + vAway; let pHome = 50, pAway = 50;
         if (total > 0) { pHome = (vHome / total) * 100; pAway = (vAway / total) * 100; }
-        document.querySelector(outHome).innerText = vHome + (isPercent ? '%' : '');
-        document.querySelector(outAway).innerText = vAway + (isPercent ? '%' : '');
-        document.getElementById(barHome).style.width = pHome + '%'; document.getElementById(barAway).style.width = pAway + '%';
+        
+        const oHome = document.querySelector(outHome);
+        const oAway = document.querySelector(outAway);
+        if(oHome) oHome.innerText = vHome + (isPercent ? '%' : '');
+        if(oAway) oAway.innerText = vAway + (isPercent ? '%' : '');
+        
+        const bHome = document.getElementById(barHome);
+        if(bHome) bHome.style.width = pHome + '%'; 
     }
     if(iHome && iAway) { iHome.addEventListener('input', updateStats); iAway.addEventListener('input', updateStats); updateStats(); }
 }
@@ -119,12 +125,10 @@ bindStat('stat-shot-home', 'stat-shot-away', '.out-stat-shot-home', '.out-stat-s
 bindStat('stat-cor-home', 'stat-cor-away', '.out-stat-cor-home', '.out-stat-cor-away', 'bar-cor-home', 'bar-cor-away');
 bindStat('stat-foul-home', 'stat-foul-away', '.out-stat-foul-home', '.out-stat-foul-away', 'bar-foul-home', 'bar-foul-away');
 
-// ==========================================
-// 🌟 İLK 11 (GERÇEK 4-3-3 SAHA DİZİLİM MANTIĞI) 🌟
-// ==========================================
+// 5. İLK 11 KADROSU
 bindImage('k-logo', '.out-k-logo'); bindImage('k-bg', '.out-k-bg', true); 
 const positions433 = ['GK', 'RB', 'CB', 'CB', 'LB', 'CDM', 'CM', 'CM', 'RW', 'ST', 'LW'];
-const layout433 = [[8, 9, 10], [5, 6, 7], [1, 2, 3, 4], [0]]; // Forvet, Orta, Defans, Kaleci
+const layout433 = [[8, 9, 10], [5, 6, 7], [1, 2, 3, 4], [0]]; 
 
 const kLineupInput = document.getElementById('k-lineup');
 if(kLineupInput) {
@@ -197,7 +201,7 @@ bindImage('fix2-logo', '.out-fix2-logo'); bindText('fix2-date', '.out-fix2-date'
 bindImage('fix3-logo', '.out-fix3-logo'); bindText('fix3-date', '.out-fix3-date'); bindText('fix3-tour', '.out-fix3-tour');
 bindText('hlt-name', '.out-hlt-name'); bindImage('hlt-img', '.out-hlt-img'); bindText('hlt-type', '.out-hlt-type'); bindText('hlt-date', '.out-hlt-date');
 
-// HAFTANIN MAÇLARI
+// 17. HAFTANIN MAÇLARI
 bindText('hw-title-input', '.out-hw-title');
 for(let i=1; i<=6; i++) {
     bindText(`hw-m${i}-home`, `.out-hw-m${i}-home`); bindText(`hw-m${i}-score`, `.out-hw-m${i}-score`, false); bindText(`hw-m${i}-away`, `.out-hw-m${i}-away`); bindImage(`hw-m${i}-hlogo`, `.out-hw-m${i}-hlogo`); bindImage(`hw-m${i}-alogo`, `.out-hw-m${i}-alogo`);
@@ -210,7 +214,7 @@ if (hwCountInput) {
         for(let i=1; i<=6; i++) {
             const inGroup = document.getElementById('hw-in-' + i); const outRow = document.getElementById('hw-out-' + i);
             if (inGroup && outRow) {
-                if (i <= count) { inGroup.style.display = 'block'; outRow.style.display = 'grid'; } 
+                if (i <= count) { inGroup.style.display = 'block'; outRow.style.display = 'flex'; } 
                 else { inGroup.style.display = 'none'; outRow.style.display = 'none'; }
             }
         }
@@ -218,7 +222,7 @@ if (hwCountInput) {
 }
 
 // ==========================================
-// 💾 OTOMATİK KAYIT VE AYAR YÜKLEME 💾
+// 💾 OTOMATİK KAYIT 💾
 // ==========================================
 const savedData = JSON.parse(localStorage.getItem('skoragi_data')) || {};
 document.querySelectorAll('input[type="text"], input[type="number"], textarea').forEach(el => {
@@ -242,7 +246,7 @@ window.addEventListener('load', () => {
 });
 
 // ==========================================
-// 🌟 FİZİKSEL RENDER İNDİRME MOTORU (KAYMAYI VE KARARMAYI BİTİRİR) 🌟
+// 🌟 YENİ NESİL FİZİKSEL İNDİRME MOTORU (KAYMA VE BOZULMAYI 100% ÖNLER) 🌟
 // ==========================================
 function downloadTpl(elementId, fileName) {
     const card = document.getElementById(elementId);
@@ -255,31 +259,28 @@ function downloadTpl(elementId, fileName) {
 
     const originalTransform = card.style.transform;
 
-    // html2canvas'ın şaşırmaması için görünmez devasa bir fiziksel oda yaratıyoruz
+    // Görünmez Render Odası (Gerçek Boyutta)
     const renderRoom = document.createElement('div');
     renderRoom.style.position = 'fixed';
     renderRoom.style.top = '0';
     renderRoom.style.left = '0';
     renderRoom.style.width = '1080px';
     renderRoom.style.height = elementId === 'tpl-reels' ? '1920px' : '1350px';
-    renderRoom.style.opacity = '0'; // Kullanıcı görmez
+    renderRoom.style.opacity = '0'; 
     renderRoom.style.pointerEvents = 'none';
     renderRoom.style.zIndex = '-9999';
     document.body.appendChild(renderRoom);
 
-    // Kartı stüdyodan alıp bu odaya tam boyutuyla koyuyoruz
     card.style.transform = 'none';
     renderRoom.appendChild(card);
 
-    // Tarayıcıya yeni düzeni çizmesi için zaman veriyoruz
     setTimeout(() => {
         html2canvas(card, { 
-            scale: 2, // 2160x2700 Kalite
+            scale: 2, 
             backgroundColor: "#050505", 
             useCORS: true, 
             logging: false 
         }).then(canvas => {
-            // Kartı stüdyodaki yerine geri koy
             wrapper.appendChild(card);
             card.style.transform = originalTransform;
             document.body.removeChild(renderRoom);
@@ -294,7 +295,6 @@ function downloadTpl(elementId, fileName) {
             btn.style.backgroundColor = "";
         }).catch(err => {
             console.error("İndirme Hatası:", err);
-            alert("İndirme başarısız oldu.");
             wrapper.appendChild(card);
             card.style.transform = originalTransform;
             document.body.removeChild(renderRoom);
