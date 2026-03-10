@@ -29,18 +29,26 @@ btnWatermark.addEventListener('click', () => {
 });
 
 // ==========================================
-// 🌟 GÜVENLİ METİN KÜÇÜLTME (KUTULARI KIRMAZ) 🌟
+// 🌟 GÜVENLİ METİN KÜÇÜLTME (PIXEL TABANLI, KAYMA YAPMAZ) 🌟
 // ==========================================
 function autoScaleText() {
-    // scale transformu ile yazıyı kutunun içine sığdırır, font-size bozmaz
     document.querySelectorAll('.auto-scale-text').forEach(el => {
         const parent = el.parentElement;
-        el.style.transform = "scale(1)"; // Önce sıfırla
         
-        if (el.scrollWidth > parent.clientWidth && parent.clientWidth > 0) {
-            const scaleRatio = parent.clientWidth / el.scrollWidth;
-            el.style.transform = `scale(${scaleRatio})`;
-            el.style.transformOrigin = "center";
+        // Şablona göre maksimum font boyutunu belirle
+        let maxFont = 100; 
+        if(el.classList.contains('team-name')) maxFont = 55;
+        if(el.classList.contains('out-sd-title')) maxFont = 60;
+        if(el.classList.contains('out-hw-m1-home')) maxFont = 40; // Haftanın maçları
+        if(el.classList.contains('pc-name')) maxFont = 26; // İlk 11
+
+        el.style.fontSize = maxFont + 'px';
+        el.style.whiteSpace = 'nowrap';
+        
+        // Yazı kutudan taşıyorsa font boyutunu ufalt
+        while ((el.scrollWidth > parent.clientWidth || el.scrollHeight > parent.clientHeight) && maxFont > 15) {
+            maxFont -= 1;
+            el.style.fontSize = maxFont + 'px';
         }
     });
 }
@@ -138,7 +146,7 @@ document.getElementById('k-lineup').addEventListener('input', function(e) {
                 card.className = `glass-panel player-card-vertical ${isPrimary ? 'neon-border' : ''}`;
                 card.innerHTML = `
                     <div class="pc-logo-container"><img src="https://creazilla-store.fra1.digitaloceanspaces.com/cliparts/3133642/soccer-player-clipart-xl.png"></div>
-                    <div class="name-box"><div class="pc-name auto-scale-text">${players[index].toUpperCase()}</div></div>
+                    <div class="name-box"><span class="pc-name auto-scale-text">${players[index].toUpperCase()}</span></div>
                     <div class="pc-meta"><b>${index + 1}</b> ${pos}</div>
                 `;
                 rowDiv.appendChild(card);
@@ -148,6 +156,7 @@ document.getElementById('k-lineup').addEventListener('input', function(e) {
     });
     setTimeout(autoScaleText, 50);
 });
+
 
 bindText('tr-name', '.out-tr-name'); bindImage('tr-logo', '.out-tr-logo'); bindImage('tr-img', '.out-tr-img');
 const trProbInput = document.getElementById('tr-prob');
@@ -168,8 +177,10 @@ if (trProbInput) {
 
 bindText('qt-author', '.out-qt-author'); bindText('qt-text', '.out-qt-text', false); bindImage('qt-img', '.out-qt-img');
 bindText('h2h-p1-name', '.out-h2h-p1-name'); bindText('h2h-p2-name', '.out-h2h-p2-name'); bindText('h2h-p1-stat', '.out-h2h-p1-stat', false); bindText('h2h-p2-stat', '.out-h2h-p2-stat', false); bindImage('h2h-p1-img', '.out-h2h-p1-img'); bindImage('h2h-p2-img', '.out-h2h-p2-img');
+bindText('pd-t1-name', '.out-pd-t1-name'); bindText('pd-t1-pts', '.out-pd-t1-pts', false); bindImage('pd-t1-logo', '.out-pd-t1-logo');
+bindText('pd-t2-name', '.out-pd-t2-name'); bindText('pd-t2-pts', '.out-pd-t2-pts', false); bindImage('pd-t2-logo', '.out-pd-t2-logo');
+bindText('pd-t3-name', '.out-pd-t3-name'); bindText('pd-t3-pts', '.out-pd-t3-pts', false); bindImage('pd-t3-logo', '.out-pd-t3-logo');
 
-// HAFTANIN MAÇLARI
 bindText('hw-title-input', '.out-hw-title');
 for(let i=1; i<=6; i++) {
     bindText(`hw-m${i}-home`, `.out-hw-m${i}-home`); bindText(`hw-m${i}-score`, `.out-hw-m${i}-score`, false); bindText(`hw-m${i}-away`, `.out-hw-m${i}-away`); bindImage(`hw-m${i}-hlogo`, `.out-hw-m${i}-hlogo`); bindImage(`hw-m${i}-alogo`, `.out-hw-m${i}-alogo`);
@@ -203,7 +214,7 @@ document.querySelectorAll('input[type="text"], input[type="number"], textarea').
 
 window.addEventListener('load', () => {
     document.querySelectorAll('input[type="text"], input[type="number"], textarea').forEach(el => { el.dispatchEvent(new Event('input')); });
-    setTimeout(autoScaleText, 100);
+    setTimeout(autoScaleText, 200);
     
     const savedTheme = localStorage.getItem('skoragi_theme') || 'default';
     if (savedTheme !== 'default') {
@@ -214,53 +225,62 @@ window.addEventListener('load', () => {
 });
 
 // ==========================================
-// 🌟 KUSURSUZ İNDİRME MOTORU (KLONLAMA İLE) 🌟
+// 🌟 FİZİKSEL RENDER İNDİRME MOTORU (KAYMA %100 BİTTİ) 🌟
 // ==========================================
 function downloadTpl(elementId, fileName) {
-    const originalCard = document.getElementById(elementId);
+    const card = document.getElementById(elementId);
+    const wrapper = card.parentElement;
     const btn = event.target;
     const originalBtnText = btn.innerText;
     
     btn.innerText = "İNDİRİLİYOR...";
     btn.style.backgroundColor = "#555";
 
-    // 1. Kartın orijinal 1080x1350 boyutunda tam bir kopyasını al
-    const cloneWrapper = document.createElement('div');
-    cloneWrapper.style.position = 'absolute';
-    cloneWrapper.style.top = '-9999px'; // Ekranda görünmesin
-    cloneWrapper.style.left = '-9999px';
-    cloneWrapper.style.width = '1080px';
-    cloneWrapper.style.height = elementId === 'tpl-reels' ? '1920px' : '1350px';
-    
-    const cloneCard = originalCard.cloneNode(true);
-    cloneCard.style.transform = 'scale(1)'; // Kopyayı küçültme!
-    cloneCard.style.position = 'relative';
-    
-    cloneWrapper.appendChild(cloneCard);
-    document.body.appendChild(cloneWrapper);
+    const originalTransform = card.style.transform;
 
-    // 2. Kopyanın fotoğrafını çek
+    // html2canvas'ın şaşırmaması için görünmez devasa bir fiziksel oda yaratıyoruz
+    const renderRoom = document.createElement('div');
+    renderRoom.style.position = 'fixed';
+    renderRoom.style.top = '0';
+    renderRoom.style.left = '0';
+    renderRoom.style.width = '1080px';
+    renderRoom.style.height = elementId === 'tpl-reels' ? '1920px' : '1350px';
+    renderRoom.style.opacity = '0'; // Kullanıcı görmez
+    renderRoom.style.pointerEvents = 'none';
+    renderRoom.style.zIndex = '-9999';
+    document.body.appendChild(renderRoom);
+
+    // Kartı stüdyodan alıp bu odaya tam boyutuyla koyuyoruz (Esnek kutular milim oynamaz)
+    card.style.transform = 'none';
+    renderRoom.appendChild(card);
+
+    // Tarayıcıya yeni düzeni çizmesi için zaman veriyoruz
     setTimeout(() => {
-        html2canvas(cloneCard, { 
-            scale: 2, // 2160x2700 Kalite
+        html2canvas(card, { 
+            scale: 2, // Sosyal Medya için 2160x2700 HD Çözünürlük
             backgroundColor: "#050505", 
             useCORS: true, 
             logging: false 
         }).then(canvas => {
+            // Kartı stüdyodaki küçük yerine geri koy
+            wrapper.appendChild(card);
+            card.style.transform = originalTransform;
+            document.body.removeChild(renderRoom);
+            
             const imageURL = canvas.toDataURL("image/jpeg", 0.95);
             const downloadLink = document.createElement('a');
             downloadLink.href = imageURL; 
             downloadLink.download = `skoragi-${fileName}.jpg`;
             downloadLink.click(); 
 
-            // 3. İşi biten kopyayı sil
-            document.body.removeChild(cloneWrapper);
             btn.innerText = originalBtnText;
             btn.style.backgroundColor = "";
         }).catch(err => {
             console.error("İndirme Hatası:", err);
             alert("İndirme başarısız oldu.");
-            document.body.removeChild(cloneWrapper);
+            wrapper.appendChild(card);
+            card.style.transform = originalTransform;
+            document.body.removeChild(renderRoom);
             btn.innerText = originalBtnText;
             btn.style.backgroundColor = "";
         });
