@@ -29,20 +29,26 @@ btnWatermark.addEventListener('click', () => {
 });
 
 // ==========================================
-// 🌟 GÜVENLİ METİN KÜÇÜLTME MOTORU (KIRILMAZ) 🌟
+// 🌟 GÜVENLİ METİN KÜÇÜLTME MOTORU (ZIRHLARI KIRMAZ) 🌟
 // ==========================================
 function autoScaleText() {
     document.querySelectorAll('.auto-scale-text').forEach(el => {
         const parent = el.parentElement;
         if(!parent) return;
+
+        // 🚨 TAKIM İSİMLERİ İÇİN FONT LİMİTİ 75'E ÇIKARILDI 🚨
+        let maxFont = 100; 
+        if(el.classList.contains('team-name')) maxFont = 75; 
+        if(el.classList.contains('out-sd-title')) maxFont = 65;
+        if(el.className.includes('out-hw-m')) maxFont = 45; // Haftanın maçları
+        if(el.classList.contains('pc-name')) maxFont = 30; // İlk 11
+
+        el.style.fontSize = maxFont + 'px';
         
-        el.style.transform = "scale(1)"; 
-        
-        // CSS içindeki width'i taşıyorsa güvenli şekilde scale et
-        if (el.scrollWidth > parent.clientWidth && parent.clientWidth > 0) {
-            const ratio = parent.clientWidth / el.scrollWidth;
-            el.style.transform = `scale(${ratio})`;
-            el.style.transformOrigin = "center";
+        // Kutuya sığmayana kadar kibarca küçült
+        while ((el.scrollWidth > parent.clientWidth || el.scrollHeight > parent.clientHeight) && maxFont > 15) {
+            maxFont -= 1;
+            el.style.fontSize = maxFont + 'px';
         }
     });
 }
@@ -98,7 +104,7 @@ bindText('ms-home-score', '.out-ms-home-score', false); bindText('ms-away-score'
 bindText('ms-home-scorers', '.out-ms-home-scorers', false, true); bindText('ms-away-scorers', '.out-ms-away-scorers', false, true);
 bindImage('ms-home-logo', '.out-ms-home-logo'); bindImage('ms-away-logo', '.out-ms-away-logo'); bindImage('ms-bg', '.out-ms-bg', true);
 
-// 4. İSTATİSTİK (JS ÇÖKMESİ GİDERİLDİ)
+// 4. İSTATİSTİK
 bindImage('stat-home-logo', '.out-stat-home-logo');
 bindImage('stat-away-logo', '.out-stat-away-logo');
 bindImage('stat-bg', '.out-stat-bg', true);
@@ -259,7 +265,7 @@ function downloadTpl(elementId, fileName) {
 
     const originalTransform = card.style.transform;
 
-    // Görünmez Render Odası (Gerçek Boyutta)
+    // Görünmez Render Odası (Gerçek Boyutta, Cam Efekti Çalışsın Diye Arkası Koyu)
     const renderRoom = document.createElement('div');
     renderRoom.style.position = 'fixed';
     renderRoom.style.top = '0';
@@ -269,6 +275,7 @@ function downloadTpl(elementId, fileName) {
     renderRoom.style.opacity = '0'; 
     renderRoom.style.pointerEvents = 'none';
     renderRoom.style.zIndex = '-9999';
+    renderRoom.style.backgroundColor = '#050505'; // Camın okunması için zemin şart
     document.body.appendChild(renderRoom);
 
     card.style.transform = 'none';
@@ -276,8 +283,8 @@ function downloadTpl(elementId, fileName) {
 
     setTimeout(() => {
         html2canvas(card, { 
-            scale: 2, 
-            backgroundColor: "#050505", 
+            scale: 2, // 2160x2700 Piksel HD İndirme
+            backgroundColor: null, 
             useCORS: true, 
             logging: false 
         }).then(canvas => {
@@ -295,6 +302,7 @@ function downloadTpl(elementId, fileName) {
             btn.style.backgroundColor = "";
         }).catch(err => {
             console.error("İndirme Hatası:", err);
+            alert("İndirme başarısız oldu. Lütfen sayfayı yenileyin.");
             wrapper.appendChild(card);
             card.style.transform = originalTransform;
             document.body.removeChild(renderRoom);
