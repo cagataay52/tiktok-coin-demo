@@ -30,11 +30,10 @@ body { background-color: var(--gray); color: var(--text); font-family: 'Montserr
 .preview-wrapper { width: 360px; height: 450px; position: relative; box-shadow: 0 20px 60px rgba(0,0,0,1); overflow: hidden; } 
 .match-card { width: 1080px; height: 1350px; background-color: var(--dark); position: absolute; top: 0; left: 0; transform: scale(0.33333); transform-origin: top left; overflow: hidden; backface-visibility: hidden; border: 1px solid #111;}
 
-/* html2canvas DESTEKLİ GLASSMORPHISM (Background RGBA ile toklaştırıldı) */
+/* html2canvas İndirme Garantili Glassmorphism (RGBA) */
 .glass-panel {
     background: rgba(15, 15, 20, 0.7); 
     backdrop-filter: blur(25px);
-    -webkit-backdrop-filter: blur(25px);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-top: 1px solid rgba(255, 255, 255, 0.25);
     box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7);
@@ -44,7 +43,7 @@ body { background-color: var(--gray); color: var(--text); font-family: 'Montserr
 
 .bg-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; opacity: 0.3; z-index: 0;}
 
-/* KESKİN DAİRELERİ ENGELLEYEN YENİ NEON KÜRELER (RADIAL GRADIENT) */
+/* RADIAL GRADIENT NEON KÜRELER (SİYAH KUTU HATASINI ÖNLER) */
 .glass-orb { position: absolute; border-radius: 50%; z-index: 1; pointer-events: none; opacity: 0.8;}
 .orb-top { width: 1000px; height: 1000px; top: -300px; left: -300px; background: radial-gradient(circle, var(--bg-grad-1) 0%, transparent 60%); }
 .orb-bottom { width: 900px; height: 900px; bottom: -200px; right: -200px; background: radial-gradient(circle, var(--primary-dim) 0%, transparent 60%); }
@@ -55,9 +54,9 @@ body { background-color: var(--gray); color: var(--text); font-family: 'Montserr
 .layout-center { display: flex; flex: 1; align-items: center; justify-content: center; width: 100%;}
 .layout-bottom { display: flex; justify-content: center; align-items: center; width: 100%; height: 200px;}
 
-/* KUSURSUZ SİMETRİ (CSS GRID) */
-.match-grid { display: grid; grid-template-columns: 1fr 1.2fr 1fr; align-items: center; justify-items: center; width: 100%; gap: 20px;}
-.team-col { display: flex; flex-direction: column; align-items: center; gap: 25px; width: 100%; min-width: 0;}
+/* SİMETRİK GRID */
+.match-grid { display: grid; grid-template-columns: 1.3fr 0.8fr 1.3fr; align-items: center; justify-items: center; width: 100%; gap: 10px;}
+.team-col { display: flex; flex-direction: column; align-items: center; gap: 20px; width: 100%; min-width: 0;}
 .score-col { display: flex; justify-content: center; align-items: center; width: 100%;}
 
 .row-layout { display: flex; flex-direction: row; justify-content: center; align-items: center; width: 100%;}
@@ -65,14 +64,14 @@ body { background-color: var(--gray); color: var(--text); font-family: 'Montserr
 .w-full { width: 100%; }
 
 /* GÖRSEL VE YAZI ZIRHLARI */
-.name-box { width: 100%; max-width: 400px; height: 80px; display: flex; justify-content: center; align-items: center; overflow: hidden; }
-.team-name { font-family: 'Barlow', sans-serif; font-weight: 900; color: #fff; text-shadow: 2px 2px 8px #000; text-align: center; white-space: nowrap; line-height: 1;}
+.name-box { width: 100%; max-width: 450px; height: 90px; display: flex; justify-content: center; align-items: center; overflow: hidden; }
+.team-name { font-family: 'Barlow', sans-serif; font-weight: 900; color: #fff; text-shadow: 2px 2px 8px #000; text-align: center; white-space: nowrap;}
+
 .logo-box { width: 280px; height: 280px; display: flex; justify-content: center; align-items: center; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.8)); }
 .logo-box img { max-width: 100%; max-height: 100%; width: auto !important; height: auto !important; display: block; }
 .logo-box-small { width: 160px; height: 160px; display: flex; justify-content: center; align-items: center; filter: drop-shadow(0 15px 30px #000); }
 .logo-box-small img { max-width: 100%; max-height: 100%; width: auto !important; height: auto !important; display: block; }
 .hero-player-img { position: absolute; max-height: 1050px; max-width: 100%; width: auto !important; height: auto !important; bottom: 0; left: 50%; transform: translateX(-50%); filter: drop-shadow(0 30px 60px rgba(0,0,0,0.9)); z-index: 5;}
-.bg-watermark-logo { position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); width: 900px; opacity: 0.05; filter: grayscale(100%); z-index: 2;}
 
 .text-primary { color: var(--primary) !important; transition: color 0.5s; }
 .bg-primary { background-color: var(--primary) !important; color: #000 !important; transition: background 0.5s;}
@@ -81,10 +80,10 @@ body { background-color: var(--gray); color: var(--text); font-family: 'Montserr
 .neon-border { border-color: var(--primary) !important; transition: 0.5s; }
 .watermark-text { position: absolute; bottom: 30px; width: 100%; text-align: center; font-size: 26px; color: rgba(255,255,255,0.3); font-weight: 900; z-index: 50; letter-spacing: 5px; text-transform: uppercase;}
 
-/* MODÜL 1, 2, 3 ELEMANLARI */
+/* MODÜL 1, 2, 3 ELEMANLARI (KÜÇÜLTÜLDÜ) */
 .main-title { font-family: 'Barlow', sans-serif; font-style: italic; font-weight: 900; font-size: 150px; margin: 0; letter-spacing: -2px; line-height: 1; text-align: center;}
-.score-text { font-family: 'Barlow', sans-serif; font-style: italic; font-weight: 900; font-size: 240px; line-height: 1; white-space: nowrap; -webkit-text-stroke: 4px var(--dark);}
-.info-pill { font-size: 32px; font-weight: 800; letter-spacing: 4px; color: #fff; border-radius: 60px; padding: 25px 80px; text-align: center; max-width: 90%; white-space: nowrap; overflow: hidden;}
+.score-text { font-family: 'Barlow', sans-serif; font-style: italic; font-weight: 900; font-size: 190px; line-height: 1; white-space: nowrap; -webkit-text-stroke: 3px var(--dark);}
+.info-pill { font-size: 24px; font-weight: 800; letter-spacing: 6px; color: #fff; border-radius: 60px; padding: 15px 50px; text-align: center; max-width: 90%; white-space: nowrap; overflow: hidden;}
 .badge-pill { font-family: 'Barlow'; font-weight: 900; font-style: italic; font-size: 65px; padding: 20px 90px; border-radius: 70px;}
 
 .scorer-panel { display: flex; justify-content: space-between; align-items: center; width: 95%; padding: 35px 50px;}
@@ -109,29 +108,32 @@ body { background-color: var(--gray); color: var(--text); font-family: 'Montserr
 .kadro-row { display: flex; justify-content: center; gap: 40px; width: 100%;}
 .player-card-vertical { width: 220px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px 10px; gap: 15px;}
 .pc-logo-container { width: 100px; height: 100px; border-radius: 50%; background: #000; border: 3px solid rgba(255,255,255,0.2); display: flex; justify-content: center; align-items: center; overflow: hidden; filter: drop-shadow(0 15px 30px #000);}
-.pc-name { font-family: 'Barlow'; font-weight: 800; color: #fff; text-align: center; white-space: nowrap; line-height: 1;}
+.pc-name { font-family: 'Barlow'; font-weight: 800; color: #fff; text-align: center; white-space: nowrap;}
 .pc-meta { display: flex; align-items: center; gap: 10px; font-family: 'Montserrat'; font-weight: 900; font-size: 18px; color: #aaa;}
 .pc-meta b { color: var(--primary); font-family: 'Barlow'; font-size: 24px; font-style: italic;}
 
-/* MODÜL 17: HAFTANIN MAÇLARI (CSS GRID İLE YIKILMAZ SİMETRİ) */
-.hw-row { padding: 20px 40px; border-radius: 20px; width: 100%; margin-bottom: 15px;}
-.hw-row.match-grid { grid-template-columns: 1fr 180px 1fr; gap: 20px; padding: 15px 30px;}
-.hw-team { display: flex; align-items: center; gap: 20px; width: 100%; min-width: 0;}
+/* MODÜL 17: HAFTANIN MAÇLARI (TEK PARÇA PANO TASARIMI) */
+.hw-master-panel { width: 100%; padding: 10px 30px; display: flex; flex-direction: column; gap: 0; }
+.hw-row { padding: 20px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); width: 100%; display: flex; justify-content: space-between; align-items: center;}
+.hw-row:last-child { border-bottom: none; }
+.hw-team { display: flex; align-items: center; gap: 20px; width: 380px; min-width: 0;}
 .hw-home { justify-content: flex-end; text-align: right;}
 .hw-away { justify-content: flex-start; text-align: left;}
-.hw-name { flex: 1; height: 50px; display: flex; align-items: center; overflow: hidden;}
+.hw-name { width: 100%; height: 50px; display: flex; align-items: center; overflow: hidden;}
 .hw-home .hw-name { justify-content: flex-end; }
 .hw-away .hw-name { justify-content: flex-start; }
-.hw-logo { width: 75px; height: 75px; display: flex; justify-content: center; align-items: center; flex-shrink: 0;}
-.hw-logo img { max-width: 100%; max-height: 100%; object-fit: contain !important; filter: drop-shadow(0 10px 20px #000);}
-.hw-score-wrapper { display: flex; justify-content: center; align-items: center; width: 100%; }
-.hw-score { font-family: 'Barlow'; font-weight: 900; font-style: italic; font-size: 40px; padding: 12px 0; border-radius: 12px; width: 100%; text-align: center; letter-spacing: 2px;}
+.hw-logo { width: 70px; height: 70px; display: flex; justify-content: center; align-items: center; flex-shrink: 0;}
+.hw-logo img { max-width: 100%; max-height: 100%; object-fit: contain !important; filter: drop-shadow(0 5px 10px #000);}
+.hw-team span { font-family: 'Barlow'; font-weight: 800; font-size: 36px; color: #fff; white-space: nowrap;}
+.hw-score-wrapper { display: flex; justify-content: center; align-items: center; flex: 1;}
+.hw-score { font-family: 'Barlow'; font-weight: 900; font-style: italic; font-size: 38px; padding: 8px 15px; border-radius: 12px; min-width: 120px; text-align: center; letter-spacing: 2px;}
+.time-bg { background: rgba(0,0,0,0.5); color: #ccc; border: 1px solid rgba(255,255,255,0.1); }
 
-/* DİĞER MODÜLLER */
-.transfer-panel { width: 100%; padding: 50px; text-align: center;}
-.transfer-name { font-family: 'Barlow'; font-weight: 900; font-style: italic; color: #fff;}
-.transfer-prob { font-family: 'Montserrat'; font-weight: 900; font-size: 30px; color: #aaa;}
-.done-stamp { font-family: 'Barlow'; font-weight: 900; font-style: italic; font-size: 70px; padding: 15px 50px; border-radius: 15px; transform: rotate(-5deg); background: var(--primary); color: #000; display: inline-block;}
+/* DİĞER MODÜLLER (6-16 ARASI) */
+.transfer-panel { padding: 50px; text-align: center;}
+.transfer-name { font-family: 'Barlow'; font-weight: 900; font-style: italic; font-size: 85px; color: #fff; margin-bottom: 30px; white-space: nowrap;}
+.stat-bar-bg { width: 100%; height: 30px; background: rgba(0,0,0,0.6); border-radius: 15px; overflow: hidden;}
+.done-stamp { font-family: 'Barlow'; font-weight: 900; font-style: italic; font-size: 70px; padding: 15px 50px; border-radius: 15px; transform: rotate(-5deg); display: inline-block;}
 
 .quote-fade { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to top, var(--dark) 40%, transparent 100%); z-index: 3;}
 .quote-panel { padding: 60px; border-left-width: 12px !important;}
@@ -157,7 +159,7 @@ body { background-color: var(--gray); color: var(--text); font-family: 'Montserr
 /* GİRDİ PANELİ */
 .input-group { margin-bottom: 20px; }
 .input-group label { font-size: 12px; color: #888; font-weight: 800; text-transform: uppercase; margin-bottom: 8px; display: block; }
-.input-group input[type="text"], .input-group input[type="number"], .input-group textarea { width: 100%; padding: 14px; background: #050505; border: 1px solid #1a1a1a; color: white; border-radius: 8px; font-family: 'Montserrat', font-weight: 700; resize: none; transition: 0.3s;}
+.input-group input[type="text"], .input-group input[type="number"], .input-group textarea { width: 100%; padding: 14px; background: #050505; border: 1px solid #1a1a1a; color: white; border-radius: 8px; font-family: 'Montserrat', font-weight: 700; resize: none;}
 .input-group input:focus, .input-group textarea:focus { border-color: var(--primary); outline: none; background: #080808;}
 .download-btn { width: 100%; padding: 18px; background: var(--primary); color: #000; font-family: 'Barlow'; font-weight: 900; font-size: 22px; border: none; border-radius: 8px; cursor: pointer; margin-top: 20px;}
 
