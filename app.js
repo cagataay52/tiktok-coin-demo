@@ -72,20 +72,28 @@ function bindText(inputId, targetClass, isUpper = true, isHtml = false) {
     });
 }
 
+// 🚨 GÖRSEL YÜKLEME KİLİTLENMESİ BURADA ÇÖZÜLDÜ 🚨
 function bindImage(inputId, targetSelector, isBackground = false) {
     const input = document.getElementById(inputId);
     if (!input) return;
+
+    // Butona her tıklandığında hafızayı temizle (Aynı fotoğrafı defalarca seçebilmek için)
+    input.addEventListener('click', function() {
+        this.value = null; 
+    });
     
     input.addEventListener('change', function(e) {
         const file = e.target.files[0];
         if (!file) return;
         
         const reader = new FileReader();
-        reader.onload = function(readEvent) {
-            const result = readEvent.target.result;
+        reader.onload = function(event) {
+            const result = event.target.result;
             
+            // İlk 11 logosunu hafızaya al
             if (inputId === 'k-logo') window.kLogoCached = result;
 
+            // Fotoğrafı şablona bas
             document.querySelectorAll(targetSelector).forEach(el => {
                 if (isBackground) {
                     el.style.backgroundImage = `url('${result}')`;
@@ -94,6 +102,7 @@ function bindImage(inputId, targetSelector, isBackground = false) {
                 }
             });
             
+            // İlk 11 logosu güncellendiyse dizilimi tetikle
             if (inputId === 'k-logo') {
                 const lineupInput = document.getElementById('k-lineup');
                 if (lineupInput) {
@@ -101,6 +110,8 @@ function bindImage(inputId, targetSelector, isBackground = false) {
                 }
             }
         }
+        
+        // Dosyayı oku
         reader.readAsDataURL(file);
     });
 }
@@ -239,7 +250,7 @@ if (hwCountInput) {
 }
 
 // ==========================================
-// 5. OTOMATİK KAYIT
+// 5. OTOMATİK KAYIT SİSTEMİ
 // ==========================================
 const savedData = JSON.parse(localStorage.getItem('skoragi_data')) || {};
 document.querySelectorAll('input[type="text"], input[type="number"], textarea').forEach(el => {
@@ -309,7 +320,7 @@ function downloadTpl(elementId, fileName) {
             btn.style.backgroundColor = "";
         }).catch(err => {
             console.error("İndirme Hatası:", err);
-            alert("İndirme başarısız oldu.");
+            alert("İndirme başarısız oldu. Lütfen sayfayı yenileyin.");
             wrapper.appendChild(card);
             card.style.transform = originalTransform;
             document.body.removeChild(renderRoom);
