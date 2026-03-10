@@ -28,13 +28,10 @@ btnWatermark.addEventListener('click', () => {
     }
 });
 
-// ==========================================
-// YARDIMCI FONKSİYONLAR 
-// ==========================================
 function autoScaleText() {
     document.querySelectorAll('.auto-scale').forEach(el => {
         let fontSize = 80; 
-        if(el.classList.contains('out-sd-title')) fontSize = 55;
+        if(el.classList.contains('quote-text')) fontSize = 55;
         
         el.style.fontSize = fontSize + 'px';
         while (el.scrollHeight > el.parentElement.clientHeight || el.scrollWidth > el.parentElement.clientWidth) {
@@ -93,7 +90,6 @@ function bindImage(inputId, targetIdOrClass, isBackground = false) {
     });
 }
 
-// BÜTÜN MODÜLLERİN BAĞLANTILARI
 bindText('mg-home-name', '.out-mg-home-name'); bindText('mg-away-name', '.out-mg-away-name');
 bindText('mg-time', '.out-mg-time', false); bindText('mg-venue', '.out-mg-venue');
 bindImage('mg-home-logo', '.out-mg-home-logo'); bindImage('mg-away-logo', '.out-mg-away-logo'); bindImage('mg-bg', 'bg-mac-gunu', true);
@@ -124,18 +120,16 @@ bindStat('stat-shot-home', 'stat-shot-away', '.out-stat-shot-home', '.out-stat-s
 bindStat('stat-cor-home', 'stat-cor-away', '.out-stat-cor-home', '.out-stat-cor-away', 'bar-cor-home', 'bar-cor-away');
 bindStat('stat-foul-home', 'stat-foul-away', '.out-stat-foul-home', '.out-stat-foul-away', 'bar-foul-home', 'bar-foul-away');
 
-// İLK 11 (YENİ SİSTEM 4-3-3)
 bindImage('k-logo', '.out-k-logo'); bindImage('k-bg', 'bg-kadro', true); 
 const positions433 = ['GK', 'RB', 'CB', 'CB', 'LB', 'CDM', 'CM', 'CM', 'RW', 'ST', 'LW'];
 document.getElementById('k-lineup').addEventListener('input', function(e) {
     const gridContainer = document.getElementById('out-k-lineup-cards'); gridContainer.innerHTML = ''; 
     const players = e.target.value.split('\n').map(p => p.trim()).filter(p => p !== '');
-    
     players.slice(0, 11).forEach((player, index) => {
         const pos = positions433[index] || 'N/A';
         const isPrimary = (index === 0 || index > 7); 
         const card = document.createElement('div'); 
-        card.className = `player-card-vertical ${isPrimary ? 'neon-border' : ''} ${pos === 'GK' ? 'gk-card' : ''}`;
+        card.className = `glass-panel player-card-vertical ${isPrimary ? 'neon-border' : ''} ${pos === 'GK' ? 'gk-card' : ''}`;
         card.innerHTML = `
             <div class="pc-logo-container"><img src="https://creazilla-store.fra1.digitaloceanspaces.com/cliparts/3133642/soccer-player-clipart-xl.png"></div>
             <div class="pc-name">${player.toUpperCase()}</div>
@@ -167,57 +161,27 @@ bindText('h2h-p1-name', '.out-h2h-p1-name'); bindText('h2h-p2-name', '.out-h2h-p
 bindText('pd-t1-name', '.out-pd-t1-name'); bindText('pd-t1-pts', '.out-pd-t1-pts', false); bindImage('pd-t1-logo', '.out-pd-t1-logo');
 bindText('pd-t2-name', '.out-pd-t2-name'); bindText('pd-t2-pts', '.out-pd-t2-pts', false); bindImage('pd-t2-logo', '.out-pd-t2-logo');
 bindText('pd-t3-name', '.out-pd-t3-name'); bindText('pd-t3-pts', '.out-pd-t3-pts', false); bindImage('pd-t3-logo', '.out-pd-t3-logo');
-bindText('ref-name', '.out-ref-name'); bindImage('ref-img', '.out-ref-img'); bindImage('ref-logo-home', '.out-ref-logo-home'); bindImage('ref-logo-away', '.out-ref-logo-away');
-bindText('sd-news-title', '.out-sd-title', false, true); bindImage('sd-player-img', '.out-sd-player'); bindImage('sd-bg', 'bg-sondakika', true);
-bindText('r-player-name', '.out-r-name'); bindImage('r-player-img', '.out-r-player'); bindImage('r-bg', 'bg-reels', true);
-bindText('motm-name', '.out-motm-name'); bindImage('motm-img', '.out-motm-img'); bindImage('motm-logo', '.out-motm-logo');
-bindText('motm-s1-lbl', '.out-motm-s1-lbl'); bindText('motm-s1-val', '.out-motm-s1-val', false);
-bindText('motm-s2-lbl', '.out-motm-s2-lbl'); bindText('motm-s2-val', '.out-motm-s2-val', false);
-bindText('mil-name', '.out-mil-name'); bindText('mil-num', '.out-mil-num', false); bindText('mil-text', '.out-mil-text'); bindImage('mil-img', '.out-mil-img');
-bindImage('fix-img', '.out-fix-img');
-bindImage('fix1-logo', '.out-fix1-logo'); bindText('fix1-date', '.out-fix1-date'); bindText('fix1-tour', '.out-fix1-tour');
-bindImage('fix2-logo', '.out-fix2-logo'); bindText('fix2-date', '.out-fix2-date'); bindText('fix2-tour', '.out-fix2-tour');
-bindImage('fix3-logo', '.out-fix3-logo'); bindText('fix3-date', '.out-fix3-date'); bindText('fix3-tour', '.out-fix3-tour');
-bindText('hlt-name', '.out-hlt-name'); bindImage('hlt-img', '.out-hlt-img'); bindText('hlt-type', '.out-hlt-type'); bindText('hlt-date', '.out-hlt-date');
 
-// HAFTANIN MAÇLARI
 bindText('hw-title-input', '.out-hw-title');
 bindImage('hw-bg', 'bg-hw', true);
-
 for(let i=1; i<=6; i++) {
-    bindText(`hw-m${i}-home`, `.out-hw-m${i}-home`);
-    bindText(`hw-m${i}-score`, `.out-hw-m${i}-score`, false);
-    bindText(`hw-m${i}-away`, `.out-hw-m${i}-away`);
-    bindImage(`hw-m${i}-hlogo`, `.out-hw-m${i}-hlogo`);
-    bindImage(`hw-m${i}-alogo`, `.out-hw-m${i}-alogo`);
+    bindText(`hw-m${i}-home`, `.out-hw-m${i}-home`); bindText(`hw-m${i}-score`, `.out-hw-m${i}-score`, false); bindText(`hw-m${i}-away`, `.out-hw-m${i}-away`); bindImage(`hw-m${i}-hlogo`, `.out-hw-m${i}-hlogo`); bindImage(`hw-m${i}-alogo`, `.out-hw-m${i}-alogo`);
 }
-
 const hwCountInput = document.getElementById('hw-match-count');
 if (hwCountInput) {
     hwCountInput.addEventListener('input', function(e) {
         let count = parseInt(e.target.value) || 5;
-        if (count > 6) count = 6;
-        if (count < 1) count = 1;
-        
+        if (count > 6) count = 6; if (count < 1) count = 1;
         for(let i=1; i<=6; i++) {
-            const inGroup = document.getElementById('hw-in-' + i);
-            const outRow = document.getElementById('hw-out-' + i);
+            const inGroup = document.getElementById('hw-in-' + i); const outRow = document.getElementById('hw-out-' + i);
             if (inGroup && outRow) {
-                if (i <= count) {
-                    inGroup.style.display = 'block';
-                    outRow.style.display = 'flex';
-                } else {
-                    inGroup.style.display = 'none';
-                    outRow.style.display = 'none';
-                }
+                if (i <= count) { inGroup.style.display = 'block'; outRow.style.display = 'flex'; } 
+                else { inGroup.style.display = 'none'; outRow.style.display = 'none'; }
             }
         }
     });
 }
 
-// ==========================================
-// 💾 OTOMATİK KAYIT VE AYAR YÜKLEME 💾
-// ==========================================
 const savedData = JSON.parse(localStorage.getItem('skoragi_data')) || {};
 document.querySelectorAll('input[type="text"], input[type="number"], textarea').forEach(el => {
     if (savedData[el.id] !== undefined) { el.value = savedData[el.id]; }
@@ -230,24 +194,14 @@ document.querySelectorAll('input[type="text"], input[type="number"], textarea').
 window.addEventListener('load', () => {
     document.querySelectorAll('input[type="text"], input[type="number"], textarea').forEach(el => { el.dispatchEvent(new Event('input')); });
     autoScaleText(); setTimeout(autoScaleSimpleText, 100);
-    
     const savedTheme = localStorage.getItem('skoragi_theme') || 'default';
     if (savedTheme !== 'default') {
         document.body.classList.add(`theme-${savedTheme}`);
         document.querySelector(`[data-theme="${savedTheme}"]`).classList.add('active');
         document.querySelector(`[data-theme="default"]`).classList.remove('active');
     }
-    
-    if (localStorage.getItem('skoragi_wm') === 'on') {
-        document.body.classList.add('watermark-on');
-        btnWatermark.innerText = "🛡️ FİLİGRAN: AÇIK";
-        btnWatermark.style.background = "#ff003c";
-    }
 });
 
-// ==========================================
-// 🌟 GÜVENLİ İNDİRME MOTORU (KAYMA VE BOZULMA ENGELLENDİ) 🌟
-// ==========================================
 function downloadTpl(elementId, fileName) {
     const captureArea = document.getElementById(elementId);
     const btn = event.target;
@@ -271,7 +225,7 @@ function downloadTpl(elementId, fileName) {
     setTimeout(() => {
         html2canvas(captureArea, { 
             scale: 2, 
-            backgroundColor: "#000", 
+            backgroundColor: "#050505", 
             useCORS: true, 
             logging: false 
         }).then(canvas => {
@@ -293,7 +247,6 @@ function downloadTpl(elementId, fileName) {
             btn.style.backgroundColor = "";
         }).catch(err => {
             console.error("İndirme Hatası:", err);
-            alert("İndirme sırasında hata oluştu. Lütfen sayfayı yenileyin.");
             captureArea.style.transform = originalTransform;
             captureArea.style.position = originalPosition;
             captureArea.style.top = originalTop;
