@@ -31,7 +31,7 @@ if(btnWatermark) {
 }
 
 // ==========================================
-// 🌟 GÜVENLİ METİN KÜÇÜLTME MOTORU (ZIRHLARI KIRMAZ) 🌟
+// 🌟 GÜVENLİ METİN KÜÇÜLTME MOTORU 🌟
 // ==========================================
 function autoScaleText() {
     document.querySelectorAll('.auto-scale-text').forEach(el => {
@@ -41,7 +41,8 @@ function autoScaleText() {
         let maxFont = 100; 
         if(el.classList.contains('team-name')) maxFont = 75; 
         if(el.classList.contains('out-sd-title')) maxFont = 65;
-        if(parent.classList.contains('hw-name')) maxFont = 45; // Haftanın maçları isimleri
+        if(el.className.includes('out-hw-m') && !el.className.includes('score')) maxFont = 36; // Haftanın maçları
+        if(el.classList.contains('out-mg-venue')) maxFont = 24; // Stadyum ismi
         if(el.classList.contains('pc-name')) maxFont = 30; // İlk 11
 
         el.style.fontSize = maxFont + 'px';
@@ -90,7 +91,7 @@ function bindImage(inputId, targetIdOrClass, isBackground = false) {
     });
 }
 
-// 1-3 MODÜLLERİ
+// BAĞLANTILAR (1'DEN 17'YE KADAR EKSİKSİZ)
 bindText('mg-home-name', '.out-mg-home-name'); bindText('mg-away-name', '.out-mg-away-name');
 bindText('mg-time', '.out-mg-time', false); bindText('mg-venue', '.out-mg-venue');
 bindImage('mg-home-logo', '.out-mg-home-logo'); bindImage('mg-away-logo', '.out-mg-away-logo'); bindImage('mg-bg', '.out-mg-bg', true);
@@ -130,7 +131,7 @@ bindStat('stat-shot-home', 'stat-shot-away', '.out-stat-shot-home', '.out-stat-s
 bindStat('stat-cor-home', 'stat-cor-away', '.out-stat-cor-home', '.out-stat-cor-away', 'bar-cor-home', null);
 bindStat('stat-foul-home', 'stat-foul-away', '.out-stat-foul-home', '.out-stat-foul-away', 'bar-foul-home', null);
 
-// 5. İLK 11 (KUSURSUZ DİZİLİM)
+// 5. İLK 11 KADROSU
 bindImage('k-logo', '.out-k-logo'); bindImage('k-bg', '.out-k-bg', true); 
 const positions433 = ['GK', 'RB', 'CB', 'CB', 'LB', 'CDM', 'CM', 'CM', 'RW', 'ST', 'LW'];
 const layout433 = [[8, 9, 10], [5, 6, 7], [1, 2, 3, 4], [0]]; 
@@ -176,7 +177,7 @@ if (trProbInput) {
         const probC = document.getElementById('tr-prob-container');
         const doneC = document.getElementById('tr-done-container');
         if(probC && doneC) {
-            if(val === 0) { probC.style.display = 'none'; doneC.style.display = 'block'; } 
+            if(val === 0) { probC.style.display = 'none'; doneC.style.display = 'inline-block'; } 
             else { probC.style.display = 'block'; doneC.style.display = 'none'; document.getElementById('out-tr-bar').style.width = val + '%'; document.querySelector('.out-tr-prob').innerText = '%' + val; }
         }
     });
@@ -213,7 +214,7 @@ if (hwCountInput) {
         for(let i=1; i<=6; i++) {
             const inGroup = document.getElementById('hw-in-' + i); const outRow = document.getElementById('hw-out-' + i);
             if (inGroup && outRow) {
-                if (i <= count) { inGroup.style.display = 'block'; outRow.style.display = 'grid'; } 
+                if (i <= count) { inGroup.style.display = 'block'; outRow.style.display = 'flex'; } 
                 else { inGroup.style.display = 'none'; outRow.style.display = 'none'; }
             }
         }
@@ -245,7 +246,7 @@ window.addEventListener('load', () => {
 });
 
 // ==========================================
-// 🌟 FİZİKSEL RENDER İNDİRME MOTORU (KAYMAYI VE KARARMAYI BİTİRİR) 🌟
+// 🌟 YENİ NESİL FİZİKSEL İNDİRME MOTORU (KAYMAYI VE KARARMAYI 100% ÖNLER) 🌟
 // ==========================================
 function downloadTpl(elementId, fileName) {
     const card = document.getElementById(elementId);
@@ -258,7 +259,7 @@ function downloadTpl(elementId, fileName) {
 
     const originalTransform = card.style.transform;
 
-    // Görünmez Render Odası (Gerçek Boyutta)
+    // Görünmez Render Odası (HTML2Canvas için karanlık zemin şart)
     const renderRoom = document.createElement('div');
     renderRoom.style.position = 'fixed';
     renderRoom.style.top = '0';
@@ -268,7 +269,6 @@ function downloadTpl(elementId, fileName) {
     renderRoom.style.opacity = '0'; 
     renderRoom.style.pointerEvents = 'none';
     renderRoom.style.zIndex = '-9999';
-    // html2canvas'ın siyah basmasını önlemek için arka plan rengini karanlık veriyoruz
     renderRoom.style.backgroundColor = '#020202'; 
     document.body.appendChild(renderRoom);
 
@@ -296,7 +296,6 @@ function downloadTpl(elementId, fileName) {
             btn.style.backgroundColor = "";
         }).catch(err => {
             console.error("İndirme Hatası:", err);
-            alert("İndirme başarısız oldu. Lütfen sayfayı yenileyin.");
             wrapper.appendChild(card);
             card.style.transform = originalTransform;
             document.body.removeChild(renderRoom);
