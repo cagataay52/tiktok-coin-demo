@@ -1,4 +1,4 @@
-/* 🌟 TEMA DEĞİŞKENLERİ 🌟 */
+/* 🌟 TEMA DEĞİŞKENLERİ VE GLASSMORPHISM 🌟 */
 :root {
     --primary: #FF5722; 
     --primary-dim: rgba(255, 87, 34, 0.4);
@@ -33,11 +33,12 @@ body { background-color: var(--gray); color: var(--text); font-family: 'Montserr
 .preview-wrapper.reels-wrapper { width: 253px; height: 450px; } 
 .match-card.tpl-reels { width: 1080px; height: 1920px; transform: scale(0.234375); }
 
-/* İNDİRME GARANTİLİ GLASSMORPHISM (RGBA) */
+/* HTML2CANVAS İNDİRME GARANTİLİ CAM EFEKTİ */
 .glass-panel {
-    background: rgba(15, 15, 20, 0.85); /* html2canvas için tok zemin */
+    background: rgba(15, 15, 20, 0.85); /* Siyah kalmaması için güçlü zemin */
     backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-top: 1px solid rgba(255, 255, 255, 0.3);
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
     border-radius: 30px;
@@ -45,11 +46,10 @@ body { background-color: var(--gray); color: var(--text); font-family: 'Montserr
 }
 
 .bg-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; opacity: 0.3; z-index: 0;}
-
-/* RADIAL GRADIENT NEON KÜRELER (SİYAH KUTU HATASINI ÖNLER) */
-.glass-orb { position: absolute; border-radius: 50%; z-index: 1; pointer-events: none; opacity: 0.8;}
-.orb-top { width: 1000px; height: 1000px; top: -300px; left: -300px; background: radial-gradient(circle, var(--bg-grad-1) 0%, transparent 60%); }
-.orb-bottom { width: 900px; height: 900px; bottom: -200px; right: -200px; background: radial-gradient(circle, var(--primary-dim) 0%, transparent 60%); }
+/* Hatalı "blur" yerine html2canvas'ın tanıdığı "radial-gradient" neonlar */
+.glass-orb { position: absolute; border-radius: 50%; z-index: 1; pointer-events: none;}
+.orb-top { width: 1000px; height: 1000px; top: -300px; left: -300px; background: radial-gradient(circle, var(--bg-grad-1) 0%, transparent 65%); opacity: 0.8; }
+.orb-bottom { width: 900px; height: 900px; bottom: -200px; right: -200px; background: radial-gradient(circle, var(--primary-dim) 0%, transparent 65%); opacity: 0.8; }
 
 /* ALTIN ORAN DÜZENİ */
 .card-layout { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: space-between; padding: 100px 60px; z-index: 10;}
@@ -57,8 +57,8 @@ body { background-color: var(--gray); color: var(--text); font-family: 'Montserr
 .layout-center { display: flex; flex: 1; align-items: center; justify-content: center; width: 100%;}
 .layout-bottom { display: flex; justify-content: center; align-items: center; width: 100%; height: 200px;}
 
-/* SİMETRİK GRID (MODÜL 1-2-3) */
-.match-grid { display: grid; grid-template-columns: 1fr 1.2fr 1fr; align-items: center; justify-items: center; width: 100%; gap: 10px;}
+/* KUSURSUZ SİMETRİ (GRID) */
+.match-grid { display: grid; grid-template-columns: 1.3fr 0.8fr 1.3fr; align-items: center; justify-items: center; width: 100%; gap: 10px;}
 .team-col { display: flex; flex-direction: column; align-items: center; gap: 20px; width: 100%; min-width: 0;}
 .score-col { display: flex; justify-content: center; align-items: center; width: 100%;}
 
@@ -67,8 +67,9 @@ body { background-color: var(--gray); color: var(--text); font-family: 'Montserr
 .w-full { width: 100%; }
 
 /* GÖRSEL VE YAZI ZIRHLARI */
-.name-box { width: 100%; max-width: 350px; height: 70px; display: flex; justify-content: center; align-items: center; overflow: hidden; }
+.name-box { width: 100%; max-width: 450px; height: 90px; display: flex; justify-content: center; align-items: center; overflow: hidden; }
 .team-name { font-family: 'Barlow', sans-serif; font-weight: 900; color: #fff; text-shadow: 2px 2px 8px #000; text-align: center; white-space: nowrap; line-height: 1;}
+
 .logo-box { width: 280px; height: 280px; display: flex; justify-content: center; align-items: center; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.8)); }
 .logo-box img { max-width: 100%; max-height: 100%; width: auto !important; height: auto !important; display: block; }
 .logo-box-small { width: 160px; height: 160px; display: flex; justify-content: center; align-items: center; filter: drop-shadow(0 15px 30px #000); }
@@ -83,10 +84,10 @@ body { background-color: var(--gray); color: var(--text); font-family: 'Montserr
 .neon-border { border-color: var(--primary) !important; transition: 0.5s; }
 .watermark-text { position: absolute; bottom: 30px; width: 100%; text-align: center; font-size: 26px; color: rgba(255,255,255,0.3); font-weight: 900; z-index: 50; letter-spacing: 5px; text-transform: uppercase;}
 
-/* MODÜL 1, 2, 3 (SAAT VE SKOR KÜÇÜLTÜLDÜ, STADYUM KÜÇÜLTÜLDÜ) */
+/* MODÜL 1, 2, 3 ELEMANLARI (KÜÇÜLTÜLMÜŞ ORANLAR) */
 .main-title { font-family: 'Barlow', sans-serif; font-style: italic; font-weight: 900; font-size: 150px; margin: 0; letter-spacing: -2px; line-height: 1; text-align: center;}
 .score-text { font-family: 'Barlow', sans-serif; font-style: italic; font-weight: 900; font-size: 190px; line-height: 1; white-space: nowrap; -webkit-text-stroke: 3px var(--dark); filter: drop-shadow(0 0 20px var(--primary-dim));}
-.info-pill { font-size: 24px; font-weight: 800; letter-spacing: 4px; color: #fff; border-radius: 50px; padding: 15px 50px; text-align: center; max-width: 80%; white-space: nowrap; overflow: hidden;}
+.info-pill { font-size: 24px; font-weight: 800; letter-spacing: 6px; color: #fff; border-radius: 60px; padding: 15px 50px; text-align: center; max-width: 90%; white-space: nowrap; overflow: hidden;}
 .badge-pill { font-family: 'Barlow'; font-weight: 900; font-style: italic; font-size: 65px; padding: 20px 90px; border-radius: 70px;}
 
 .scorer-panel { display: flex; justify-content: space-between; align-items: center; width: 95%; padding: 35px 50px;}
@@ -104,22 +105,22 @@ body { background-color: var(--gray); color: var(--text); font-family: 'Montserr
 .stat-bar-bg { width: 100%; height: 22px; background: rgba(0,0,0,0.5); border-radius: 12px; display: flex; overflow: hidden; box-shadow: inset 0 4px 8px #000;}
 .stat-bar-fill { height: 100%; box-shadow: 0 0 15px var(--primary);}
 
-/* MODÜL 5: İLK 11 (KUSURSUZ 4-3-3) */
+/* MODÜL 5: İLK 11 (KUSURSUZ 4-3-3 SAHA DİZİLİMİ) */
 .pitch-lines { width: 90%; height: 85%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); border: 4px solid rgba(255,255,255,0.15); border-radius: 20px; background-image: repeating-linear-gradient(0deg, transparent, transparent 50px, rgba(255,255,255,0.03) 50px, rgba(255,255,255,0.03) 100px); box-shadow: inset 0 0 150px rgba(0,0,0,0.8); z-index: 1;}
 .pitch-lines::after { content:''; position:absolute; top:50%; left:0; width:100%; height:4px; background:rgba(255,255,255,0.15); }
 .pitch-formation { width: 100%; height: 900px; display: flex; flex-direction: column; justify-content: space-evenly; align-items: center; z-index: 10;}
 .kadro-row { display: flex; justify-content: center; gap: 40px; width: 100%;}
 .player-card-vertical { width: 220px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px 10px; gap: 15px;}
 .pc-logo-container { width: 100px; height: 100px; border-radius: 50%; background: #000; border: 3px solid rgba(255,255,255,0.2); display: flex; justify-content: center; align-items: center; overflow: hidden; filter: drop-shadow(0 15px 30px #000);}
-.pc-name { font-family: 'Barlow'; font-weight: 800; color: #fff; text-align: center; white-space: nowrap;}
+.pc-name { font-family: 'Barlow'; font-weight: 800; color: #fff; text-align: center; white-space: nowrap; width: 100%;}
 .pc-meta { display: flex; align-items: center; gap: 10px; font-family: 'Montserrat'; font-weight: 900; font-size: 18px; color: #aaa;}
 .pc-meta b { color: var(--primary); font-family: 'Barlow'; font-size: 24px; font-style: italic;}
 
-/* 🚨 MODÜL 17: HAFTANIN MAÇLARI (5 SÜTUNLU KUSURSUZ GRID MİMARİSİ) 🚨 */
-.hw-master-panel { padding: 20px 40px; display: flex; flex-direction: column; border-top: 5px solid var(--primary); }
+/* 🚨 MODÜL 17: HAFTANIN MAÇLARI (5 SÜTUNLU KESİN SİMETRİ GRID'İ) 🚨 */
+.hw-master-panel { padding: 10px 40px; display: flex; flex-direction: column; border-top: 5px solid var(--primary); }
 .hw-row { 
     display: grid; 
-    grid-template-columns: 1fr 90px 180px 90px 1fr; /* SOL İSİM - LOGO - SKOR - LOGO - SAĞ İSİM */
+    grid-template-columns: 1fr 90px 160px 90px 1fr; /* KUSURSUZ HİZALAMA */
     align-items: center; 
     justify-items: center;
     padding: 25px 0; 
@@ -136,13 +137,9 @@ body { background-color: var(--gray); color: var(--text); font-family: 'Montserr
 .hw-score-wrapper { display: flex; justify-content: center; align-items: center; width: 100%; }
 .hw-score { 
     font-family: 'Barlow', sans-serif; font-weight: 900; font-style: italic; font-size: 40px; 
-    padding: 10px 20px; border-radius: 15px; min-width: 150px; text-align: center; letter-spacing: 2px;
-    background: rgba(0, 0, 0, 0.6); /* Standart karanlık cam */
-    color: var(--primary); /* Standart parlak yazı */
-    border: 2px solid var(--primary-dim);
-    box-shadow: 0 0 15px rgba(0,0,0,0.5), inset 0 0 10px var(--primary-dim);
-    text-shadow: 0 0 10px var(--primary);
+    padding: 10px 10px; border-radius: 12px; width: 100%; text-align: center; letter-spacing: 2px;
 }
+.time-bg { background: rgba(0, 0, 0, 0.6); color: #fff; border: 1px solid rgba(255,255,255,0.1); }
 
 /* DİĞER MODÜLLER (6-16 ARASI KORUMALI) */
 .transfer-panel { padding: 50px; text-align: center;}
@@ -154,7 +151,7 @@ body { background-color: var(--gray); color: var(--text); font-family: 'Montserr
 .quote-panel { padding: 60px; border-left-width: 12px !important;}
 .quote-mark { font-family: 'Barlow'; font-style: italic; font-weight: 900; font-size: 250px; line-height: 0.3; margin-bottom: 30px;}
 .quote-text { font-family: 'Barlow'; font-weight: 800; font-style: italic; color: #fff; white-space: normal;}
-.quote-line { width: 80px; height: 6px; background: var(--primary); margin: 40px auto 20px auto; border-radius: 3px;}
+.quote-line { width: 80px; height: 6px; margin: 40px auto 20px auto; border-radius: 3px;}
 .quote-author { font-family: 'Montserrat'; font-weight: 900; font-size: 35px; color: #888; letter-spacing: 2px;}
 
 .h2h-split-bg { position: absolute; top:0; left:0; width:100%; height:100%; background: linear-gradient(90deg, var(--bg-grad-1) 0%, rgba(169,4,50,0.5) 100%); z-index:1; opacity: 0.6;} 
