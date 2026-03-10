@@ -29,24 +29,22 @@ btnWatermark.addEventListener('click', () => {
 });
 
 // ==========================================
-// 🌟 GÜVENLİ METİN KÜÇÜLTME (PIXEL TABANLI, KAYMA YAPMAZ) 🌟
+// 🌟 GÜVENLİ METİN KÜÇÜLTME MOTORU (ZIRHLARI KIRMAZ) 🌟
 // ==========================================
 function autoScaleText() {
+    // Cam panelleri kırmaması için başlangıç boyutu optimal seviyeye çekildi
     document.querySelectorAll('.auto-scale-text').forEach(el => {
-        const parent = el.parentElement;
-        
-        // Şablona göre maksimum font boyutunu belirle
-        let maxFont = 100; 
+        let maxFont = 100; // Başlangıç
         if(el.classList.contains('team-name')) maxFont = 55;
-        if(el.classList.contains('out-sd-title')) maxFont = 60;
-        if(el.classList.contains('out-hw-m1-home')) maxFont = 40; // Haftanın maçları
+        if(el.classList.contains('quote-text')) maxFont = 60;
+        if(el.classList.contains('out-mg-venue')) maxFont = 32;
+        if(el.classList.contains('out-h2h-p1-name')) maxFont = 50;
         if(el.classList.contains('pc-name')) maxFont = 26; // İlk 11
 
         el.style.fontSize = maxFont + 'px';
-        el.style.whiteSpace = 'nowrap';
         
-        // Yazı kutudan taşıyorsa font boyutunu ufalt
-        while ((el.scrollWidth > parent.clientWidth || el.scrollHeight > parent.clientHeight) && maxFont > 15) {
+        // Taştığı sürece yazıyı piksel piksel küçült
+        while ((el.scrollWidth > el.parentElement.clientWidth || el.scrollHeight > el.parentElement.clientHeight) && maxFont > 15) {
             maxFont -= 1;
             el.style.fontSize = maxFont + 'px';
         }
@@ -122,11 +120,12 @@ bindStat('stat-cor-home', 'stat-cor-away', '.out-stat-cor-home', '.out-stat-cor-
 bindStat('stat-foul-home', 'stat-foul-away', '.out-stat-foul-home', '.out-stat-foul-away', 'bar-foul-home', 'bar-foul-away');
 
 // ==========================================
-// 🌟 İLK 11 (GERÇEK 4-3-3 SAHA DİZİLİMİ) 🌟
+// 🌟 İLK 11 (GERÇEK 4-3-3 SAHA DİZİLİM MANTIĞI) 🌟
 // ==========================================
 bindImage('k-logo', '.out-k-logo'); bindImage('k-bg', 'bg-kadro', true); 
 const positions433 = ['GK', 'RB', 'CB', 'CB', 'LB', 'CDM', 'CM', 'CM', 'RW', 'ST', 'LW'];
-const layout433 = [[8, 9, 10], [5, 6, 7], [1, 2, 3, 4], [0]]; // Forvet, Orta, Defans, Kaleci
+// Taktik sıralaması: ATT(3), MID(3), DEF(4), GK(1)
+const layout433 = [[8, 9, 10], [5, 6, 7], [1, 2, 3, 4], [0]];
 
 document.getElementById('k-lineup').addEventListener('input', function(e) {
     const pitch = document.getElementById('out-k-lineup-pitch'); 
@@ -154,7 +153,7 @@ document.getElementById('k-lineup').addEventListener('input', function(e) {
         });
         if(rowDiv.children.length > 0) pitch.appendChild(rowDiv);
     });
-    setTimeout(autoScaleText, 50);
+    setTimeout(autoScaleText, 10);
 });
 
 
@@ -225,7 +224,7 @@ window.addEventListener('load', () => {
 });
 
 // ==========================================
-// 🌟 FİZİKSEL RENDER İNDİRME MOTORU (KAYMA %100 BİTTİ) 🌟
+// 🌟 GÜVENLİ İNDİRME MOTORU (KAYMA VE BOZULMA ENGELLENDİ) 🌟
 // ==========================================
 function downloadTpl(elementId, fileName) {
     const card = document.getElementById(elementId);
@@ -238,7 +237,7 @@ function downloadTpl(elementId, fileName) {
 
     const originalTransform = card.style.transform;
 
-    // html2canvas'ın şaşırmaması için görünmez devasa bir fiziksel oda yaratıyoruz
+    // 1. html2canvas'ın şaşırmaması için görünmez bir devasa fiziksel oda yaratıyoruz
     const renderRoom = document.createElement('div');
     renderRoom.style.position = 'fixed';
     renderRoom.style.top = '0';
@@ -250,11 +249,11 @@ function downloadTpl(elementId, fileName) {
     renderRoom.style.zIndex = '-9999';
     document.body.appendChild(renderRoom);
 
-    // Kartı stüdyodan alıp bu odaya tam boyutuyla koyuyoruz (Esnek kutular milim oynamaz)
+    // 2. Kartı stüdyodan alıp bu odaya tam boyutuyla koyuyoruz (Esnek kutular milim oynamaz)
     card.style.transform = 'none';
     renderRoom.appendChild(card);
 
-    // Tarayıcıya yeni düzeni çizmesi için zaman veriyoruz
+    // 3. Tarayıcıya yeni düzeni çizmesi için zaman veriyoruz
     setTimeout(() => {
         html2canvas(card, { 
             scale: 2, // Sosyal Medya için 2160x2700 HD Çözünürlük
@@ -262,7 +261,7 @@ function downloadTpl(elementId, fileName) {
             useCORS: true, 
             logging: false 
         }).then(canvas => {
-            // Kartı stüdyodaki küçük yerine geri koy
+            // 4. Kartı stüdyodaki küçük yerine geri koy
             wrapper.appendChild(card);
             card.style.transform = originalTransform;
             document.body.removeChild(renderRoom);
@@ -277,12 +276,11 @@ function downloadTpl(elementId, fileName) {
             btn.style.backgroundColor = "";
         }).catch(err => {
             console.error("İndirme Hatası:", err);
-            alert("İndirme başarısız oldu.");
             wrapper.appendChild(card);
             card.style.transform = originalTransform;
             document.body.removeChild(renderRoom);
             btn.innerText = originalBtnText;
             btn.style.backgroundColor = "";
         });
-    }, 500); 
+    }, 500); // 0.5 saniye bekle
 }
