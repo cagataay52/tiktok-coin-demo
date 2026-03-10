@@ -31,31 +31,27 @@ if(btnWatermark) {
 }
 
 // ==========================================
-// 🌟 GÜVENLİ METİN KÜÇÜLTME MOTORU (ZIRHLARI KIRMAZ) 🌟
+// 🌟 GÜVENLİ METİN KÜÇÜLTME MOTORU 🌟
 // ==========================================
 function autoScaleText() {
-    try {
-        document.querySelectorAll('.auto-scale-text').forEach(el => {
-            const parent = el.parentElement;
-            if(!parent) return;
+    document.querySelectorAll('.auto-scale-text').forEach(el => {
+        const parent = el.parentElement;
+        if(!parent) return;
 
-            let maxFont = 100; 
-            if(el.classList.contains('team-name')) maxFont = 75; 
-            if(el.classList.contains('out-sd-title')) maxFont = 65;
-            if(parent.classList.contains('hw-name')) maxFont = 45; // 17. Modül için
-            if(el.classList.contains('out-mg-venue')) maxFont = 24; 
-            if(el.classList.contains('pc-name')) maxFont = 26; 
+        let maxFont = 100; 
+        if(el.classList.contains('team-name')) maxFont = 75; 
+        if(el.classList.contains('out-sd-title')) maxFont = 65;
+        if(parent.classList.contains('hw-name')) maxFont = 45; // 17. Modül için tam ayar
+        if(el.classList.contains('out-mg-venue')) maxFont = 24; 
+        if(el.classList.contains('pc-name')) maxFont = 30; 
 
+        el.style.fontSize = maxFont + 'px';
+        
+        while ((el.scrollWidth > parent.clientWidth || el.scrollHeight > parent.clientHeight) && maxFont > 15) {
+            maxFont -= 1;
             el.style.fontSize = maxFont + 'px';
-            
-            let loops = 0; // Sonsuz döngü kilidi
-            while ((el.scrollWidth > parent.clientWidth || el.scrollHeight > parent.clientHeight) && maxFont > 15 && loops < 100) {
-                maxFont -= 1;
-                el.style.fontSize = maxFont + 'px';
-                loops++;
-            }
-        });
-    } catch(e) { console.error("Metin küçültme hatası:", e); }
+        }
+    });
 }
 
 function bindText(inputId, targetClass, isUpper = true, isHtml = false) {
@@ -74,22 +70,28 @@ function bindImage(inputId, targetIdOrClass, isBackground = false) {
     if (!input) return;
     input.addEventListener('change', function(e) {
         const file = e.target.files[0];
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = function(event) {
-            const result = event.target.result;
-            document.querySelectorAll(targetIdOrClass).forEach(el => {
-                if (isBackground) el.style.backgroundImage = `url('${result}')`;
-                else el.src = result;
-            });
-            // İlk 11 logosu için özel önbellek
-            if (inputId === 'k-logo') window.kLogoCached = result;
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                if (targetIdOrClass.startsWith('.')) {
+                    document.querySelectorAll(targetIdOrClass).forEach(el => {
+                        if (isBackground) el.style.backgroundImage = `url('${event.target.result}')`;
+                        else el.src = event.target.result;
+                    });
+                } else {
+                    const el = document.getElementById(targetIdOrClass);
+                    if (el) {
+                        if (isBackground) el.style.backgroundImage = `url('${event.target.result}')`;
+                        else el.src = event.target.result;
+                    }
+                }
+            }
+            reader.readAsDataURL(file);
         }
-        reader.readAsDataURL(file);
     });
 }
 
-// BÜTÜN MODÜLLERİN BAĞLANTILARI (1-17)
+// BAĞLANTILAR (1'DEN 17'YE KADAR EKSİKSİZ)
 bindText('mg-home-name', '.out-mg-home-name'); bindText('mg-away-name', '.out-mg-away-name');
 bindText('mg-time', '.out-mg-time', false); bindText('mg-venue', '.out-mg-venue');
 bindImage('mg-home-logo', '.out-mg-home-logo'); bindImage('mg-away-logo', '.out-mg-away-logo'); bindImage('mg-bg', '.out-mg-bg', true);
@@ -103,7 +105,7 @@ bindText('ms-home-score', '.out-ms-home-score', false); bindText('ms-away-score'
 bindText('ms-home-scorers', '.out-ms-home-scorers', false, true); bindText('ms-away-scorers', '.out-ms-away-scorers', false, true);
 bindImage('ms-home-logo', '.out-ms-home-logo'); bindImage('ms-away-logo', '.out-ms-away-logo'); bindImage('ms-bg', '.out-ms-bg', true);
 
-// 4. İSTATİSTİK (GÜVENLİ FONKSİYON)
+// 4. İSTATİSTİK
 bindImage('stat-home-logo', '.out-stat-home-logo');
 bindImage('stat-away-logo', '.out-stat-away-logo');
 bindImage('stat-bg', '.out-stat-bg', true);
@@ -111,9 +113,7 @@ bindImage('stat-bg', '.out-stat-bg', true);
 function bindStat(idHome, idAway, outHome, outAway, barHome, barAway, isPercent = false) {
     const iHome = document.getElementById(idHome); const iAway = document.getElementById(idAway);
     function updateStats() {
-        // Eski tarayıcılarda çöken ?. silindi
-        const vHome = parseFloat(iHome ? iHome.value : 0) || 0; 
-        const vAway = parseFloat(iAway ? iAway.value : 0) || 0;
+        const vHome = parseFloat(iHome?.value) || 0; const vAway = parseFloat(iAway?.value) || 0;
         const total = vHome + vAway; let pHome = 50, pAway = 50;
         if (total > 0) { pHome = (vHome / total) * 100; pAway = (vAway / total) * 100; }
         
@@ -131,11 +131,8 @@ bindStat('stat-shot-home', 'stat-shot-away', '.out-stat-shot-home', '.out-stat-s
 bindStat('stat-cor-home', 'stat-cor-away', '.out-stat-cor-home', '.out-stat-cor-away', 'bar-cor-home', null);
 bindStat('stat-foul-home', 'stat-foul-away', '.out-stat-foul-home', '.out-stat-foul-away', 'bar-foul-home', null);
 
-// 5. İLK 11 (LOGO KAYBOLMASINI ÖNLEYEN KOD)
-bindImage('k-logo', '.out-k-main-logo'); 
-bindImage('k-bg', '.out-k-bg', true); 
-window.kLogoCached = "https://creazilla-store.fra1.digitaloceanspaces.com/cliparts/3133642/soccer-player-clipart-xl.png";
-
+// 5. İLK 11 KADROSU
+bindImage('k-logo', '.out-k-logo'); bindImage('k-bg', '.out-k-bg', true); 
 const positions433 = ['GK', 'RB', 'CB', 'CB', 'LB', 'CDM', 'CM', 'CM', 'RW', 'ST', 'LW'];
 const layout433 = [[8, 9, 10], [5, 6, 7], [1, 2, 3, 4], [0]]; 
 
@@ -158,7 +155,7 @@ if(kLineupInput) {
                     const card = document.createElement('div'); 
                     card.className = `glass-panel player-card-vertical ${isPrimary ? 'neon-border' : ''}`;
                     card.innerHTML = `
-                        <div class="pc-logo-container"><img src="${window.kLogoCached}" class="out-k-logo"></div>
+                        <div class="pc-logo-container"><img src="https://creazilla-store.fra1.digitaloceanspaces.com/cliparts/3133642/soccer-player-clipart-xl.png" class="out-k-logo"></div>
                         <div class="name-box"><span class="pc-name auto-scale-text">${players[index].toUpperCase()}</span></div>
                         <div class="pc-meta"><b>${index + 1}</b> ${pos}</div>
                     `;
@@ -249,7 +246,7 @@ window.addEventListener('load', () => {
 });
 
 // ==========================================
-// 🌟 GÜVENLİ FİZİKSEL RENDER İNDİRME MOTORU 🌟
+// 🌟 YENİ NESİL FİZİKSEL İNDİRME MOTORU (KAYMAYI VE KARARMAYI BİTİRİR) 🌟
 // ==========================================
 function downloadTpl(elementId, fileName) {
     const card = document.getElementById(elementId);
@@ -262,13 +259,17 @@ function downloadTpl(elementId, fileName) {
 
     const originalTransform = card.style.transform;
 
-    // Görünmez Render Odası (HTML2Canvas için karanlık zemin şart)
+    // Görünmez Render Odası (Gerçek Boyutta)
     const renderRoom = document.createElement('div');
     renderRoom.style.position = 'fixed';
     renderRoom.style.top = '0';
-    renderRoom.style.left = '-15000px'; // Ekranda asla görünmez
+    renderRoom.style.left = '0';
     renderRoom.style.width = '1080px';
     renderRoom.style.height = elementId === 'tpl-reels' ? '1920px' : '1350px';
+    renderRoom.style.opacity = '0'; 
+    renderRoom.style.pointerEvents = 'none';
+    renderRoom.style.zIndex = '-9999';
+    // html2canvas'ın siyah basmasını önlemek için arka plan rengini karanlık veriyoruz
     renderRoom.style.backgroundColor = '#020202'; 
     document.body.appendChild(renderRoom);
 
