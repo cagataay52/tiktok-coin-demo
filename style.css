@@ -1,6 +1,4 @@
-/* ========================================= */
-/* 🌟 PREMIUM GLASSMORPHISM & SİMETRİ 🌟       */
-/* ========================================= */
+/* 🌟 TEMA DEĞİŞKENLERİ VE GLASSMORPHISM 🌟 */
 :root {
     --primary: #FF5722; 
     --primary-dim: rgba(255, 87, 34, 0.4);
@@ -35,76 +33,86 @@ body.theme-uecl {
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { background-color: var(--gray); color: var(--text); font-family: 'Montserrat', sans-serif; overflow-x: hidden; transition: background 0.5s;}
+body { background-color: var(--gray); color: #fff; font-family: 'Montserrat', sans-serif; overflow-x: hidden; transition: background 0.5s;}
 .app-container { max-width: 1500px; margin: 0 auto; padding: 40px 20px; }
-.main-header { font-family: 'Barlow', sans-serif; font-style: italic; font-weight: 900; color: white; text-align: center; font-size: 40px; text-shadow: 0 0 20px var(--primary); margin-bottom: 30px;}
+.main-header { font-family: 'Barlow', sans-serif; font-style: italic; font-weight: 900; text-align: center; font-size: 40px; text-shadow: 0 0 20px var(--primary); margin-bottom: 30px;}
 
-.theme-switcher { display: flex; justify-content: center; gap: 15px; margin-bottom: 50px; flex-wrap: wrap; align-items: center;}
+.theme-switcher { display: flex; justify-content: center; gap: 15px; margin-bottom: 50px; flex-wrap: wrap; }
 .ts-btn { padding: 12px 25px; background: #080808; color: #888; border: 2px solid #222; border-radius: 30px; font-family: 'Barlow'; font-weight: 900; font-size: 16px; cursor: pointer; transition: 0.3s;}
 .ts-btn:hover { border-color: #555; color: #fff;}
 .ts-btn.active { background: var(--primary); color: #000; border-color: var(--primary); box-shadow: 0 0 25px var(--primary-dim);}
 
 .studio-module { display: flex; background: var(--gray); border-radius: 16px; margin-bottom: 50px; border: 1px solid #222; box-shadow: 0 40px 80px rgba(0,0,0,1); }
 .module-panel { width: 35%; padding: 40px; background: rgba(0,0,0,0.8); border-right: 3px solid var(--primary); }
-.module-panel h2 { font-family: 'Barlow'; font-weight: 900; font-style: italic; color: #fff; margin-bottom: 30px; font-size: 26px; border-bottom: 1px solid #222; padding-bottom: 10px;}
+.module-panel h2 { font-family: 'Barlow'; font-weight: 900; font-style: italic; margin-bottom: 30px; font-size: 26px; border-bottom: 1px solid #222; padding-bottom: 10px;}
 .module-preview { width: 65%; display: flex; justify-content: center; align-items: center; padding: 30px; background: var(--gray); background-image: radial-gradient(circle at center, rgba(255,255,255,0.02) 0%, transparent 100%); }
 
 /* 🚨 1080x1350 KART YAPISI 🚨 */
-.preview-wrapper { width: 360px; height: 450px; position: relative; box-shadow: 0 20px 60px rgba(0,0,0,1); overflow: visible; } 
-.match-card { width: 1080px; height: 1350px; background-color: var(--dark); position: absolute; top: 0; left: 0; transform: scale(0.33333); transform-origin: top left; overflow: hidden; backface-visibility: hidden; border: 1px solid #111; transition: background-color 0.5s;}
+.preview-wrapper { width: 360px; height: 450px; position: relative; box-shadow: 0 20px 60px rgba(0,0,0,1); overflow: hidden; } 
+.match-card { width: 1080px; height: 1350px; background-color: var(--dark); position: absolute; top: 0; left: 0; transform: scale(0.33333); transform-origin: top left; overflow: hidden; backface-visibility: hidden; border: 1px solid #111;}
 
-/* html2canvas'ın Bulanıklığı (blur) doğru okuyabilmesi için tok bir taban rengi şart */
+.preview-wrapper.reels-wrapper { width: 253px; height: 450px; } 
+.match-card.tpl-reels { width: 1080px; height: 1920px; transform: scale(0.234375); }
+
+/* HTML2CANVAS İÇİN ÖZEL GLASSMORPHISM VE KÜRELER */
 .glass-panel {
-    background: rgba(20, 20, 25, 0.85); /* Tok zemin */
+    background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(0,0,0,0.7) 100%);
     backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-top: 1px solid rgba(255, 255, 255, 0.3);
-    border-left: 1px solid rgba(255, 255, 255, 0.15);
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
-    border-radius: 24px;
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+    border-radius: 30px;
     z-index: 10;
 }
-
-.bg-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; opacity: 0.3; filter: blur(3px); z-index: 0;}
-.glass-orb { position: absolute; border-radius: 50%; filter: blur(150px); opacity: 0.6; z-index: 1;}
-.orb-top { width: 700px; height: 700px; top: -150px; left: -150px; background: var(--bg-grad-1); }
-.orb-bottom { width: 600px; height: 600px; bottom: -100px; right: -100px; background: var(--primary); opacity: 0.4;}
+.bg-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; opacity: 0.3; z-index: 0;}
+/* Kürelere Blur yerine Radial Gradient verildi (İndirme hatasını çözer) */
+.glass-orb { position: absolute; border-radius: 50%; z-index: 1; pointer-events: none; opacity: 0.8;}
+.orb-top { width: 1200px; height: 1200px; top: -400px; left: -400px; background: radial-gradient(circle, var(--bg-grad-1) 0%, transparent 65%); }
+.orb-bottom { width: 1000px; height: 1000px; bottom: -300px; right: -300px; background: radial-gradient(circle, var(--primary-dim) 0%, transparent 65%); }
 
 /* ESNEK HİYERARŞİ (ALTIN ORAN) */
-.card-layout { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: space-between; padding: 100px 60px; z-index: 10;}
-.layout-header { display: flex; justify-content: center; align-items: center; width: 100%; height: 200px;}
-.layout-body { display: flex; flex: 1; align-items: center; justify-content: center; width: 100%; position: relative;}
-.layout-footer { display: flex; justify-content: center; align-items: center; width: 100%; height: 200px;}
+.card-layout { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: space-between; padding: 120px 80px; z-index: 10;}
+.layout-top { display: flex; justify-content: center; align-items: center; width: 100%;}
+.layout-center { display: flex; flex: 1; align-items: center; justify-content: center; width: 100%;}
+.layout-bottom { display: flex; justify-content: center; align-items: center; width: 100%;}
 
-/* TAKIM KOLONLARI VE SKOR SİMETRİSİ (GRID) */
-.match-grid { display: grid; grid-template-columns: 1fr 1.2fr 1fr; align-items: center; justify-items: center; width: 100%; gap: 30px;}
-.team-col { display: flex; flex-direction: column; align-items: center; gap: 20px; width: 100%; min-width: 0;}
+/* %100 SİMETRİK GRID SİSTEMİ (ASLA KAYMAZ) */
+.match-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; align-items: center; justify-items: center; width: 100%; gap: 20px;}
+.team-col { display: flex; flex-direction: column; align-items: center; gap: 25px; width: 100%; min-width: 0;}
 .score-col { display: flex; justify-content: center; align-items: center; width: 100%;}
 
+.row-layout { display: flex; flex-direction: row; justify-content: center; align-items: center; width: 100%;}
+.col-layout { display: flex; flex-direction: column; justify-content: center; align-items: center;}
+.w-full { width: 100%; }
+
 /* YAZI VE GÖRSEL ZIRHLARI (Taşmayı Önler) */
-.name-box { width: 100%; max-width: 350px; height: 70px; display: flex; justify-content: center; align-items: center; overflow: hidden; }
-.team-name { font-family: 'Barlow', sans-serif; font-weight: 900; color: #fff; text-shadow: 2px 2px 8px #000; text-align: center; white-space: nowrap; }
+.name-box { width: 100%; max-width: 350px; height: 75px; display: flex; justify-content: center; align-items: center; overflow: hidden; }
+.team-name { font-family: 'Barlow', sans-serif; font-weight: 900; color: #fff; text-shadow: 2px 2px 8px #000; white-space: nowrap; line-height: 1;}
 .logo-box { width: 280px; height: 280px; display: flex; justify-content: center; align-items: center; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.8)); }
 .logo-box img { max-width: 100%; max-height: 100%; width: auto !important; height: auto !important; display: block; }
 .logo-box-small { width: 160px; height: 160px; display: flex; justify-content: center; align-items: center; filter: drop-shadow(0 15px 30px #000); }
 .logo-box-small img { max-width: 100%; max-height: 100%; width: auto !important; height: auto !important; display: block; }
+.hero-player-img { position: absolute; max-height: 1050px; max-width: 100%; width: auto !important; height: auto !important; bottom: 0; left: 50%; transform: translateX(-50%); filter: drop-shadow(0 30px 60px rgba(0,0,0,0.9)); z-index: 5;}
+.bg-watermark-logo { position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); width: 900px; opacity: 0.05; filter: grayscale(100%); z-index: 2;}
 
-.text-primary { color: var(--primary) !important; }
-.bg-primary { background-color: var(--primary) !important; color: #000 !important; }
-.text-glow { text-shadow: 0 0 40px var(--primary-dim); }
-.neon-glow { box-shadow: 0 0 25px var(--primary-dim); border: 2px solid var(--primary); }
-.neon-border { border-color: var(--primary) !important; }
+.text-primary { color: var(--primary) !important; transition: color 0.5s; }
+.bg-primary { background-color: var(--primary) !important; color: #000 !important; transition: background 0.5s;}
+.text-glow { text-shadow: 0 0 40px var(--primary-dim); transition: 0.5s; }
+.neon-glow { box-shadow: 0 0 25px var(--primary-dim); border: 2px solid var(--primary); transition: 0.5s; }
+.neon-border { border-color: var(--primary) !important; transition: 0.5s; }
+.watermark-text { position: absolute; bottom: 30px; width: 100%; text-align: center; font-size: 26px; color: rgba(255,255,255,0.3); font-weight: 900; z-index: 50; letter-spacing: 5px; text-transform: uppercase;}
 
-/* MODÜL 1,2,3 ELEMANLARI */
+/* MODÜL 1, 2, 3 ELEMANLARI */
 .main-title { font-family: 'Barlow', sans-serif; font-style: italic; font-weight: 900; font-size: 150px; margin: 0; letter-spacing: -2px; line-height: 1; text-align: center;}
 .score-text { font-family: 'Barlow', sans-serif; font-style: italic; font-weight: 900; font-size: 240px; line-height: 1; white-space: nowrap; -webkit-text-stroke: 4px var(--dark);}
-.info-pill { font-size: 32px; font-weight: 800; letter-spacing: 4px; color: #fff; border-radius: 60px; padding: 25px 80px; text-align: center; max-width: 90%; white-space: nowrap; overflow: hidden;}
+.info-pill { font-size: 32px; font-weight: 800; letter-spacing: 4px; color: #fff; border-radius: 60px; padding: 25px 80px; text-align: center;}
 .badge-pill { font-family: 'Barlow'; font-weight: 900; font-style: italic; font-size: 65px; padding: 20px 90px; border-radius: 70px;}
 
 .scorer-panel { display: flex; justify-content: space-between; align-items: center; width: 95%; padding: 35px 50px;}
 .scorer-list { flex: 1; font-family: 'Montserrat'; font-size: 28px; color: #eee; font-weight: 700; line-height: 1.6;}
-.scorer-list.home { text-align: right; padding-right: 40px; border-right: 3px solid rgba(255,255,255,0.2); }
-.scorer-list.away { text-align: left; padding-left: 40px; border-left: 3px solid rgba(255,255,255,0.2); }
+.scorer-list.home { text-align: right; padding-right: 40px; border-right: 3px solid rgba(255,255,255,0.1); }
+.scorer-list.away { text-align: left; padding-left: 40px; border-left: 3px solid rgba(255,255,255,0.1); }
 .scorer-icon { font-size: 60px; padding: 0 40px; filter: drop-shadow(0 0 20px var(--primary));}
 
 /* MODÜL 4: İSTATİSTİK */
@@ -116,46 +124,47 @@ body { background-color: var(--gray); color: var(--text); font-family: 'Montserr
 .stat-bar-bg { width: 100%; height: 22px; background: rgba(0,0,0,0.5); border-radius: 12px; display: flex; overflow: hidden; box-shadow: inset 0 4px 8px #000;}
 .stat-bar-fill { height: 100%; transition: 0.6s; box-shadow: 0 0 15px var(--primary);}
 
-/* MODÜL 5: İLK 11 (KUSURSUZ 4-3-3 SAHA MANTIK CSS'Sİ) */
-.pitch-lines { width: 100%; height: 100%; border: 4px solid rgba(255,255,255,0.15); border-radius: 20px; background-image: repeating-linear-gradient(0deg, transparent, transparent 50px, rgba(255,255,255,0.03) 50px, rgba(255,255,255,0.03) 100px); box-shadow: inset 0 0 150px rgba(0,0,0,0.8); z-index: 1;}
+/* MODÜL 5: İLK 11 (KUSURSUZ 4-3-3) */
+.pitch-lines { width: 90%; height: 85%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); border: 4px solid rgba(255,255,255,0.15); border-radius: 20px; background-image: repeating-linear-gradient(0deg, transparent, transparent 50px, rgba(255,255,255,0.03) 50px, rgba(255,255,255,0.03) 100px); box-shadow: inset 0 0 150px rgba(0,0,0,0.8); z-index: 1;}
 .pitch-lines::after { content:''; position:absolute; top:50%; left:0; width:100%; height:4px; background:rgba(255,255,255,0.15); }
 .pitch-formation { width: 100%; height: 900px; display: flex; flex-direction: column; justify-content: space-evenly; align-items: center; z-index: 10;}
-.kadro-row { display: flex; justify-content: center; gap: 30px; width: 100%;}
+.kadro-row { display: flex; justify-content: center; gap: 40px; width: 100%;}
 .player-card-vertical { width: 220px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px 10px; gap: 15px;}
 .pc-logo-container { width: 100px; height: 100px; border-radius: 50%; background: #000; border: 3px solid rgba(255,255,255,0.2); display: flex; justify-content: center; align-items: center; overflow: hidden; filter: drop-shadow(0 15px 30px #000);}
 .pc-logo-container img { max-width: 100%; max-height: 100%; object-fit: cover; }
-.pc-name { font-family: 'Barlow'; font-weight: 800; font-size: 26px; color: #fff; text-align: center; white-space: nowrap; width: 100%;}
+.pc-name { font-family: 'Barlow'; font-weight: 800; color: #fff; text-align: center; white-space: nowrap; line-height: 1;}
 .pc-meta { display: flex; align-items: center; gap: 10px; font-family: 'Montserrat'; font-weight: 900; font-size: 18px; color: #aaa;}
 .pc-meta b { color: var(--primary); font-family: 'Barlow'; font-size: 24px; font-style: italic;}
 
-/* DİĞER MODÜLLER (6-16 ARASI) */
-.hero-image { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); max-height: 1050px; max-width: 100%; width: auto !important; height: auto !important; z-index: 5; filter: drop-shadow(0 30px 60px rgba(0,0,0,0.9));}
-.bg-watermark-logo { position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); width: 900px; opacity: 0.05; filter: grayscale(100%); z-index: 2;}
-.transfer-panel { padding: 50px; text-align: center;}
-.transfer-name { font-family: 'Barlow'; font-weight: 900; font-style: italic; font-size: 85px; color: #fff; margin-bottom: 30px;}
-.stat-bar-bg { width: 100%; height: 30px; background: rgba(0,0,0,0.6); border-radius: 15px; overflow: hidden;}
+/* DİĞER MODÜLLER */
+.transfer-panel { width: 100%; padding: 50px; text-align: center;}
+.transfer-name { font-family: 'Barlow'; font-weight: 900; font-style: italic; color: #fff; white-space: nowrap;}
 .transfer-prob { font-family: 'Montserrat'; font-weight: 900; font-size: 30px; color: #aaa;}
-.done-stamp { font-family: 'Barlow'; font-weight: 900; font-style: italic; font-size: 70px; padding: 15px 50px; border-radius: 15px; transform: rotate(-5deg); background: var(--primary); display: inline-block;}
+.done-stamp { font-family: 'Barlow'; font-weight: 900; font-style: italic; font-size: 70px; padding: 15px 50px; border-radius: 15px; transform: rotate(-5deg); background: var(--primary); color: #000; display: inline-block;}
 
 .quote-fade { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to top, var(--dark) 40%, transparent 100%); z-index: 3;}
-.quote-mark { font-family: 'Barlow'; font-style: italic; font-weight: 900; font-size: 250px; line-height: 0.3; margin-bottom: 30px;}
-.quote-panel { padding: 60px; }
-.quote-text { font-family: 'Barlow'; font-weight: 800; font-style: italic; font-size: 60px; color: #fff; text-wrap: balance;}
-.quote-line { width: 80px; height: 6px; margin: 40px auto 20px auto; border-radius: 3px;}
-.quote-author { font-family: 'Montserrat'; font-weight: 900; font-size: 35px; color: #888; letter-spacing: 2px;}
+.quote-panel { padding: 60px; border-left-width: 12px !important;}
+.quote-text { font-family: 'Barlow'; font-weight: 800; font-style: italic; color: #fff; white-space: normal;}
+.quote-line { width: 80px; height: 6px; background: var(--primary); margin: 40px auto 20px auto; border-radius: 3px;}
+.quote-author { font-family: 'Montserrat'; font-weight: 900; font-size: 35px; color: #aaa; letter-spacing: 2px;}
 
 .h2h-split-bg { position: absolute; top:0; left:0; width:100%; height:100%; background: linear-gradient(90deg, var(--bg-grad-1) 0%, rgba(169,4,50,0.5) 100%); z-index:1; opacity: 0.6;} 
-.h2h-player { flex: 1; display: flex; flex-direction: column; align-items: center; z-index: 5;}
+.h2h-player { display: flex; flex-direction: column; align-items: center; z-index: 5;}
 .h2h-img-box { height: 500px; display: flex; align-items: flex-end;}
 .h2h-img-box img { max-height: 100%; filter: drop-shadow(0 20px 40px #000);}
 .h2h-name { padding: 20px; border-radius: 20px; margin-top: -30px;}
-.h2h-name span { font-family: 'Barlow'; font-weight: 900; font-style: italic; font-size: 50px; white-space: nowrap;}
-.h2h-stat-panel { padding: 40px; text-align: center;}
 .stat-header-title { font-family: 'Montserrat'; font-weight: 900; font-size: 28px; color: #aaa; letter-spacing: 8px; margin-bottom: 20px;}
-.h2h-stat-num { font-family: 'Barlow'; font-weight: 900; font-style: italic; font-size: 90px; color: #fff;}
 .vs-badge-small { font-family: 'Barlow'; font-weight: 900; font-style: italic; font-size: 35px; padding: 15px 30px; border-radius: 20px;}
 
-.brand-tag { position: absolute; bottom: 30px; width: 100%; text-align: center; font-size: 26px; color: rgba(255,255,255,0.3); font-weight: 900; z-index: 50; letter-spacing: 5px; text-transform: uppercase;}
+.st-row { display: flex; align-items: center; justify-content: space-between; padding: 35px 50px; border-radius: 20px;}
+.leader-row { border-left-width: 8px !important; }
+.st-rank { font-family: 'Barlow'; font-weight: 900; font-size: 65px; color: #555; width: 90px;}
+
+.hw-row { padding: 25px 40px; border-radius: 20px;}
+.hw-team { display: flex; align-items: center; gap: 20px; width: 100%; min-width: 0;}
+.hw-logo { width: 80px; height: 80px; display: flex; justify-content: center; align-items: center; flex-shrink: 0;}
+.hw-logo img { max-width: 100%; max-height: 100%; object-fit: contain; filter: drop-shadow(0 10px 20px #000);}
+.hw-score { font-family: 'Barlow'; font-weight: 900; font-style: italic; font-size: 45px; padding: 12px 20px; border-radius: 12px; width: 100%; text-align: center; letter-spacing: 2px;}
 
 /* GİRDİ PANELİ */
 .input-group { margin-bottom: 20px; }
