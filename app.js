@@ -28,9 +28,6 @@ btnWatermark.addEventListener('click', () => {
     }
 });
 
-// ==========================================
-// YARDIMCI FONKSİYONLAR (Orijinal Tasarım)
-// ==========================================
 function autoScaleText() {
     document.querySelectorAll('.auto-scale').forEach(el => {
         let fontSize = 45; 
@@ -91,7 +88,6 @@ function bindImage(inputId, targetIdOrClass, isBackground = false) {
     });
 }
 
-// BÜTÜN MODÜLLERİN BAĞLANTILARI GERİ GELDİ (1-16)
 bindText('mg-home-name', '.out-mg-home-name'); bindText('mg-away-name', '.out-mg-away-name');
 bindText('mg-time', '.out-mg-time', false); bindText('mg-venue', '.out-mg-venue');
 bindImage('mg-home-logo', '.out-mg-home-logo'); bindImage('mg-away-logo', '.out-mg-away-logo'); bindImage('mg-bg', 'bg-mac-gunu', true);
@@ -122,7 +118,6 @@ bindStat('stat-shot-home', 'stat-shot-away', '.out-stat-shot-home', '.out-stat-s
 bindStat('stat-cor-home', 'stat-cor-away', '.out-stat-cor-home', '.out-stat-cor-away', 'bar-cor-home', 'bar-cor-away');
 bindStat('stat-foul-home', 'stat-foul-away', '.out-stat-foul-home', '.out-stat-foul-away', 'bar-foul-home', 'bar-foul-away');
 
-// İLK 11 (Orijinal Liste Mantığı)
 bindImage('k-logo', '.out-k-logo'); bindImage('k-bg', 'bg-kadro', true); 
 document.getElementById('k-lineup').addEventListener('input', function(e) {
     const listContainer = document.getElementById('out-k-lineup'); listContainer.innerHTML = ''; 
@@ -169,6 +164,14 @@ bindImage('fix2-logo', '.out-fix2-logo'); bindText('fix2-date', '.out-fix2-date'
 bindImage('fix3-logo', '.out-fix3-logo'); bindText('fix3-date', '.out-fix3-date'); bindText('fix3-tour', '.out-fix3-tour');
 bindText('hlt-name', '.out-hlt-name'); bindImage('hlt-img', '.out-hlt-img'); bindText('hlt-type', '.out-hlt-type'); bindText('hlt-date', '.out-hlt-date');
 
+// 🌟 YENİ EKLENEN MODÜL: HAFTANIN MAÇLARI (17) 🌟
+bindText('hw-m1-home', '.out-hw-m1-home'); bindText('hw-m1-score', '.out-hw-m1-score', false); bindText('hw-m1-away', '.out-hw-m1-away'); bindImage('hw-m1-hlogo', '.out-hw-m1-hlogo'); bindImage('hw-m1-alogo', '.out-hw-m1-alogo');
+bindText('hw-m2-home', '.out-hw-m2-home'); bindText('hw-m2-score', '.out-hw-m2-score', false); bindText('hw-m2-away', '.out-hw-m2-away'); bindImage('hw-m2-hlogo', '.out-hw-m2-hlogo'); bindImage('hw-m2-alogo', '.out-hw-m2-alogo');
+bindText('hw-m3-home', '.out-hw-m3-home'); bindText('hw-m3-score', '.out-hw-m3-score', false); bindText('hw-m3-away', '.out-hw-m3-away'); bindImage('hw-m3-hlogo', '.out-hw-m3-hlogo'); bindImage('hw-m3-alogo', '.out-hw-m3-alogo');
+bindText('hw-m4-home', '.out-hw-m4-home'); bindText('hw-m4-score', '.out-hw-m4-score', false); bindText('hw-m4-away', '.out-hw-m4-away'); bindImage('hw-m4-hlogo', '.out-hw-m4-hlogo'); bindImage('hw-m4-alogo', '.out-hw-m4-alogo');
+bindText('hw-m5-home', '.out-hw-m5-home'); bindText('hw-m5-score', '.out-hw-m5-score', false); bindText('hw-m5-away', '.out-hw-m5-away'); bindImage('hw-m5-hlogo', '.out-hw-m5-hlogo'); bindImage('hw-m5-alogo', '.out-hw-m5-alogo');
+bindImage('hw-bg', 'bg-hw', true);
+
 // ==========================================
 // 💾 OTOMATİK KAYIT VE AYAR YÜKLEME 💾
 // ==========================================
@@ -200,13 +203,13 @@ window.addEventListener('load', () => {
 });
 
 // ==========================================
-// 🌟 YENİ NESİL KAYMASIZ HD İNDİRME MOTORU 🌟
+// 🌟 GÜVENLİ VE KESİLMEYEN İNDİRME MOTORU (ORİJİNAL) 🌟
 // ==========================================
 function downloadTpl(elementId, fileName) {
     const captureArea = document.getElementById(elementId);
-    
     const btn = event.target;
     const originalBtnText = btn.innerText;
+    
     btn.innerText = "İNDİRİLİYOR...";
     btn.style.backgroundColor = "#555";
 
@@ -216,7 +219,6 @@ function downloadTpl(elementId, fileName) {
     const originalLeft = captureArea.style.left;
     const originalZIndex = captureArea.style.zIndex;
 
-    // GİZLİ ÇEKİM MODU: İçeriğin çökmesini, kaymasını ve saydamlaşmasını önler
     captureArea.style.transform = "none"; 
     captureArea.style.position = "fixed";
     captureArea.style.top = "0px";
@@ -225,7 +227,7 @@ function downloadTpl(elementId, fileName) {
 
     setTimeout(() => {
         html2canvas(captureArea, { 
-            scale: 2, // 800x800 * 2 = 1600x1600 Kalitesinde indirir
+            scale: 2, 
             backgroundColor: "#000", 
             useCORS: true, 
             logging: false 
@@ -248,7 +250,7 @@ function downloadTpl(elementId, fileName) {
             btn.style.backgroundColor = "";
         }).catch(err => {
             console.error("İndirme Hatası:", err);
-            alert("İndirme sırasında hata oluştu. Lütfen sayfayı yenileyin.");
+            alert("İndirme sırasında hata oluştu. Sayfayı yenileyin.");
             captureArea.style.transform = originalTransform;
             captureArea.style.position = originalPosition;
             captureArea.style.top = originalTop;
