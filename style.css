@@ -13,7 +13,6 @@
     --text: #ffffff;
 }
 
-/* ⭐ ŞAMPİYONLAR LİGİ - GECE LACİVERTİ ⭐ */
 body.theme-ucl {
     --primary: #00d4ff; 
     --primary-dim: rgba(0, 212, 255, 0.4); 
@@ -25,7 +24,6 @@ body.theme-ucl {
     --panel-border: rgba(0, 212, 255, 0.2);
 }
 
-/* 🟠 AVRUPA LİGİ 🟠 */
 body.theme-uel {
     --primary: #ffaa00; 
     --primary-dim: rgba(255, 170, 0, 0.4);
@@ -37,7 +35,6 @@ body.theme-uel {
     --panel-border: rgba(255, 170, 0, 0.2);
 }
 
-/* 🟢 KONFERANS LİGİ 🟢 */
 body.theme-uecl {
     --primary: #00ff44; 
     --primary-dim: rgba(0, 255, 68, 0.4);
@@ -52,7 +49,7 @@ body.theme-uecl {
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { background-color: var(--gray); color: var(--text); font-family: 'Montserrat', sans-serif; overflow-x: hidden; transition: background 0.5s;}
 .app-container { max-width: 1500px; margin: 0 auto; padding: 40px 20px; }
-.main-header { font-family: 'Barlow', sans-serif; font-style: italic; font-weight: 900; color: white; text-align: center; font-size: 40px; text-shadow: 0 0 20px var(--primary), 0 0 40px var(--primary-dim); margin-bottom: 30px; transition: 0.5s;}
+.main-header { font-family: 'Barlow', sans-serif; font-style: italic; font-weight: 900; color: white; text-align: center; font-size: 40px; text-shadow: 0 0 20px var(--primary), 0 0 40px var(--primary-dim); margin-bottom: 30px;}
 
 /* TEMA BUTONLARI */
 .theme-switcher { display: flex; justify-content: center; gap: 15px; margin-bottom: 50px; flex-wrap: wrap; align-items: center;}
@@ -61,17 +58,20 @@ body { background-color: var(--gray); color: var(--text); font-family: 'Montserr
 .ts-btn.active { background: var(--primary); color: #000; border-color: var(--primary); box-shadow: 0 0 25px var(--primary-dim);}
 
 /* MODÜL ve PANEL */
-.studio-module { display: flex; background: var(--gray); border-radius: 16px; margin-bottom: 50px; border: 1px solid #222; box-shadow: 0 40px 80px rgba(0,0,0,1); transition: background 0.5s;}
+.studio-module { display: flex; background: var(--gray); border-radius: 16px; margin-bottom: 50px; border: 1px solid #222; box-shadow: 0 40px 80px rgba(0,0,0,1); transition: background 0.5s, border-color 0.5s;}
 .module-panel { width: 35%; padding: 40px; background: rgba(0,0,0,0.8); border-right: 3px solid var(--primary); transition: 0.5s; }
-.module-panel h2 { font-family: 'Barlow'; font-weight: 900; font-style: italic; color: #fff; margin-bottom: 30px; font-size: 26px; border-bottom: 1px solid #222; padding-bottom: 10px; text-shadow: 0 0 10px var(--primary); transition: 0.5s;}
+.module-panel h2 { font-family: 'Barlow'; font-weight: 900; font-style: italic; color: #fff; margin-bottom: 30px; font-size: 26px; border-bottom: 1px solid #222; padding-bottom: 10px; text-shadow: 0 0 10px var(--primary);}
 .module-preview { width: 65%; display: flex; justify-content: center; align-items: center; padding: 30px; background: var(--gray); background-image: radial-gradient(circle at center, rgba(255,255,255,0.02) 0%, transparent 100%); transition: 0.5s;}
 
-/* 🚨 4:5 VERTIKAL KART YAPISI 🚨 */
-.preview-wrapper.vertical-wrapper { width: 320px; height: 400px; /* Önizleme boyutu */ } 
-.match-card.vertical-card { width: 1080px; height: 1350px; transform: scale(0.296); /* 320 / 1080 */ }
+/* ========================================= */
+/* 🚨 ORTAK KART DİNAMİĞİ - TÜM ŞABLONLAR 1080x1350 (4:5 DİKEY) OLDU 🚨 */
+/* ========================================= */
+.preview-wrapper { width: 320px; height: 400px; position: relative; box-shadow: 0 20px 60px rgba(0,0,0,1); overflow: visible; } 
+.match-card { width: 1080px; height: 1350px; background-color: var(--dark); position: absolute; top: 0; left: 0; transform: scale(0.296); transform-origin: top left; overflow: hidden; backface-visibility: hidden; border: 1px solid #111; transition: background-color 0.5s;}
 
-/* ANA KART DİNAMİĞİ */
-.match-card { background-color: var(--dark); position: absolute; top: 0; left: 0; transform-origin: top left; overflow: hidden; backface-visibility: hidden; border: 1px solid #111; transition: background-color 0.5s;}
+/* SADECE REELS MODÜLÜ (9:16) İÇİN ÖZEL BOYUT */
+.preview-wrapper.reels-wrapper { width: 270px; height: 480px; }
+.match-card.tpl-reels { width: 1080px; height: 1920px; transform: scale(0.25); }
 
 /* FİLİGRAN (WATERMARK) */
 body.watermark-on .match-card::after {
@@ -81,7 +81,7 @@ body.watermark-on .match-card::after {
 }
 
 /* KRİSTAL PANELLER VE NEONLAR */
-.crystal-panel { background: var(--panel-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--panel-border); box-shadow: 0 20px 50px rgba(0,0,0,1); position: relative; overflow: hidden; transition: background 0.5s, border-color 0.5s;}
+.crystal-panel { background: linear-gradient(135deg, rgba(30,30,30,0.5) 0%, rgba(5,5,5,0.8) 100%); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--panel-border); box-shadow: 0 20px 50px rgba(0,0,0,1); position: relative; overflow: hidden; transition: background 0.5s, border-color 0.5s;}
 .neon-glow { box-shadow: 0 0 15px var(--primary-dim), 0 0 30px var(--primary-dim); border: 1px solid var(--primary); transition: 0.5s;}
 .neon-text { color: #fff; text-shadow: 0 0 15px var(--primary), 0 0 30px var(--primary); transition: 0.5s;}
 .neon-text-color { color: var(--primary); text-shadow: 0 0 15px var(--primary), 0 0 30px var(--primary); transition: 0.5s;}
@@ -95,120 +95,162 @@ body.watermark-on .match-card::after {
 .download-btn { width: 100%; padding: 18px; background: var(--primary); color: #000; font-family: 'Barlow'; font-weight: 900; font-size: 22px; border: none; border-radius: 8px; cursor: pointer; transition: 0.3s; margin-top: 20px; box-shadow: 0 0 30px var(--primary-dim); text-transform: uppercase;}
 .download-btn:hover { background: white; color: var(--primary); transform: translateY(-3px);}
 
-/* ORTAK PARÇALAR */
+/* ORTAK KART PARÇALARI */
 .card-footer { position: absolute; bottom: 30px; width: 100%; text-align: center; font-size: 20px; color: rgba(255,255,255,0.4); font-weight: 900; z-index: 50; letter-spacing: 4px;}
 .bg-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; opacity: 0.5; filter: blur(2px); }
-.brand-glow { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at top left, var(--bg-grad-1) 0%, transparent 60%), radial-gradient(circle at bottom right, var(--bg-grad-2) 0%, transparent 60%); mix-blend-mode: screen; z-index: 1; pointer-events: none; transition: 0.5s;}
+.brand-glow { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at 30% 40%, var(--bg-grad-1) 0%, transparent 70%), radial-gradient(circle at 70% 60%, var(--bg-grad-2) 0%, transparent 60%); mix-blend-mode: screen; z-index: 1; pointer-events: none; transition: 0.5s;}
 .black-fade { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, transparent 40%, var(--dark) 100%); z-index: 1; pointer-events: none; transition: 0.5s;}
 .reels-fade { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.8) 70%, var(--dark) 100%); z-index: 1; pointer-events: none; transition: 0.5s;}
 .brand-gradient-bottom { position: absolute; bottom: 0; left: 0; width: 100%; height: 70%; background: linear-gradient(to top, var(--primary-dim) 0%, transparent 100%); z-index: 1; pointer-events: none; transition: 0.5s;}
 
-/* OYUNCU VE LOGO KORUMASI */
-.tr-bg-logo { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 800px; opacity: 0.1; filter: grayscale(100%); z-index: 2;}
+/* LOGOLAR */
 .premium-logo-container { width: 220px; height: 220px; display: flex; justify-content: center; align-items: center; filter: drop-shadow(0 20px 40px rgba(0,0,0,1)); position: relative; }
 .premium-logo-container img { max-width: 100%; max-height: 100%; width: auto !important; height: auto !important; }
-.stat-logo-wrapper { width: 180px; height: 180px; display: flex; justify-content: center; align-items: center; }
-.stat-logo { max-width: 180px; max-height: 180px; width: auto !important; height: auto !important; filter: drop-shadow(0 15px 30px #000); }
 
-/* 1. MAÇ GÜNÜ (🚨 VS YAZISI KALDIRILDI 🚨) */
-.mg-content.vertical-content { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 100px 0 150px 0; z-index: 10;}
-.mg-teams.vertical-teams { display: flex; flex-direction: column; align-items: center; gap: 60px; width: 100%; flex: 1; justify-content: center;}
-.mg-team { display: flex; flex-direction: column; align-items: center; width: 100%; gap: 20px; } 
-.mg-name { font-family: 'Barlow', sans-serif; font-weight: 900; font-size: 60px; letter-spacing: 2px; text-shadow: 4px 4px 8px #000;}
-.mg-center.vertical-center-fix { display: flex; flex-direction: column; align-items: center; gap: 10px;}
+/* 1, 2, 3. MG, HT, MS METİNLERİ VE DÜZENİ */
+.mg-content, .ms-content { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 120px 0 150px 0; z-index: 10;}
+.mg-teams, .ft-scoreboard { display: flex; flex-direction: column; align-items: center; gap: 40px; width: 100%; flex: 1; justify-content: center;}
+.mg-team, .ft-team { display: flex; flex-direction: column; align-items: center; width: 100%; gap: 15px; } 
+.mg-name, .ft-team span { font-family: 'Barlow', sans-serif; font-weight: 900; font-size: 60px; letter-spacing: 2px; text-shadow: 4px 4px 8px #000; text-align: center; text-wrap: balance;}
+.mg-center { display: flex; flex-direction: column; align-items: center; gap: 15px;}
 .mg-time { font-family: 'Barlow', sans-serif; font-weight: 900; font-size: 150px; line-height: 1; color: var(--primary); text-shadow: 0 0 50px var(--primary-dim); transition: 0.5s;}
-.mg-venue { font-size: 26px; font-weight: 800; letter-spacing: 4px; color: #fff; background: var(--panel-bg); border-radius: 50px; padding: 20px 60px; border: 1px solid var(--panel-border); text-wrap: balance; text-align: center;}
-.mg-title { font-family: 'Barlow', sans-serif; font-style: italic; font-weight: 900; font-size: 180px; letter-spacing: -4px; text-shadow: 0 0 80px var(--primary); line-height: 1; transition: 0.5s;}
-
-/* 2 & 3. SKORBOARTLAR (🚨 KÜÇÜK BAŞLIK SİLİNDİ 🚨) */
-.ms-content.vertical-content { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 120px 0 180px 0; z-index: 10;}
-.iy-badge { font-family: 'Barlow'; font-weight: 900; font-style: italic; font-size: 50px; padding: 20px 60px; border-radius: 50px;}
-.ft-scoreboard.vertical-scoreboard { display: flex; justify-content: center; align-items: center; gap: 40px; width: 90%; flex: 1;}
+.mg-venue { font-size: 26px; font-weight: 800; letter-spacing: 4px; color: #fff; border-radius: 50px; padding: 20px 60px; text-wrap: balance; text-align: center;}
+.vs-badge { color: var(--dark); font-family: 'Barlow'; font-weight: 900; font-style: italic; font-size: 35px; width: 80px; height: 80px; display: flex; justify-content: center; align-items: center; border-radius: 50%; margin: 15px 0; background-color: var(--primary); transition: 0.5s;}
 .ft-score { font-family: 'Barlow', sans-serif; font-style: italic; font-weight: 900; font-size: 250px; color: var(--primary); -webkit-text-stroke: 6px var(--dark); line-height: 1; transition: 0.5s; filter: drop-shadow(0 0 50px var(--primary-dim));}
-.ft-main-title { font-family: 'Barlow', sans-serif; font-style: italic; font-weight: 900; font-size: 130px; letter-spacing: -2px; line-height: 1; text-shadow: 0 0 70px var(--primary); transition: 0.5s;} 
-.ft-scorers-container.vertical-scorers-container { display: flex; justify-content: space-between; align-items: stretch; width: 85%; border-radius: 20px; padding: 30px; margin-bottom: 50px;}
+.ft-scorers-container { display: flex; justify-content: space-between; align-items: stretch; width: 85%; border-radius: 20px; padding: 30px; margin-bottom: 50px;}
 .scorer-list { flex: 1; font-family: 'Montserrat'; font-size: 24px; color: #eee; font-weight: 700; line-height: 1.6;}
 .scorer-list.home { text-align: right; padding-right: 35px; border-right: 3px solid var(--panel-border); transition: 0.5s;}
 .scorer-list.away { text-align: left; padding-left: 35px; border-left: 3px solid var(--panel-border); transition: 0.5s;}
 .scorer-icon { display: flex; align-items: center; justify-content: center; font-size: 50px; padding: 0 25px; color: var(--primary); filter: drop-shadow(0 0 20px var(--primary)); transition: 0.5s;}
+.mg-title { font-family: 'Barlow', sans-serif; font-style: italic; font-weight: 900; font-size: 180px; margin: 0; letter-spacing: -4px; text-shadow: 0 0 80px var(--primary); line-height: 1;}
+.ft-main-title { font-family: 'Barlow', sans-serif; font-style: italic; font-weight: 900; font-size: 130px; margin: 0; letter-spacing: -2px; line-height: 1; text-shadow: 0 0 70px var(--primary);} 
+.iy-badge { font-family: 'Barlow'; font-weight: 900; font-style: italic; font-size: 50px; padding: 20px 60px; border-radius: 50px;}
 
 /* 4. İSTATİSTİK */
-.vertical-stat-container { width: 90% !important; top: 350px !important; padding: 50px !important; }
-.stat-labels { display: flex; justify-content: space-between; align-items: center; width: 100%; gap: 10px; }
-.stat-center { text-align: center; font-family: 'Montserrat'; font-weight: 900; font-size: 26px; letter-spacing: 4px; color: #aaa; flex: 1; white-space: nowrap; overflow: visible;}
-.stat-num { font-family: 'Barlow'; font-weight: 900; font-style: italic; font-size: 55px; color: #fff; width: 140px; flex-shrink: 0; text-align: center;}
-.stat-bar-container { height: 22px !important; margin-top: 10px; }
+.stat-header { position: absolute; top: 100px; width: 100%; display: flex; justify-content: center; align-items: center; gap: 40px; z-index: 10;}
+.stat-logo-wrapper { width: 150px; height: 150px; display: flex; justify-content: center; align-items: center; }
+.stat-logo { max-width: 150px; max-height: 150px; width: auto !important; height: auto !important; filter: drop-shadow(0 15px 30px #000); }
+.stat-main-title { font-family: 'Barlow'; font-style: italic; font-weight: 900; font-size: 80px; letter-spacing: 2px;}
+.stat-container { position: absolute; top: 350px; left: 50%; transform: translateX(-50%); width: 90%; display: flex; flex-direction: column; gap: 40px; z-index: 10; padding: 60px; border-radius: 20px;}
+.stat-item { display: flex; flex-direction: column; width: 100%; gap: 10px;}
+.stat-labels { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+.stat-center { text-align: center; font-family: 'Montserrat'; font-weight: 900; font-size: 26px; letter-spacing: 4px; color: #888; flex: 1; white-space: nowrap;}
+.stat-num { font-family: 'Barlow'; font-weight: 900; font-style: italic; font-size: 60px; color: #fff; text-shadow: 2px 2px 0 #000; width: 120px; text-align: center; flex-shrink: 0;}
+.stat-num.home { color: var(--primary); text-shadow: 0 0 15px var(--primary-dim); transition: 0.5s;}
+.stat-bar-container { width: 100%; height: 22px; background: rgba(0,0,0,0.8); border-radius: 12px; display: flex; overflow: hidden; box-shadow: inset 0 4px 8px #000;}
+.stat-bar { height: 100%; transition: width 0.6s, background 0.5s, box-shadow 0.5s; }
+.stat-bar.home { background: var(--primary); box-shadow: 0 0 15px var(--primary);}
+.stat-bar.away { background: #333; }
 
-/* 5. İLK 11 KADROSU (🚨 YENİ KART DİZİLİMİ CSS 🚨) */
+/* 5. İLK 11 KADROSU (YENİ 4-3-3 SAHA DİZİLİMİ) */
 .pitch-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
 .pitch-lines { position: absolute; top: 10%; left: 5%; width: 90%; height: 80%; border: 4px solid rgba(255,255,255,0.05); border-radius: 10px; }
 .pitch-lines::after { content: ''; position: absolute; top: 50%; left: 0; width: 100%; height: 4px; background: rgba(255,255,255,0.05); }
+.kadro-header { position: absolute; top: 60px; left: 50%; transform: translateX(-50%); text-align: center; z-index: 10; width: 100%; display: flex; flex-direction: column; align-items: center; gap: 20px;} 
+.kadro-logo { max-width: 150px; max-height: 150px; width: auto !important; height: auto !important; filter: drop-shadow(0 15px 30px rgba(0,0,0,1));}
+.kadro-title { font-family: 'Barlow'; font-weight: 900; font-style: italic; font-size: 60px; line-height: 1; letter-spacing: 2px; color: #fff; padding: 15px 50px; border-radius: 60px; display: inline-block;}
 
-.kadro-header-vertical { position: absolute; top: 80px; width: 100%; display: flex; flex-direction: column; align-items: center; z-index: 10; gap: 15px;}
-.kadro-logo { max-width: 120px; max-height: 120px; }
-.kadro-title-vertical { font-family: 'Barlow'; font-weight: 900; font-style: italic; font-size: 60px; padding: 15px 50px; border-radius: 60px; text-transform: uppercase;}
-
-/* Kart Grid Sistemi */
-.kadro-grid { position: absolute; top: 320px; left: 50%; transform: translateX(-50%); width: 95%; height: 950px; z-index: 10; display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(4, 1fr); gap: 20px; padding: 20px;}
-
+.kadro-grid { position: absolute; top: 350px; left: 50%; transform: translateX(-50%); width: 95%; height: 950px; z-index: 10; display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(4, 1fr); gap: 20px; padding: 20px;}
 .player-card-vertical { background: var(--panel-bg); border: 2px solid var(--panel-border); border-radius: 15px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 15px; gap: 10px; transition: 0.5s; box-shadow: 0 10px 30px rgba(0,0,0,0.5);}
-.player-card-vertical.neon-border { border-color: var(--primary); box-shadow: 0 0 20px var(--primary-dim); }
-.pc-logo-container { width: 120px; height: 120px; border-radius: 50%; background: #000; border: 3px solid #222; display: flex; justify-content: center; align-items: center; overflow: hidden; filter: drop-shadow(0 10px 20px #000); transition: 0.5s;}
+.pc-logo-container { width: 100px; height: 100px; border-radius: 50%; background: #000; border: 3px solid #222; display: flex; justify-content: center; align-items: center; overflow: hidden; filter: drop-shadow(0 10px 20px #000);}
 .pc-logo-container img { max-width: 100%; max-height: 100%; object-fit: cover; }
 .pc-name { font-family: 'Barlow'; font-weight: 800; font-size: 24px; color: #fff; text-align: center; text-wrap: balance; line-height: 1.1; text-shadow: 2px 2px 4px #000;}
-.pc-meta { display: flex; align-items: center; gap: 10px; font-family: 'Montserrat'; font-weight: 900; font-size: 16px; color: #888; text-transform: uppercase; letter-spacing: 2px;}
-.pc-meta b { color: var(--primary); font-family: 'Barlow'; font-size: 20px; font-style: italic; transition: 0.5s;}
-
-/* Kaleci Özel Konumu */
+.pc-meta { display: flex; align-items: center; gap: 10px; font-family: 'Montserrat'; font-weight: 900; font-size: 18px; color: #888; text-transform: uppercase; letter-spacing: 2px;}
+.pc-meta b { color: var(--primary); font-family: 'Barlow'; font-size: 22px; font-style: italic; transition: 0.5s;}
 .player-card-vertical.gk-card { grid-column: 2; grid-row: 4; align-self: end; border-color: #555; }
 
 /* 6. TRANSFER MERKEZİ */
-.tr-player-img-vertical { position: absolute; bottom: 350px; left: 50%; transform: translateX(-50%); max-height: 900px; filter: drop-shadow(0 30px 60px rgba(0,0,0,1)); z-index: 5;}
-.tr-title { font-size: 75px; text-shadow: 4px 4px 8px #000;}
-.tr-bar-bg { height: 25px; }
-.tr-prob-text { font-size: 30px; }
-.tr-done-stamp { font-size: 70px; padding: 20px 60px; }
+.tr-bg-logo { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 800px; opacity: 0.1; filter: grayscale(100%); z-index: 2;}
+.tr-bottom { position: absolute; bottom: 80px; left: 50%; transform: translateX(-50%); width: 90%; z-index: 10; padding: 50px; border-radius: 20px; text-align: center;}
+.tr-title { font-family: 'Barlow'; font-weight: 900; font-style: italic; font-size: 75px; color: #fff; margin-bottom: 30px; text-shadow: 4px 4px 8px #000;}
+.tr-bar-bg { width: 100%; height: 25px; background: rgba(0,0,0,0.6); border-radius: 10px; overflow: hidden; margin-bottom: 15px; box-shadow: inset 0 3px 5px rgba(0,0,0,0.5);}
+.tr-bar-fill { height: 100%; background: var(--primary); transition: width 0.5s, background 0.5s; box-shadow: 0 0 15px var(--primary); }
+.tr-prob-text { font-family: 'Montserrat'; font-weight: 900; font-size: 30px; color: #888;}
+.tr-done-stamp { font-family: 'Barlow'; font-weight: 900; font-style: italic; font-size: 70px; color: var(--dark); background: var(--primary); display: inline-block; padding: 20px 60px; border-radius: 15px; transform: rotate(-5deg); transition: 0.5s; box-shadow: 0 0 40px var(--primary);}
 
 /* 7. FLAŞ AÇIKLAMA */
-.qt-person-img { max-height: 950px; }
-.qt-fade { background: linear-gradient(to top, var(--dark) 30%, transparent 100%); }
-.qt-content-vertical { position: absolute; bottom: 150px; left: 50%; transform: translateX(-50%); width: 90%; z-index: 10; text-align: center; display: flex; flex-direction: column; align-items: center;}
-.qt-mark { font-size: 250px; margin-bottom: 0px; }
-.qt-box-vertical { padding: 50px; border-radius: 25px; border-bottom: 10px solid var(--primary) !important; border-left: none !important; width: 100%; }
-.qt-text { font-size: 50px; text-align: center; }
-.qt-author { font-size: 35px; }
+.qt-fade { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to top, var(--dark) 30%, transparent 100%); z-index: 3; transition: 0.5s;}
+.qt-content { position: absolute; bottom: 150px; left: 50%; transform: translateX(-50%); width: 90%; z-index: 10; text-align: center; display: flex; flex-direction: column; align-items: center;}
+.qt-mark { font-family: 'Barlow'; font-style: italic; font-weight: 900; font-size: 250px; line-height: 0.5; margin-bottom: 0; filter: drop-shadow(0 0 20px var(--primary));}
+.qt-box { padding: 60px; border-radius: 25px; border-bottom: 10px solid var(--primary) !important; border-left: none !important; width: 100%; transition: 0.5s;}
+.qt-text-container { width: 100%; max-height: 350px; overflow: hidden; display: flex; align-items: center; justify-content: center;}
+.qt-text { font-family: 'Barlow'; font-weight: 800; font-style: italic; font-size: 60px; color: #fff; width: 100%; text-align: center; text-wrap: balance; text-shadow: 2px 2px 5px #000;}
+.qt-author-line { width: 80px; height: 6px; background: var(--primary); margin: 40px 0 20px 0; transition: 0.5s; box-shadow: 0 0 10px var(--primary);}
+.qt-author { font-family: 'Montserrat'; font-weight: 900; font-size: 35px; color: #888; letter-spacing: 2px;}
 
 /* 8. H2H KARŞILAŞTIRMA */
-.vertical-h2h-panel { width: 95% !important; bottom: 100px !important; padding: 40px !important; }
-.h2h-num { font-size: 100px; }
-.h2h-center-panel h3 { font-size: 30px; letter-spacing: 6px;}
+.h2h-bg-left { position: absolute; top:0; left:0; width:50%; height:100%; background: radial-gradient(circle at center, var(--bg-grad-1) 0%, transparent 80%); z-index:1; transition: 0.5s;} 
+.h2h-bg-right { position: absolute; top:0; right:0; width:50%; height:100%; background: radial-gradient(circle at center, rgba(169,4,50,0.5) 0%, transparent 80%); z-index:1;} 
+.h2h-player-box { position: absolute; bottom: 350px; width: 450px; height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; z-index: 5;}
+.h2h-player-box.left { left: 40px; }
+.h2h-player-box.right { right: 40px; }
+.h2h-player-box h2 { width: 100%; text-align: center; font-family: 'Barlow'; font-style: italic; font-weight: 900; font-size: 50px; color: #fff; padding: 15px 0; border-radius: 15px; margin-top: 15px; text-shadow: 2px 2px 5px #000;}
+.h2h-center-panel { position: absolute; bottom: 100px; left: 50%; transform: translateX(-50%); width: 95%; padding: 50px; border-radius: 20px; z-index: 10; text-align: center;}
+.h2h-center-panel h3 { font-family: 'Montserrat'; font-weight: 900; font-size: 30px; color: #888; letter-spacing: 6px; margin-bottom: 20px;}
+.h2h-stat-row { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 0 50px;}
+.h2h-num { font-family: 'Barlow'; font-weight: 900; font-style: italic; font-size: 100px; color: #fff; text-shadow: 0 0 30px var(--primary); transition: 0.5s;}
 
 /* 9. PUAN DURUMU */
-.st-title-vertical { position: absolute; top: 100px; width: 100%; text-align: center; font-family: 'Barlow'; font-weight: 900; font-style: italic; font-size: 100px; line-height: 1; z-index: 10; transition: 0.5s;}
-.vertical-st-container { gap: 20px !important; top: 400px !important; width: 90% !important; }
-.st-row { padding: 30px 40px; }
-.st-rank { font-size: 60px; width: 100px;}
-.st-logo { max-width: 90px; max-height: 90px; margin-right: 40px;}
-.st-name { font-size: 50px; }
-.st-pts { font-size: 70px;}
+.st-title { position: absolute; top: 120px; width: 100%; text-align: center; font-family: 'Barlow'; font-weight: 900; font-style: italic; font-size: 100px; line-height: 1; z-index: 10; transition: 0.5s;}
+.st-container { position: absolute; top: 400px; left: 50%; transform: translateX(-50%); width: 90%; display: flex; flex-direction: column; gap: 20px; z-index: 10;}
+.st-row { display: flex; align-items: center; padding: 40px 50px; border-radius: 15px;}
+.st-leader { background: linear-gradient(90deg, var(--primary-dim) 0%, var(--dark) 100%) !important; border-left: 8px solid var(--primary) !important; transition: 0.5s;}
+.st-rank { font-family: 'Barlow'; font-weight: 900; font-size: 60px; color: #555; width: 100px;}
+.st-logo { max-width: 90px; max-height: 90px; width: auto !important; height: auto !important; margin-right: 40px;}
+.st-name { font-family: 'Barlow'; font-weight: 800; font-size: 50px; flex: 1; color: #fff; text-shadow: 2px 2px 5px #000;}
+.st-pts { font-family: 'Barlow'; font-weight: 900; font-style: italic; font-size: 70px; color: #888;}
 
 /* 10. MAÇIN HAKEMİ */
-.ref-img { max-height: 900px; }
-.vertical-ref-teams { top: 120px; gap: 30px; }
-.ref-logo { max-width: 250px; max-height: 250px; }
-.vs-badge-small { font-family: 'Barlow'; font-weight: 900; font-style: italic; font-size: 30px; color: var(--dark); background: var(--primary); padding: 10px 30px; border-radius: 30px; transition: 0.5s;}
-.vertical-ref-panel { bottom: 100px !important; width: 90% !important; padding: 40px !important;}
-.ref-panel h3 { font-size: 30px; letter-spacing: 8px;}
-.ref-panel h2 { font-size: 80px; }
+.ref-teams { position: absolute; top: 120px; width: 100%; display: flex; justify-content: center; align-items: center; gap: 50px; z-index: 2;}
+.ref-logo { max-width: 250px; max-height: 250px; width: auto !important; height: auto !important; opacity: 0.2; filter: grayscale(100%);}
+.ref-panel { position: absolute; bottom: 100px; left: 50%; transform: translateX(-50%); width: 90%; text-align: center; padding: 50px; border-radius: 20px; z-index: 10;}
+.ref-panel h3 { font-family: 'Montserrat'; font-weight: 900; font-size: 30px; color: #888; letter-spacing: 8px; margin-bottom: 15px;}
+.ref-panel h2 { font-family: 'Barlow'; font-style: italic; font-weight: 900; font-size: 80px; text-shadow: 2px 2px 5px #000;}
 
-/* 11. SON DAKİKA (🚨 4:5 TASARIM 🚨) */
-.sd-big-text-vertical { position: absolute; top: 100px; width: 100%; text-align: center; z-index: 3; }
-.sd-big-text-vertical h1 { font-family: 'Barlow', sans-serif; font-style: italic; font-weight: 900; font-size: 150px; color: var(--primary); line-height: 0.9; text-shadow: 10px 10px 0px rgba(0,0,0,0.9); transition: 0.5s;}
-.sd-content-vertical { position: absolute; bottom: 150px; left: 0; width: 100%; height: 800px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; z-index: 10; padding-bottom: 50px;}
-.sd-player-img-vertical-45 { max-height: 700px; filter: drop-shadow(0 20px 50px #000); margin-bottom: -50px; z-index: 5;}
-.sd-box-vertical-45 { width: 90%; height: 250px; border-radius: 25px; border: 2px solid var(--primary) !important; transition: 0.5s; box-shadow: 0 30px 60px rgba(0,0,0,1); display: flex; align-items: center; justify-content: center; padding: 40px; position: relative; z-index: 4; background: rgba(0,0,0,0.8);}
-.sd-title-wrapper-vertical { font-size: 50px; text-align: center; color: #fff; font-family: 'Montserrat'; font-weight: 800; text-shadow: 2px 2px 5px #000;}
-.sd-x { position: absolute; top: 20px; right: 25px; font-size: 40px; font-weight: 900; color: #444;}
+/* 11. SON DAKİKA */
+.sd-pattern { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: repeating-linear-gradient(45deg, rgba(0,0,0,0.6) 0, rgba(0,0,0,0.6) 2px, transparent 2px, transparent 12px); z-index: 2;}
+.sd-big-text { position: absolute; top: 120px; width: 100%; text-align: center; z-index: 3; }
+.sd-big-text h1 { font-family: 'Barlow', sans-serif; font-style: italic; font-weight: 900; font-size: 180px; color: var(--primary); line-height: 0.9; text-shadow: 10px 10px 0px rgba(0,0,0,0.9), 0 0 60px var(--primary-dim); letter-spacing: -2px; transition: 0.5s;}
+.sd-content { position: absolute; bottom: 150px; left: 0; width: 100%; height: 800px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; z-index: 10; padding-bottom: 50px;}
+.sd-player-img { max-height: 800px; filter: drop-shadow(0 30px 60px #000); margin-bottom: -50px; z-index: 5;}
+.sd-box { width: 90%; height: 250px; border-radius: 25px; border: 2px solid var(--primary) !important; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; padding: 40px; position: relative; z-index: 4; box-shadow: 0 30px 60px rgba(0,0,0,1);}
+.sd-title-wrapper { font-size: 50px; text-align: center; color: #fff; font-family: 'Montserrat'; font-weight: 800; text-shadow: 2px 2px 5px #000;}
+.sd-x { position: absolute; top: 20px; right: 25px; font-size: 40px; font-weight: 900; font-family: 'Barlow'; color: #888;}
+
+/* 13. MAÇIN ADAMI (MOTM) */
+.motm-bg-logo { position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); width: 800px; opacity: 0.1; filter: grayscale(100%); z-index: 2;}
+.motm-panel { position: absolute; bottom: 80px; left: 50%; transform: translateX(-50%); width: 90%; text-align: center; padding: 40px; border-radius: 20px; z-index: 10;}
+.motm-panel h3 { font-family: 'Montserrat'; font-weight: 900; font-size: 26px; letter-spacing: 5px; margin-bottom: 5px;}
+.motm-panel h1 { font-family: 'Barlow'; font-style: italic; font-weight: 900; font-size: 70px; color: #fff; margin-bottom: 15px; text-shadow: 2px 2px 5px #000;}
+.motm-stats { display: flex; justify-content: center; align-items: center; gap: 40px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;}
+.m-stat span { font-family: 'Montserrat'; font-weight: 800; font-size: 18px; color: #888; letter-spacing: 2px;}
+.m-stat h2 { font-family: 'Barlow'; font-style: italic; font-weight: 900; font-size: 55px; color: var(--primary); text-shadow: 0 0 15px var(--primary-dim); transition: 0.5s;}
+
+/* 14. DÖNÜM NOKTASI */
+.mil-big-num { position: absolute; top: 150px; left: 50%; transform: translateX(-50%); font-family: 'Barlow'; font-style: italic; font-weight: 900; font-size: 500px; line-height: 0.8; z-index: 3; opacity: 0.8;}
+.mil-panel { position: absolute; bottom: 100px; left: 50%; transform: translateX(-50%); width: 90%; text-align: center; padding: 40px; border-radius: 20px; z-index: 10;}
+.mil-panel h1 { font-family: 'Barlow'; font-style: italic; font-weight: 900; font-size: 60px; color: #fff;}
+.mil-panel h3 { font-family: 'Montserrat'; font-weight: 900; font-size: 30px; letter-spacing: 4px; margin-top: 10px;}
+
+/* 15. GELECEK FİKSTÜR */
+.fix-left { position: absolute; top: 0; left: 0; width: 45%; height: 100%; border-right: 5px solid var(--primary); z-index: 5; transition: 0.5s;}
+.fix-left img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(50%) contrast(120%); opacity: 0.8;}
+.fix-right { position: absolute; top: 0; right: 0; width: 55%; height: 100%; padding: 60px 50px; display: flex; flex-direction: column; justify-content: center; z-index: 10;}
+.fix-main-title { font-family: 'Barlow'; font-style: italic; font-weight: 900; font-size: 55px; line-height: 1; margin-bottom: 50px;}
+.fix-row { display: flex; align-items: center; padding: 30px; border-radius: 20px; margin-bottom: 30px;}
+.fix-logo { max-width: 90px; max-height: 90px; width: auto !important; height: auto !important; margin-right: 30px;}
+.fix-row h3 { font-family: 'Barlow'; font-style: italic; font-weight: 900; font-size: 40px; color: #fff; line-height: 1;}
+.fix-row span { font-family: 'Montserrat'; font-weight: 800; font-size: 20px; letter-spacing: 2px;}
+
+/* 16. SAĞLIK RAPORU */
+.hlt-glow { position: absolute; top:0; left:0; width:100%; height:100%; background: radial-gradient(circle at top, rgba(255,0,60,0.5) 0%, transparent 70%); mix-blend-mode: screen; z-index: 1;}
+.hlt-player { filter: grayscale(100%) contrast(110%) drop-shadow(0 30px 60px #000) !important; }
+.hlt-top-title { position: absolute; top: 120px; width: 100%; text-align: center; font-family: 'Barlow'; font-style: italic; font-weight: 900; font-size: 90px; color: #ff003c; text-shadow: 0 0 30px #ff003c, 0 0 60px rgba(255,0,60,0.5); z-index: 10; letter-spacing: 2px;}
+.hlt-panel { position: absolute; bottom: 100px; left: 50%; transform: translateX(-50%); width: 90%; background: rgba(10,0,0,0.8); border: 2px solid #ff003c; border-radius: 20px; padding: 50px; text-align: center; z-index: 10; box-shadow: 0 0 40px rgba(255,0,60,0.3);}
+.hlt-panel h1 { font-family: 'Barlow'; font-style: italic; font-weight: 900; font-size: 65px; color: #fff; margin-bottom: 30px;}
+.hlt-info-box { display: flex; justify-content: space-evenly; align-items: center;}
+.hlt-info-box span { font-family: 'Montserrat'; font-weight: 900; font-size: 20px; color: #888; letter-spacing: 2px;}
+.hlt-info-box h3 { font-family: 'Barlow'; font-style: italic; font-weight: 900; font-size: 45px; color: #ff003c; text-shadow: 0 0 15px rgba(255,0,60,0.5); margin-top: 5px;}
 
 ::-webkit-scrollbar { width: 12px; height: 12px; }
 ::-webkit-scrollbar-thumb { background: #333; border-radius: 6px; border: 3px solid var(--gray); transition: 0.5s;}
