@@ -1,5 +1,5 @@
 // ==========================================
-// 1. TEMA VE FİLİGRAN KONTROL MOTORU
+// TEMA VE FİLİGRAN KONTROL MOTORU
 // ==========================================
 const themeBtns = document.querySelectorAll('.ts-btn:not(#btn-watermark)');
 themeBtns.forEach(btn => {
@@ -31,7 +31,7 @@ if(btnWatermark) {
 }
 
 // ==========================================
-// 2. GÜVENLİ METİN KÜÇÜLTME MOTORU
+// 🌟 GÜVENLİ METİN KÜÇÜLTME MOTORU 🌟
 // ==========================================
 function autoScaleText() {
     try {
@@ -44,7 +44,7 @@ function autoScaleText() {
             if(el.classList.contains('out-sd-title')) maxFont = 65;
             if(parent.classList.contains('hw-name')) maxFont = 45; 
             if(el.classList.contains('out-mg-venue')) maxFont = 24; 
-            if(el.classList.contains('pc-name')) maxFont = 26; 
+            if(el.classList.contains('pc-name')) maxFont = 30; 
 
             el.style.fontSize = maxFont + 'px';
             
@@ -58,9 +58,6 @@ function autoScaleText() {
     } catch(e) { console.error("Metin küçültme hatası:", e); }
 }
 
-// ==========================================
-// 3. BAĞLANTI (BINDING) FONKSİYONLARI 
-// ==========================================
 function bindText(inputId, targetClass, isUpper = true, isHtml = false) {
     const input = document.getElementById(inputId);
     if (!input) return;
@@ -72,29 +69,26 @@ function bindText(inputId, targetClass, isUpper = true, isHtml = false) {
     });
 }
 
-// 🚨 GÖRSEL YÜKLEME KİLİTLENMESİ BURADA ÇÖZÜLDÜ 🚨
-function bindImage(inputId, targetSelector, isBackground = false) {
+function bindImage(inputId, targetIdOrClass, isBackground = false) {
     const input = document.getElementById(inputId);
     if (!input) return;
-
-    // Butona her tıklandığında hafızayı temizle (Aynı fotoğrafı defalarca seçebilmek için)
+    
+    // GÖRSEL SEÇİM SIFIRLAMA EKLENDİ - ART ARDA AYNI GÖRSELİ SEÇMEYİ SAĞLAR
     input.addEventListener('click', function() {
         this.value = null; 
     });
-    
+
     input.addEventListener('change', function(e) {
         const file = e.target.files[0];
         if (!file) return;
         
         const reader = new FileReader();
-        reader.onload = function(event) {
-            const result = event.target.result;
+        reader.onload = function(readEvent) {
+            const result = readEvent.target.result;
             
-            // İlk 11 logosunu hafızaya al
             if (inputId === 'k-logo') window.kLogoCached = result;
 
-            // Fotoğrafı şablona bas
-            document.querySelectorAll(targetSelector).forEach(el => {
+            document.querySelectorAll(targetIdOrClass).forEach(el => {
                 if (isBackground) {
                     el.style.backgroundImage = `url('${result}')`;
                 } else {
@@ -102,7 +96,6 @@ function bindImage(inputId, targetSelector, isBackground = false) {
                 }
             });
             
-            // İlk 11 logosu güncellendiyse dizilimi tetikle
             if (inputId === 'k-logo') {
                 const lineupInput = document.getElementById('k-lineup');
                 if (lineupInput) {
@@ -110,17 +103,11 @@ function bindImage(inputId, targetSelector, isBackground = false) {
                 }
             }
         }
-        
-        // Dosyayı oku
         reader.readAsDataURL(file);
     });
 }
 
-// ==========================================
-// 4. BÜTÜN MODÜLLERİN VERİ BAĞLANTILARI (1-17)
-// ==========================================
-
-// MODÜL 1, 2, 3
+// BAĞLANTILAR
 bindText('mg-home-name', '.out-mg-home-name'); bindText('mg-away-name', '.out-mg-away-name');
 bindText('mg-time', '.out-mg-time', false); bindText('mg-venue', '.out-mg-venue');
 bindImage('mg-home-logo', '.out-mg-home-logo'); bindImage('mg-away-logo', '.out-mg-away-logo'); bindImage('mg-bg', '.out-mg-bg', true);
@@ -134,8 +121,11 @@ bindText('ms-home-score', '.out-ms-home-score', false); bindText('ms-away-score'
 bindText('ms-home-scorers', '.out-ms-home-scorers', false, true); bindText('ms-away-scorers', '.out-ms-away-scorers', false, true);
 bindImage('ms-home-logo', '.out-ms-home-logo'); bindImage('ms-away-logo', '.out-ms-away-logo'); bindImage('ms-bg', '.out-ms-bg', true);
 
-// MODÜL 4: İSTATİSTİK
-bindImage('stat-home-logo', '.out-stat-home-logo'); bindImage('stat-away-logo', '.out-stat-away-logo'); bindImage('stat-bg', '.out-stat-bg', true);
+// 4. İSTATİSTİK
+bindImage('stat-home-logo', '.out-stat-home-logo');
+bindImage('stat-away-logo', '.out-stat-away-logo');
+bindImage('stat-bg', '.out-stat-bg', true);
+
 function bindStat(idHome, idAway, outHome, outAway, barHome, barAway, isPercent = false) {
     const iHome = document.getElementById(idHome); const iAway = document.getElementById(idAway);
     function updateStats() {
@@ -158,8 +148,7 @@ bindStat('stat-shot-home', 'stat-shot-away', '.out-stat-shot-home', '.out-stat-s
 bindStat('stat-cor-home', 'stat-cor-away', '.out-stat-cor-home', '.out-stat-cor-away', 'bar-cor-home', null);
 bindStat('stat-foul-home', 'stat-foul-away', '.out-stat-foul-home', '.out-stat-foul-away', 'bar-foul-home', null);
 
-// MODÜL 5: İLK 11
-window.kLogoCached = "https://media.api-sports.io/football/teams/9.png"; 
+// 5. İLK 11 KADROSU
 bindImage('k-logo', '.out-k-main-logo'); bindImage('k-bg', '.out-k-bg', true); 
 const positions433 = ['GK', 'RB', 'CB', 'CB', 'LB', 'CDM', 'CM', 'CM', 'RW', 'ST', 'LW'];
 const layout433 = [[8, 9, 10], [5, 6, 7], [1, 2, 3, 4], [0]]; 
@@ -183,7 +172,7 @@ if(kLineupInput) {
                     const card = document.createElement('div'); 
                     card.className = `glass-panel player-card-vertical ${isPrimary ? 'neon-border' : ''}`;
                     card.innerHTML = `
-                        <div class="pc-logo-container"><img src="${window.kLogoCached}" class="out-k-logo"></div>
+                        <div class="pc-logo-container"><img src="${window.kLogoCached || 'https://media.api-sports.io/football/teams/9.png'}" class="out-k-logo"></div>
                         <div class="name-box"><span class="pc-name auto-scale-text">${players[index].toUpperCase()}</span></div>
                         <div class="pc-meta"><b>${index + 1}</b> ${pos}</div>
                     `;
@@ -196,7 +185,7 @@ if(kLineupInput) {
     });
 }
 
-// MODÜL 6-16
+// 6-16 MODÜLLERİ
 bindText('tr-name', '.out-tr-name'); bindImage('tr-logo', '.out-tr-logo'); bindImage('tr-img', '.out-tr-img');
 const trProbInput = document.getElementById('tr-prob');
 if (trProbInput) {
@@ -229,7 +218,7 @@ bindImage('fix2-logo', '.out-fix2-logo'); bindText('fix2-date', '.out-fix2-date'
 bindImage('fix3-logo', '.out-fix3-logo'); bindText('fix3-date', '.out-fix3-date'); bindText('fix3-tour', '.out-fix3-tour');
 bindText('hlt-name', '.out-hlt-name'); bindImage('hlt-img', '.out-hlt-img'); bindText('hlt-type', '.out-hlt-type'); bindText('hlt-date', '.out-hlt-date');
 
-// MODÜL 17: HAFTANIN MAÇLARI
+// 17. HAFTANIN MAÇLARI
 bindText('hw-title-input', '.out-hw-title');
 for(let i=1; i<=6; i++) {
     bindText(`hw-m${i}-home`, `.out-hw-m${i}-home`); bindText(`hw-m${i}-score`, `.out-hw-m${i}-score`, false); bindText(`hw-m${i}-away`, `.out-hw-m${i}-away`); bindImage(`hw-m${i}-hlogo`, `.out-hw-m${i}-hlogo`); bindImage(`hw-m${i}-alogo`, `.out-hw-m${i}-alogo`);
@@ -250,7 +239,7 @@ if (hwCountInput) {
 }
 
 // ==========================================
-// 5. OTOMATİK KAYIT SİSTEMİ
+// 5. OTOMATİK KAYIT
 // ==========================================
 const savedData = JSON.parse(localStorage.getItem('skoragi_data')) || {};
 document.querySelectorAll('input[type="text"], input[type="number"], textarea').forEach(el => {
