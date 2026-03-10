@@ -29,18 +29,18 @@ btnWatermark.addEventListener('click', () => {
 });
 
 // ==========================================
-// YARDIMCI FONKSİYONLAR (Boyutlar 1080p için büyütüldü)
+// YARDIMCI FONKSİYONLAR 
 // ==========================================
 function autoScaleText() {
     document.querySelectorAll('.auto-scale').forEach(el => {
         let fontSize = 80; 
-        if(el.classList.contains('out-sd-title')) fontSize = 60;
+        if(el.classList.contains('out-sd-title')) fontSize = 55;
         
         el.style.fontSize = fontSize + 'px';
         while (el.scrollHeight > el.parentElement.clientHeight || el.scrollWidth > el.parentElement.clientWidth) {
             fontSize--; 
             el.style.fontSize = fontSize + 'px';
-            if (fontSize <= 25) break; 
+            if (fontSize <= 20) break; 
         }
     });
 }
@@ -124,14 +124,24 @@ bindStat('stat-shot-home', 'stat-shot-away', '.out-stat-shot-home', '.out-stat-s
 bindStat('stat-cor-home', 'stat-cor-away', '.out-stat-cor-home', '.out-stat-cor-away', 'bar-cor-home', 'bar-cor-away');
 bindStat('stat-foul-home', 'stat-foul-away', '.out-stat-foul-home', '.out-stat-foul-away', 'bar-foul-home', 'bar-foul-away');
 
+// İLK 11 (YENİ SİSTEM 4-3-3)
 bindImage('k-logo', '.out-k-logo'); bindImage('k-bg', 'bg-kadro', true); 
+const positions433 = ['GK', 'RB', 'CB', 'CB', 'LB', 'CDM', 'CM', 'CM', 'RW', 'ST', 'LW'];
 document.getElementById('k-lineup').addEventListener('input', function(e) {
-    const listContainer = document.getElementById('out-k-lineup'); listContainer.innerHTML = ''; 
+    const gridContainer = document.getElementById('out-k-lineup-cards'); gridContainer.innerHTML = ''; 
     const players = e.target.value.split('\n').map(p => p.trim()).filter(p => p !== '');
+    
     players.slice(0, 11).forEach((player, index) => {
-        const item = document.createElement('div'); item.className = 'kadro-item';
-        item.innerHTML = `<span class="kadro-item-num">${index + 1}</span> ${player.toUpperCase()}`;
-        listContainer.appendChild(item);
+        const pos = positions433[index] || 'N/A';
+        const isPrimary = (index === 0 || index > 7); 
+        const card = document.createElement('div'); 
+        card.className = `player-card-vertical ${isPrimary ? 'neon-border' : ''} ${pos === 'GK' ? 'gk-card' : ''}`;
+        card.innerHTML = `
+            <div class="pc-logo-container"><img src="https://creazilla-store.fra1.digitaloceanspaces.com/cliparts/3133642/soccer-player-clipart-xl.png"></div>
+            <div class="pc-name">${player.toUpperCase()}</div>
+            <div class="pc-meta"><b>${index + 1}</b> ${pos}</div>
+        `;
+        gridContainer.appendChild(card);
     });
 });
 
@@ -170,7 +180,7 @@ bindImage('fix2-logo', '.out-fix2-logo'); bindText('fix2-date', '.out-fix2-date'
 bindImage('fix3-logo', '.out-fix3-logo'); bindText('fix3-date', '.out-fix3-date'); bindText('fix3-tour', '.out-fix3-tour');
 bindText('hlt-name', '.out-hlt-name'); bindImage('hlt-img', '.out-hlt-img'); bindText('hlt-type', '.out-hlt-type'); bindText('hlt-date', '.out-hlt-date');
 
-// 17. HAFTANIN MAÇLARI DİNAMİK GÖSTERİM KODU
+// HAFTANIN MAÇLARI
 bindText('hw-title-input', '.out-hw-title');
 bindImage('hw-bg', 'bg-hw', true);
 
@@ -236,7 +246,7 @@ window.addEventListener('load', () => {
 });
 
 // ==========================================
-// 🌟 GÜVENLİ İNDİRME MOTORU 🌟
+// 🌟 GÜVENLİ İNDİRME MOTORU (KAYMA VE BOZULMA ENGELLENDİ) 🌟
 // ==========================================
 function downloadTpl(elementId, fileName) {
     const captureArea = document.getElementById(elementId);
@@ -252,7 +262,6 @@ function downloadTpl(elementId, fileName) {
     const originalLeft = captureArea.style.left;
     const originalZIndex = captureArea.style.zIndex;
 
-    // Kartı düz çekim için serbest bırak
     captureArea.style.transform = "none"; 
     captureArea.style.position = "fixed";
     captureArea.style.top = "0px";
@@ -261,12 +270,11 @@ function downloadTpl(elementId, fileName) {
 
     setTimeout(() => {
         html2canvas(captureArea, { 
-            scale: 2, // 1080x1350 * 2 = 2160x2700 Ultra HD Kalite
+            scale: 2, 
             backgroundColor: "#000", 
             useCORS: true, 
             logging: false 
         }).then(canvas => {
-            // Ekrana geri döndür
             captureArea.style.transform = originalTransform;
             captureArea.style.position = originalPosition;
             captureArea.style.top = originalTop;
