@@ -113,68 +113,77 @@
 
         <div class="studio-module"><div class="module-panel">
             <h2>17. HAFTANIN MAÇLARI 🗓️</h2>
+            <div class="input-group"><label>Şablon Başlığı</label><input type="text" id="hw-title-input" value="HAFTANIN MAÇLARI"></div>
+            <div class="input-group"><label>Gösterilecek Maç Sayısı (1-6)</label><input type="number" id="hw-match-count" value="5" min="1" max="6"></div>
             <p style="color:#888; font-size:12px; margin-bottom:15px;">Fikstür için saat (20:00), biten maçlar için skor (2-1) girebilirsiniz.</p>
             
-            <div class="input-group" style="background:#111; padding:15px; border-radius:10px; margin-bottom:10px; border-left:3px solid var(--primary);">
-                <label style="color:var(--primary);">Maç 1 (Ev - Skor - Dep)</label>
+            <div class="input-group match-input-wrapper" id="hw-in-1" style="background:#111; padding:15px; border-radius:10px; margin-bottom:10px; border-left:3px solid var(--primary);">
+                <label style="color:var(--primary);">Maç 1 (Ev - Skor/Saat - Dep)</label>
                 <div style="display:flex;gap:5px;margin-bottom:5px;"><input type="text" id="hw-m1-home" value="FENERBAHÇE" style="flex:2;"><input type="text" id="hw-m1-score" value="2-1" style="flex:1; text-align:center;"><input type="text" id="hw-m1-away" value="GALATASARAY" style="flex:2;"></div>
                 <div style="display:flex;gap:5px;"><input type="file" id="hw-m1-hlogo"><input type="file" id="hw-m1-alogo"></div>
             </div>
-            
-            <div class="input-group" style="background:#111; padding:15px; border-radius:10px; margin-bottom:10px; border-left:3px solid var(--primary);">
-                <label style="color:var(--primary);">Maç 2 (Ev - Skor - Dep)</label>
+            <div class="input-group match-input-wrapper" id="hw-in-2" style="background:#111; padding:15px; border-radius:10px; margin-bottom:10px; border-left:3px solid var(--primary);">
+                <label style="color:var(--primary);">Maç 2 (Ev - Skor/Saat - Dep)</label>
                 <div style="display:flex;gap:5px;margin-bottom:5px;"><input type="text" id="hw-m2-home" value="BEŞİKTAŞ" style="flex:2;"><input type="text" id="hw-m2-score" value="20:00" style="flex:1; text-align:center;"><input type="text" id="hw-m2-away" value="TRABZONSPOR" style="flex:2;"></div>
                 <div style="display:flex;gap:5px;"><input type="file" id="hw-m2-hlogo"><input type="file" id="hw-m2-alogo"></div>
             </div>
-
-            <div class="input-group" style="background:#111; padding:15px; border-radius:10px; margin-bottom:10px; border-left:3px solid var(--primary);">
-                <label style="color:var(--primary);">Maç 3 (Ev - Skor - Dep)</label>
+            <div class="input-group match-input-wrapper" id="hw-in-3" style="background:#111; padding:15px; border-radius:10px; margin-bottom:10px; border-left:3px solid var(--primary);">
+                <label style="color:var(--primary);">Maç 3 (Ev - Skor/Saat - Dep)</label>
                 <div style="display:flex;gap:5px;margin-bottom:5px;"><input type="text" id="hw-m3-home" value="SİVASSPOR" style="flex:2;"><input type="text" id="hw-m3-score" value="1-0" style="flex:1; text-align:center;"><input type="text" id="hw-m3-away" value="KASIMPAŞA" style="flex:2;"></div>
                 <div style="display:flex;gap:5px;"><input type="file" id="hw-m3-hlogo"><input type="file" id="hw-m3-alogo"></div>
             </div>
-
-            <div class="input-group" style="background:#111; padding:15px; border-radius:10px; margin-bottom:10px; border-left:3px solid var(--primary);">
-                <label style="color:var(--primary);">Maç 4 (Ev - Skor - Dep)</label>
+            <div class="input-group match-input-wrapper" id="hw-in-4" style="background:#111; padding:15px; border-radius:10px; margin-bottom:10px; border-left:3px solid var(--primary);">
+                <label style="color:var(--primary);">Maç 4 (Ev - Skor/Saat - Dep)</label>
                 <div style="display:flex;gap:5px;margin-bottom:5px;"><input type="text" id="hw-m4-home" value="BAŞAKŞEHİR" style="flex:2;"><input type="text" id="hw-m4-score" value="3-3" style="flex:1; text-align:center;"><input type="text" id="hw-m4-away" value="KONYASPOR" style="flex:2;"></div>
                 <div style="display:flex;gap:5px;"><input type="file" id="hw-m4-hlogo"><input type="file" id="hw-m4-alogo"></div>
             </div>
-
-            <div class="input-group" style="background:#111; padding:15px; border-radius:10px; margin-bottom:10px; border-left:3px solid var(--primary);">
-                <label style="color:var(--primary);">Maç 5 (Ev - Skor - Dep)</label>
+            <div class="input-group match-input-wrapper" id="hw-in-5" style="background:#111; padding:15px; border-radius:10px; margin-bottom:10px; border-left:3px solid var(--primary);">
+                <label style="color:var(--primary);">Maç 5 (Ev - Skor/Saat - Dep)</label>
                 <div style="display:flex;gap:5px;margin-bottom:5px;"><input type="text" id="hw-m5-home" value="ANTALYASPOR" style="flex:2;"><input type="text" id="hw-m5-score" value="19:00" style="flex:1; text-align:center;"><input type="text" id="hw-m5-away" value="ALANYASPOR" style="flex:2;"></div>
                 <div style="display:flex;gap:5px;"><input type="file" id="hw-m5-hlogo"><input type="file" id="hw-m5-alogo"></div>
+            </div>
+            <div class="input-group match-input-wrapper" id="hw-in-6" style="background:#111; padding:15px; border-radius:10px; margin-bottom:10px; border-left:3px solid var(--primary); display: none;">
+                <label style="color:var(--primary);">Maç 6 (Ev - Skor/Saat - Dep)</label>
+                <div style="display:flex;gap:5px;margin-bottom:5px;"><input type="text" id="hw-m6-home" value="KAYSERİSPOR" style="flex:2;"><input type="text" id="hw-m6-score" value="0-0" style="flex:1; text-align:center;"><input type="text" id="hw-m6-away" value="HATAYSPOR" style="flex:2;"></div>
+                <div style="display:flex;gap:5px;"><input type="file" id="hw-m6-hlogo"><input type="file" id="hw-m6-alogo"></div>
             </div>
 
             <div class="input-group"><label>Arka Plan</label><input type="file" id="hw-bg"></div>
             <button class="download-btn" onclick="downloadTpl('tpl-haftanin-maclari', 'haftanin-maclari')">İNDİR</button>
         </div><div class="module-preview"><div class="preview-wrapper"><div class="match-card" id="tpl-haftanin-maclari">
             <div class="bg-layer" id="bg-hw" style="opacity:0.3;"></div><div class="brand-glow" style="opacity:0.7;"></div><div class="brand-gradient-bottom"></div>
-            <h1 class="hw-title neon-text">HAFTANIN MAÇLARI</h1>
+            <h1 class="hw-title neon-text out-hw-title">HAFTANIN MAÇLARI</h1>
+            
             <div class="hw-container">
-                <div class="hw-row crystal-panel neon-border">
+                <div class="hw-row crystal-panel neon-border match-preview-row" id="hw-out-1">
                     <div class="hw-team hw-home"><span class="out-hw-m1-home auto-text">FENERBAHÇE</span><img src="https://media.api-sports.io/football/teams/9.png" class="out-hw-m1-hlogo"></div>
                     <div class="hw-score neon-glow out-hw-m1-score">2-1</div>
                     <div class="hw-team hw-away"><img src="https://media.api-sports.io/football/teams/11.png" class="out-hw-m1-alogo"><span class="out-hw-m1-away auto-text">GALATASARAY</span></div>
                 </div>
-                <div class="hw-row crystal-panel">
+                <div class="hw-row crystal-panel match-preview-row" id="hw-out-2">
                     <div class="hw-team hw-home"><span class="out-hw-m2-home auto-text">BEŞİKTAŞ</span><img src="https://media.api-sports.io/football/teams/10.png" class="out-hw-m2-hlogo"></div>
-                    <div class="hw-score neon-glow out-hw-m2-score" style="background:#222; color:#fff; border-color:#555;">20:00</div>
+                    <div class="hw-score out-hw-m2-score" style="background:#111; color:#fff; border:1px solid #333;">20:00</div>
                     <div class="hw-team hw-away"><img src="https://media.api-sports.io/football/teams/61.png" class="out-hw-m2-alogo"><span class="out-hw-m2-away auto-text">TRABZONSPOR</span></div>
                 </div>
-                <div class="hw-row crystal-panel">
+                <div class="hw-row crystal-panel match-preview-row" id="hw-out-3">
                     <div class="hw-team hw-home"><span class="out-hw-m3-home auto-text">SİVASSPOR</span><img src="https://media.api-sports.io/football/teams/102.png" class="out-hw-m3-hlogo"></div>
                     <div class="hw-score neon-glow out-hw-m3-score">1-0</div>
                     <div class="hw-team hw-away"><img src="https://media.api-sports.io/football/teams/99.png" class="out-hw-m3-alogo"><span class="out-hw-m3-away auto-text">KASIMPAŞA</span></div>
                 </div>
-                <div class="hw-row crystal-panel">
+                <div class="hw-row crystal-panel match-preview-row" id="hw-out-4">
                     <div class="hw-team hw-home"><span class="out-hw-m4-home auto-text">BAŞAKŞEHİR</span><img src="https://media.api-sports.io/football/teams/13.png" class="out-hw-m4-hlogo"></div>
                     <div class="hw-score neon-glow out-hw-m4-score">3-3</div>
                     <div class="hw-team hw-away"><img src="https://media.api-sports.io/football/teams/92.png" class="out-hw-m4-alogo"><span class="out-hw-m4-away auto-text">KONYASPOR</span></div>
                 </div>
-                <div class="hw-row crystal-panel">
+                <div class="hw-row crystal-panel match-preview-row" id="hw-out-5">
                     <div class="hw-team hw-home"><span class="out-hw-m5-home auto-text">ANTALYASPOR</span><img src="https://media.api-sports.io/football/teams/100.png" class="out-hw-m5-hlogo"></div>
-                    <div class="hw-score neon-glow out-hw-m5-score" style="background:#222; color:#fff; border-color:#555;">19:00</div>
+                    <div class="hw-score out-hw-m5-score" style="background:#111; color:#fff; border:1px solid #333;">19:00</div>
                     <div class="hw-team hw-away"><img src="https://media.api-sports.io/football/teams/103.png" class="out-hw-m5-alogo"><span class="out-hw-m5-away auto-text">ALANYASPOR</span></div>
+                </div>
+                <div class="hw-row crystal-panel match-preview-row" id="hw-out-6" style="display:none;">
+                    <div class="hw-team hw-home"><span class="out-hw-m6-home auto-text">KAYSERİSPOR</span><img src="https://media.api-sports.io/football/teams/73.png" class="out-hw-m6-hlogo"></div>
+                    <div class="hw-score neon-glow out-hw-m6-score">0-0</div>
+                    <div class="hw-team hw-away"><img src="https://media.api-sports.io/football/teams/62.png" class="out-hw-m6-alogo"><span class="out-hw-m6-away auto-text">HATAYSPOR</span></div>
                 </div>
             </div>
             <div class="card-footer">@skoragi</div>
@@ -223,7 +232,7 @@
             <div class="h2h-bg-left"></div><div class="h2h-bg-right"></div>
             <div class="h2h-player-box left"><img src="https://creazilla-store.fra1.digitaloceanspaces.com/cliparts/3133642/soccer-player-clipart-xl.png" class="out-h2h-p1-img"><h2 class="crystal-panel out-h2h-p1-name auto-text neon-border">DZEKO</h2></div>
             <div class="h2h-player-box right"><img src="https://creazilla-store.fra1.digitaloceanspaces.com/cliparts/3133642/soccer-player-clipart-xl.png" class="out-h2h-p2-img"><h2 class="crystal-panel out-h2h-p2-name auto-text neon-border">ICARDI</h2></div>
-            <div class="h2h-center-panel crystal-panel neon-border"><h3>LİG GOLLERİ</h3><div class="h2h-stat-row"><span class="h2h-num out-h2h-p1-stat">15</span><span class="h2h-num out-h2h-p2-stat">14</span></div></div>
+            <div class="h2h-center-panel crystal-panel neon-border"><h3>LİG GOLLERİ</h3><div class="h2h-stat-row"><span class="h2h-num out-h2h-p1-stat">15</span><div class="vs-badge neon-glow" style="width:40px;height:40px;font-size:18px;">VS</div><span class="h2h-num out-h2h-p2-stat">14</span></div></div>
             <div class="card-footer">@skoragi</div>
         </div></div></div></div>
 
