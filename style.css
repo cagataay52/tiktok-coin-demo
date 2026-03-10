@@ -62,16 +62,10 @@ body { background-color: var(--gray); color: var(--text); font-family: 'Montserr
 .module-panel { width: 35%; padding: 40px; background: rgba(0,0,0,0.8); border-right: 3px solid var(--primary); transition: 0.5s; }
 .module-panel h2 { font-family: 'Barlow'; font-weight: 900; font-style: italic; color: #fff; margin-bottom: 30px; font-size: 26px; border-bottom: 1px solid #222; padding-bottom: 10px; text-shadow: 0 0 10px var(--primary);}
 .module-preview { width: 65%; display: flex; justify-content: center; align-items: center; padding: 30px; background: var(--gray); background-image: radial-gradient(circle at center, rgba(255,255,255,0.02) 0%, transparent 100%); transition: 0.5s;}
+.preview-wrapper { width: 400px; height: 400px; position: relative; box-shadow: 0 20px 60px rgba(0,0,0,1); overflow: visible; } 
 
-/* ========================================= */
-/* 🚨 ORTAK KART DİNAMİĞİ - TÜM ŞABLONLAR 1080x1350 (4:5 DİKEY) OLDU 🚨 */
-/* ========================================= */
-.preview-wrapper { width: 320px; height: 400px; position: relative; box-shadow: 0 20px 60px rgba(0,0,0,1); overflow: visible; } 
-.match-card { width: 1080px; height: 1350px; background-color: var(--dark); position: absolute; top: 0; left: 0; transform: scale(0.296); transform-origin: top left; overflow: hidden; backface-visibility: hidden; border: 1px solid #111; transition: background-color 0.5s;}
-
-/* SADECE REELS MODÜLÜ (9:16) İÇİN ÖZEL BOYUT */
-.preview-wrapper.reels-wrapper { width: 270px; height: 480px; }
-.match-card.tpl-reels { width: 1080px; height: 1920px; transform: scale(0.25); }
+/* ANA KART DİNAMİĞİ (Tüm Modüller Yatay/Stacked Düzenine Geri Döndü) */
+.match-card { width: 800px; height: 800px; background-color: var(--dark); position: absolute; top: 0; left: 0; transform: scale(0.5); transform-origin: top left; overflow: hidden; backface-visibility: hidden; border: 1px solid #111; transition: background-color 0.5s;}
 
 /* FİLİGRAN (WATERMARK) */
 body.watermark-on .match-card::after {
@@ -80,8 +74,8 @@ body.watermark-on .match-card::after {
     pointer-events: none; z-index: 999;
 }
 
-/* KRİSTAL PANELLER VE NEONLAR */
-.crystal-panel { background: linear-gradient(135deg, rgba(30,30,30,0.5) 0%, rgba(5,5,5,0.8) 100%); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--panel-border); box-shadow: 0 20px 50px rgba(0,0,0,1); position: relative; overflow: hidden; transition: background 0.5s, border-color 0.5s;}
+/* KRİSTAL PANELLER VE NEONLAR (Orijinal Tasarıma Geri Dönüldü, ::before kaldırıldı) */
+.crystal-panel { background: linear-gradient(135deg, rgba(30, 30, 30, 0.5) 0%, rgba(5, 5, 5, 0.8) 100%); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--panel-border); box-shadow: 0 20px 50px rgba(0,0,0,1); position: relative; overflow: hidden; transition: background 0.5s, border-color 0.5s;}
 .neon-glow { box-shadow: 0 0 15px var(--primary-dim), 0 0 30px var(--primary-dim); border: 1px solid var(--primary); transition: 0.5s;}
 .neon-text { color: #fff; text-shadow: 0 0 15px var(--primary), 0 0 30px var(--primary); transition: 0.5s;}
 .neon-text-color { color: var(--primary); text-shadow: 0 0 15px var(--primary), 0 0 30px var(--primary); transition: 0.5s;}
@@ -95,164 +89,152 @@ body.watermark-on .match-card::after {
 .download-btn { width: 100%; padding: 18px; background: var(--primary); color: #000; font-family: 'Barlow'; font-weight: 900; font-size: 22px; border: none; border-radius: 8px; cursor: pointer; transition: 0.3s; margin-top: 20px; box-shadow: 0 0 30px var(--primary-dim); text-transform: uppercase;}
 .download-btn:hover { background: white; color: var(--primary); transform: translateY(-3px);}
 
-/* ORTAK KART PARÇALARI */
-.card-footer { position: absolute; bottom: 30px; width: 100%; text-align: center; font-size: 20px; color: rgba(255,255,255,0.4); font-weight: 900; z-index: 50; letter-spacing: 4px;}
+/* ORTAK PARÇALAR */
+.card-footer { position: absolute; bottom: 20px; width: 100%; text-align: center; font-size: 15px; color: rgba(255,255,255,0.4); font-weight: 900; z-index: 50; letter-spacing: 2px;}
 .bg-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; opacity: 0.5; filter: blur(2px); }
 .brand-glow { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at 30% 40%, var(--bg-grad-1) 0%, transparent 70%), radial-gradient(circle at 70% 60%, var(--bg-grad-2) 0%, transparent 60%); mix-blend-mode: screen; z-index: 1; pointer-events: none; transition: 0.5s;}
 .black-fade { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, transparent 40%, var(--dark) 100%); z-index: 1; pointer-events: none; transition: 0.5s;}
 .reels-fade { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.8) 70%, var(--dark) 100%); z-index: 1; pointer-events: none; transition: 0.5s;}
-.brand-gradient-bottom { position: absolute; bottom: 0; left: 0; width: 100%; height: 70%; background: linear-gradient(to top, var(--primary-dim) 0%, transparent 100%); z-index: 1; pointer-events: none; transition: 0.5s;}
+.brand-gradient-bottom { position: absolute; bottom: 0; left: 0; width: 100%; height: 80%; background: linear-gradient(to top, var(--primary-dim) 0%, transparent 100%); z-index: 1; pointer-events: none; transition: 0.5s;}
 
-/* LOGOLAR */
-.premium-logo-container { width: 220px; height: 220px; display: flex; justify-content: center; align-items: center; filter: drop-shadow(0 20px 40px rgba(0,0,0,1)); position: relative; }
+/* OYUNCU VE LOGO KORUMASI */
+.tr-player-img, .rl-player, .ref-img { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); max-height: 730px; max-width: 100%; width: auto !important; height: auto !important; z-index: 5; filter: drop-shadow(0 30px 60px rgba(0,0,0,1)); }
+.qt-person-img { position: absolute; bottom: 0; right: -40px; max-width: 80%; max-height: 760px; width: auto !important; height: auto !important; z-index: 2; filter: drop-shadow(-30px 0 60px #000); opacity: 0.9;}
+.premium-logo-container { width: 150px; height: 150px; display: flex; justify-content: center; align-items: center; margin-bottom: 15px; filter: drop-shadow(0 15px 30px rgba(0,0,0,1)); position: relative; }
 .premium-logo-container img { max-width: 100%; max-height: 100%; width: auto !important; height: auto !important; }
+.stat-logo-wrapper { width: 130px; height: 130px; display: flex; justify-content: center; align-items: center; }
+.stat-logo { max-width: 130px; max-height: 130px; width: auto !important; height: auto !important; filter: drop-shadow(0 10px 20px #000); }
+.kadro-logo { max-width: 70px; max-height: 70px; filter: drop-shadow(0 10px 20px rgba(0,0,0,1)); margin-bottom: 5px;}
 
-/* 1, 2, 3. MG, HT, MS METİNLERİ VE DÜZENİ */
-.mg-content, .ms-content { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 120px 0 150px 0; z-index: 10;}
-.mg-teams, .ft-scoreboard { display: flex; flex-direction: column; align-items: center; gap: 40px; width: 100%; flex: 1; justify-content: center;}
-.mg-team, .ft-team { display: flex; flex-direction: column; align-items: center; width: 100%; gap: 15px; } 
-.mg-name, .ft-team span { font-family: 'Barlow', sans-serif; font-weight: 900; font-size: 60px; letter-spacing: 2px; text-shadow: 4px 4px 8px #000; text-align: center; text-wrap: balance;}
-.mg-center { display: flex; flex-direction: column; align-items: center; gap: 15px;}
-.mg-time { font-family: 'Barlow', sans-serif; font-weight: 900; font-size: 150px; line-height: 1; color: var(--primary); text-shadow: 0 0 50px var(--primary-dim); transition: 0.5s;}
-.mg-venue { font-size: 26px; font-weight: 800; letter-spacing: 4px; color: #fff; border-radius: 50px; padding: 20px 60px; text-wrap: balance; text-align: center;}
-.vs-badge { color: var(--dark); font-family: 'Barlow'; font-weight: 900; font-style: italic; font-size: 35px; width: 80px; height: 80px; display: flex; justify-content: center; align-items: center; border-radius: 50%; margin: 15px 0; background-color: var(--primary); transition: 0.5s;}
-.ft-score { font-family: 'Barlow', sans-serif; font-style: italic; font-weight: 900; font-size: 250px; color: var(--primary); -webkit-text-stroke: 6px var(--dark); line-height: 1; transition: 0.5s; filter: drop-shadow(0 0 50px var(--primary-dim));}
-.ft-scorers-container { display: flex; justify-content: space-between; align-items: stretch; width: 85%; border-radius: 20px; padding: 30px; margin-bottom: 50px;}
-.scorer-list { flex: 1; font-family: 'Montserrat'; font-size: 24px; color: #eee; font-weight: 700; line-height: 1.6;}
-.scorer-list.home { text-align: right; padding-right: 35px; border-right: 3px solid var(--panel-border); transition: 0.5s;}
-.scorer-list.away { text-align: left; padding-left: 35px; border-left: 3px solid var(--panel-border); transition: 0.5s;}
-.scorer-icon { display: flex; align-items: center; justify-content: center; font-size: 50px; padding: 0 25px; color: var(--primary); filter: drop-shadow(0 0 20px var(--primary)); transition: 0.5s;}
-.mg-title { font-family: 'Barlow', sans-serif; font-style: italic; font-weight: 900; font-size: 180px; margin: 0; letter-spacing: -4px; text-shadow: 0 0 80px var(--primary); line-height: 1;}
-.ft-main-title { font-family: 'Barlow', sans-serif; font-style: italic; font-weight: 900; font-size: 130px; margin: 0; letter-spacing: -2px; line-height: 1; text-shadow: 0 0 70px var(--primary);} 
-.iy-badge { font-family: 'Barlow'; font-weight: 900; font-style: italic; font-size: 50px; padding: 20px 60px; border-radius: 50px;}
+/* MG, HT, MS METİNLERİ (Orijinal Boyutlar) */
+.mg-content, .ms-content { position: absolute; bottom: 80px; left: 0; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; z-index: 10;}
+.mg-teams, .ft-scoreboard { display: flex; justify-content: center; align-items: center; gap: 30px; margin-bottom: 20px; width: 100%; }
+.mg-team, .ft-team { display: flex; flex-direction: column; align-items: center; width: 230px; } 
+.mg-name, .ft-team span { font-family: 'Barlow', sans-serif; font-weight: 900; font-size: 27px; letter-spacing: 1px; text-shadow: 3px 3px 6px #000; text-align: center; text-wrap: balance;}
+.mg-center { display: flex; flex-direction: column; align-items: center; margin-top: -30px; position: relative; width: 280px;}
+.mg-time { font-family: 'Barlow', sans-serif; font-weight: 900; font-size: 75px; line-height: 1; text-shadow: 0 0 30px rgba(0,0,0,1); }
+.vs-badge { color: var(--dark); font-family: 'Barlow'; font-weight: 900; font-style: italic; font-size: 26px; width: 55px; height: 55px; display: flex; justify-content: center; align-items: center; border-radius: 50%; margin: 15px 0; background-color: var(--primary); transition: 0.5s;}
+.mg-venue { font-size: 16px; font-weight: 800; letter-spacing: 2px; color: #fff; border-radius: 40px; padding: 12px 30px; margin-top: 5px; text-wrap: balance;}
+.ft-score { font-family: 'Barlow', sans-serif; font-style: italic; font-weight: 900; font-size: 140px; color: var(--primary); -webkit-text-stroke: 4px var(--dark); padding: 0 20px; line-height: 1; margin-top: -30px; transition: 0.5s; filter: drop-shadow(0 0 30px var(--primary-dim));}
+.ft-scorers-container { display: flex; justify-content: space-between; align-items: stretch; width: 85%; margin-bottom: 40px; border-radius: 15px; padding: 20px; }
+.scorer-list { flex: 1; font-family: 'Montserrat'; font-size: 16px; color: #eee; font-weight: 700; line-height: 1.6;}
+.scorer-list.home { text-align: right; padding-right: 25px; border-right: 2px solid var(--panel-border); transition: 0.5s;}
+.scorer-list.away { text-align: left; padding-left: 25px; border-left: 2px solid var(--panel-border); transition: 0.5s;}
+.scorer-icon { display: flex; align-items: center; justify-content: center; font-size: 32px; padding: 0 15px; color: var(--primary); filter: drop-shadow(0 0 15px var(--primary)); transition: 0.5s;}
+.mg-bottom { display: flex; flex-direction: column; align-items: center; width: 100%;}
+.mg-title { font-family: 'Barlow', sans-serif; font-style: italic; font-weight: 900; font-size: 140px; margin: 0; letter-spacing: -2px; text-shadow: 0 0 60px var(--primary), 0 0 90px var(--primary-dim); line-height: 1;}
+.ft-main-title { font-family: 'Barlow', sans-serif; font-style: italic; font-weight: 900; font-size: 115px; margin: 0; letter-spacing: -2px; line-height: 1; margin-bottom: 10px; text-shadow: 0 0 60px var(--primary);} 
+.iy-badge { font-family: 'Barlow'; font-weight: 900; font-style: italic; font-size: 32px; padding: 12px 35px; border-radius: 40px; margin-bottom: 10px;}
 
-/* 4. İSTATİSTİK */
-.stat-header { position: absolute; top: 100px; width: 100%; display: flex; justify-content: center; align-items: center; gap: 40px; z-index: 10;}
-.stat-logo-wrapper { width: 150px; height: 150px; display: flex; justify-content: center; align-items: center; }
-.stat-logo { max-width: 150px; max-height: 150px; width: auto !important; height: auto !important; filter: drop-shadow(0 15px 30px #000); }
-.stat-main-title { font-family: 'Barlow'; font-style: italic; font-weight: 900; font-size: 80px; letter-spacing: 2px;}
-.stat-container { position: absolute; top: 350px; left: 50%; transform: translateX(-50%); width: 90%; display: flex; flex-direction: column; gap: 40px; z-index: 10; padding: 60px; border-radius: 20px;}
-.stat-item { display: flex; flex-direction: column; width: 100%; gap: 10px;}
+/* 4. İSTATİSTİK (Orijinal Tasarım) */
+.stat-header { position: absolute; top: 60px; width: 100%; display: flex; justify-content: center; align-items: center; gap: 40px; z-index: 10;}
+.stat-main-title { font-family: 'Barlow'; font-style: italic; font-weight: 900; font-size: 68px; letter-spacing: 2px;}
+.stat-container { position: absolute; top: 250px; left: 50%; transform: translateX(-50%); width: 85%; display: flex; flex-direction: column; gap: 20px; z-index: 10; padding: 35px; border-radius: 20px;}
+.stat-item { display: flex; flex-direction: column; width: 100%; gap: 8px;}
 .stat-labels { display: flex; justify-content: space-between; align-items: center; width: 100%; }
-.stat-center { text-align: center; font-family: 'Montserrat'; font-weight: 900; font-size: 26px; letter-spacing: 4px; color: #888; flex: 1; white-space: nowrap;}
-.stat-num { font-family: 'Barlow'; font-weight: 900; font-style: italic; font-size: 60px; color: #fff; text-shadow: 2px 2px 0 #000; width: 120px; text-align: center; flex-shrink: 0;}
+.stat-center { text-align: center; font-family: 'Montserrat'; font-weight: 900; font-size: 18px; letter-spacing: 3px; color: #888; flex: 1; white-space: nowrap;}
+.stat-num { font-family: 'Barlow'; font-weight: 900; font-style: italic; font-size: 35px; color: #fff; text-shadow: 2px 2px 0 #000; width: 90px; text-align: center; flex-shrink: 0;}
 .stat-num.home { color: var(--primary); text-shadow: 0 0 15px var(--primary-dim); transition: 0.5s;}
-.stat-bar-container { width: 100%; height: 22px; background: rgba(0,0,0,0.8); border-radius: 12px; display: flex; overflow: hidden; box-shadow: inset 0 4px 8px #000;}
+.stat-bar-container { width: 100%; height: 14px; background: rgba(0,0,0,0.8); border-radius: 12px; display: flex; overflow: hidden; box-shadow: inset 0 4px 8px #000;}
 .stat-bar { height: 100%; transition: width 0.6s, background 0.5s, box-shadow 0.5s; }
 .stat-bar.home { background: var(--primary); box-shadow: 0 0 15px var(--primary);}
 .stat-bar.away { background: #333; }
 
-/* 5. İLK 11 KADROSU (YENİ 4-3-3 SAHA DİZİLİMİ) */
-.pitch-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
-.pitch-lines { position: absolute; top: 10%; left: 5%; width: 90%; height: 80%; border: 4px solid rgba(255,255,255,0.05); border-radius: 10px; }
-.pitch-lines::after { content: ''; position: absolute; top: 50%; left: 0; width: 100%; height: 4px; background: rgba(255,255,255,0.05); }
-.kadro-header { position: absolute; top: 60px; left: 50%; transform: translateX(-50%); text-align: center; z-index: 10; width: 100%; display: flex; flex-direction: column; align-items: center; gap: 20px;} 
-.kadro-logo { max-width: 150px; max-height: 150px; width: auto !important; height: auto !important; filter: drop-shadow(0 15px 30px rgba(0,0,0,1));}
-.kadro-title { font-family: 'Barlow'; font-weight: 900; font-style: italic; font-size: 60px; line-height: 1; letter-spacing: 2px; color: #fff; padding: 15px 50px; border-radius: 60px; display: inline-block;}
+/* 5. İLK 11 KADROSU (Orijinal Liste Tasarımı) */
+.pitch-container { position: absolute; bottom: 0; left: 0; width: 100%; height: 75%; z-index: 2; overflow: hidden; perspective: 1200px;}
+.pitch-lines { width: 100%; height: 160%; background-image: repeating-linear-gradient(0deg, transparent, transparent 40px, rgba(255,255,255,0.04) 40px, rgba(255,255,255,0.04) 80px); border: 3px solid rgba(255,255,255,0.1); transform: rotateX(62deg) translateY(-20%); transform-origin: top center; box-shadow: inset 0 0 100px rgba(0,0,0,0.9);}
+.kadro-header { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); text-align: center; z-index: 10; width: 100%; display: flex; flex-direction: column; align-items: center;} 
+.kadro-title { font-family: 'Barlow'; font-weight: 900; font-style: italic; font-size: 35px; line-height: 1; letter-spacing: 2px; color: #fff; padding: 5px 30px; border-radius: 50px;}
+.kadro-list { position: absolute; top: 150px; left: 50%; transform: translateX(-50%); width: 75%; display: flex; flex-direction: column; gap: 5px; z-index: 10;} 
+.kadro-item { background: linear-gradient(90deg, var(--dark) 0%, var(--primary-dim) 100%); border-left: 5px solid var(--primary); border-radius: 4px; padding: 7px 20px; font-family: 'Barlow'; font-weight: 800; font-size: 20px; letter-spacing: 1px; color: #fff; transition: 0.5s;} 
+.kadro-item-num { color: var(--primary); font-size: 18px; margin-right: 15px; width: 30px; font-style: italic; transition: 0.5s;}
 
-.kadro-grid { position: absolute; top: 350px; left: 50%; transform: translateX(-50%); width: 95%; height: 950px; z-index: 10; display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(4, 1fr); gap: 20px; padding: 20px;}
-.player-card-vertical { background: var(--panel-bg); border: 2px solid var(--panel-border); border-radius: 15px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 15px; gap: 10px; transition: 0.5s; box-shadow: 0 10px 30px rgba(0,0,0,0.5);}
-.pc-logo-container { width: 100px; height: 100px; border-radius: 50%; background: #000; border: 3px solid #222; display: flex; justify-content: center; align-items: center; overflow: hidden; filter: drop-shadow(0 10px 20px #000);}
-.pc-logo-container img { max-width: 100%; max-height: 100%; object-fit: cover; }
-.pc-name { font-family: 'Barlow'; font-weight: 800; font-size: 24px; color: #fff; text-align: center; text-wrap: balance; line-height: 1.1; text-shadow: 2px 2px 4px #000;}
-.pc-meta { display: flex; align-items: center; gap: 10px; font-family: 'Montserrat'; font-weight: 900; font-size: 18px; color: #888; text-transform: uppercase; letter-spacing: 2px;}
-.pc-meta b { color: var(--primary); font-family: 'Barlow'; font-size: 22px; font-style: italic; transition: 0.5s;}
-.player-card-vertical.gk-card { grid-column: 2; grid-row: 4; align-self: end; border-color: #555; }
+/* DİĞER TÜM ŞABLONLARIN ORIJINAL TASARIMLARI (6-16) GERİ GELDİ */
+.tr-bg-logo { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 600px; opacity: 0.1; filter: grayscale(100%); z-index: 2;}
+.tr-bottom { position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); width: 90%; z-index: 10; padding: 30px; border-radius: 20px; text-align: center;}
+.tr-title { font-family: 'Barlow'; font-weight: 900; font-style: italic; font-size: 55px; color: #fff; margin-bottom: 20px; text-shadow: 2px 2px 0 #000;}
+.tr-bar-bg { width: 100%; height: 15px; background: rgba(0,0,0,0.6); border-radius: 10px; overflow: hidden; margin-bottom: 10px;}
+.tr-bar-fill { height: 100%; background: var(--primary); transition: width 0.5s; box-shadow: 0 0 15px var(--primary); }
+.tr-prob-text { font-family: 'Montserrat'; font-weight: 900; font-size: 22px; color: #888;}
+.tr-done-stamp { font-family: 'Barlow'; font-weight: 900; font-style: italic; font-size: 50px; color: var(--dark); background: var(--primary); display: inline-block; padding: 10px 40px; border-radius: 10px; transform: rotate(-5deg); transition: 0.5s;}
 
-/* 6. TRANSFER MERKEZİ */
-.tr-bg-logo { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 800px; opacity: 0.1; filter: grayscale(100%); z-index: 2;}
-.tr-bottom { position: absolute; bottom: 80px; left: 50%; transform: translateX(-50%); width: 90%; z-index: 10; padding: 50px; border-radius: 20px; text-align: center;}
-.tr-title { font-family: 'Barlow'; font-weight: 900; font-style: italic; font-size: 75px; color: #fff; margin-bottom: 30px; text-shadow: 4px 4px 8px #000;}
-.tr-bar-bg { width: 100%; height: 25px; background: rgba(0,0,0,0.6); border-radius: 10px; overflow: hidden; margin-bottom: 15px; box-shadow: inset 0 3px 5px rgba(0,0,0,0.5);}
-.tr-bar-fill { height: 100%; background: var(--primary); transition: width 0.5s, background 0.5s; box-shadow: 0 0 15px var(--primary); }
-.tr-prob-text { font-family: 'Montserrat'; font-weight: 900; font-size: 30px; color: #888;}
-.tr-done-stamp { font-family: 'Barlow'; font-weight: 900; font-style: italic; font-size: 70px; color: var(--dark); background: var(--primary); display: inline-block; padding: 20px 60px; border-radius: 15px; transform: rotate(-5deg); transition: 0.5s; box-shadow: 0 0 40px var(--primary);}
+.qt-fade { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(90deg, var(--dark) 40%, transparent 100%); z-index: 3;}
+.qt-content { position: absolute; top: 120px; left: 50px; width: 60%; z-index: 10;}
+.qt-mark { font-family: 'Barlow'; font-style: italic; font-weight: 900; font-size: 200px; line-height: 0.5; margin-bottom: 30px;}
+.qt-box { padding: 40px; border-radius: 20px; border-left: 8px solid var(--primary) !important; transition: 0.5s;}
+.qt-text-container { width: 100%; max-height: 250px; overflow: hidden;}
+.qt-text { font-family: 'Barlow'; font-weight: 800; font-style: italic; color: #fff;}
+.qt-author-line { width: 50px; height: 4px; background: var(--primary); margin: 30px 0 10px 0;}
+.qt-author { font-family: 'Montserrat'; font-weight: 900; font-size: 26px; color: #888;}
 
-/* 7. FLAŞ AÇIKLAMA */
-.qt-fade { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to top, var(--dark) 30%, transparent 100%); z-index: 3; transition: 0.5s;}
-.qt-content { position: absolute; bottom: 150px; left: 50%; transform: translateX(-50%); width: 90%; z-index: 10; text-align: center; display: flex; flex-direction: column; align-items: center;}
-.qt-mark { font-family: 'Barlow'; font-style: italic; font-weight: 900; font-size: 250px; line-height: 0.5; margin-bottom: 0; filter: drop-shadow(0 0 20px var(--primary));}
-.qt-box { padding: 60px; border-radius: 25px; border-bottom: 10px solid var(--primary) !important; border-left: none !important; width: 100%; transition: 0.5s;}
-.qt-text-container { width: 100%; max-height: 350px; overflow: hidden; display: flex; align-items: center; justify-content: center;}
-.qt-text { font-family: 'Barlow'; font-weight: 800; font-style: italic; font-size: 60px; color: #fff; width: 100%; text-align: center; text-wrap: balance; text-shadow: 2px 2px 5px #000;}
-.qt-author-line { width: 80px; height: 6px; background: var(--primary); margin: 40px 0 20px 0; transition: 0.5s; box-shadow: 0 0 10px var(--primary);}
-.qt-author { font-family: 'Montserrat'; font-weight: 900; font-size: 35px; color: #888; letter-spacing: 2px;}
-
-/* 8. H2H KARŞILAŞTIRMA */
-.h2h-bg-left { position: absolute; top:0; left:0; width:50%; height:100%; background: radial-gradient(circle at center, var(--bg-grad-1) 0%, transparent 80%); z-index:1; transition: 0.5s;} 
+.h2h-bg-left { position: absolute; top:0; left:0; width:50%; height:100%; background: radial-gradient(circle at center, var(--bg-grad-1) 0%, transparent 80%); z-index:1;} 
 .h2h-bg-right { position: absolute; top:0; right:0; width:50%; height:100%; background: radial-gradient(circle at center, rgba(169,4,50,0.5) 0%, transparent 80%); z-index:1;} 
-.h2h-player-box { position: absolute; bottom: 350px; width: 450px; height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; z-index: 5;}
-.h2h-player-box.left { left: 40px; }
-.h2h-player-box.right { right: 40px; }
-.h2h-player-box h2 { width: 100%; text-align: center; font-family: 'Barlow'; font-style: italic; font-weight: 900; font-size: 50px; color: #fff; padding: 15px 0; border-radius: 15px; margin-top: 15px; text-shadow: 2px 2px 5px #000;}
-.h2h-center-panel { position: absolute; bottom: 100px; left: 50%; transform: translateX(-50%); width: 95%; padding: 50px; border-radius: 20px; z-index: 10; text-align: center;}
-.h2h-center-panel h3 { font-family: 'Montserrat'; font-weight: 900; font-size: 30px; color: #888; letter-spacing: 6px; margin-bottom: 20px;}
-.h2h-stat-row { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 0 50px;}
-.h2h-num { font-family: 'Barlow'; font-weight: 900; font-style: italic; font-size: 100px; color: #fff; text-shadow: 0 0 30px var(--primary); transition: 0.5s;}
+.h2h-player-box { position: absolute; bottom: 250px; width: 350px; height: 500px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; z-index: 5;}
+.h2h-player-box.left { left: 20px; }
+.h2h-player-box.right { right: 20px; }
+.h2h-player-box h2 { width: 100%; text-align: center; font-family: 'Barlow'; font-style: italic; font-weight: 900; font-size: 35px; color: #fff; padding: 10px 0; border-radius: 10px; margin-top: 10px;}
+.h2h-center-panel { position: absolute; bottom: 60px; left: 50%; transform: translateX(-50%); width: 85%; padding: 30px; border-radius: 20px; z-index: 10; text-align: center;}
+.h2h-center-panel h3 { font-family: 'Montserrat'; font-weight: 900; font-size: 20px; color: #888; letter-spacing: 4px; margin-bottom: 15px;}
+.h2h-stat-row { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 0 40px;}
+.h2h-num { font-family: 'Barlow'; font-weight: 900; font-style: italic; font-size: 60px; color: #fff; transition: 0.5s;}
 
-/* 9. PUAN DURUMU */
-.st-title { position: absolute; top: 120px; width: 100%; text-align: center; font-family: 'Barlow'; font-weight: 900; font-style: italic; font-size: 100px; line-height: 1; z-index: 10; transition: 0.5s;}
-.st-container { position: absolute; top: 400px; left: 50%; transform: translateX(-50%); width: 90%; display: flex; flex-direction: column; gap: 20px; z-index: 10;}
-.st-row { display: flex; align-items: center; padding: 40px 50px; border-radius: 15px;}
-.st-leader { background: linear-gradient(90deg, var(--primary-dim) 0%, var(--dark) 100%) !important; border-left: 8px solid var(--primary) !important; transition: 0.5s;}
-.st-rank { font-family: 'Barlow'; font-weight: 900; font-size: 60px; color: #555; width: 100px;}
-.st-logo { max-width: 90px; max-height: 90px; width: auto !important; height: auto !important; margin-right: 40px;}
-.st-name { font-family: 'Barlow'; font-weight: 800; font-size: 50px; flex: 1; color: #fff; text-shadow: 2px 2px 5px #000;}
-.st-pts { font-family: 'Barlow'; font-weight: 900; font-style: italic; font-size: 70px; color: #888;}
+.st-title { position: absolute; top: 80px; left: 60px; font-family: 'Barlow'; font-weight: 900; font-style: italic; font-size: 70px; line-height: 0.9; border-left: 8px solid var(--primary); padding-left: 20px; z-index: 10;}
+.st-container { position: absolute; top: 300px; left: 50%; transform: translateX(-50%); width: 85%; display: flex; flex-direction: column; gap: 15px; z-index: 10;}
+.st-row { display: flex; align-items: center; padding: 20px 30px; border-radius: 12px;}
+.st-leader { background: linear-gradient(90deg, var(--primary-dim) 0%, var(--dark) 100%) !important; border-left: 5px solid var(--primary) !important;}
+.st-rank { font-family: 'Barlow'; font-weight: 900; font-size: 40px; color: #555; width: 60px;}
+.st-logo { max-width: 60px; max-height: 60px; margin-right: 30px;}
+.st-name { font-family: 'Barlow'; font-weight: 800; font-size: 35px; flex: 1; color: #fff;}
+.st-pts { font-family: 'Barlow'; font-weight: 900; font-style: italic; font-size: 45px; color: #888;}
 
-/* 10. MAÇIN HAKEMİ */
-.ref-teams { position: absolute; top: 120px; width: 100%; display: flex; justify-content: center; align-items: center; gap: 50px; z-index: 2;}
-.ref-logo { max-width: 250px; max-height: 250px; width: auto !important; height: auto !important; opacity: 0.2; filter: grayscale(100%);}
-.ref-panel { position: absolute; bottom: 100px; left: 50%; transform: translateX(-50%); width: 90%; text-align: center; padding: 50px; border-radius: 20px; z-index: 10;}
-.ref-panel h3 { font-family: 'Montserrat'; font-weight: 900; font-size: 30px; color: #888; letter-spacing: 8px; margin-bottom: 15px;}
-.ref-panel h2 { font-family: 'Barlow'; font-style: italic; font-weight: 900; font-size: 80px; text-shadow: 2px 2px 5px #000;}
+.ref-teams { position: absolute; top: 80px; width: 100%; display: flex; justify-content: center; align-items: center; z-index: 2;}
+.ref-logo { max-width: 180px; max-height: 180px; opacity: 0.2; filter: grayscale(100%);}
+.ref-panel { position: absolute; bottom: 60px; left: 50%; transform: translateX(-50%); width: 80%; text-align: center; padding: 30px; border-radius: 20px; z-index: 10;}
+.ref-panel h3 { font-family: 'Montserrat'; font-weight: 900; font-size: 22px; color: #888; letter-spacing: 5px; margin-bottom: 10px;}
+.ref-panel h2 { font-family: 'Barlow'; font-style: italic; font-weight: 900; font-size: 60px; text-shadow: 1px 1px 3px #000;}
 
-/* 11. SON DAKİKA */
 .sd-pattern { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: repeating-linear-gradient(45deg, rgba(0,0,0,0.6) 0, rgba(0,0,0,0.6) 2px, transparent 2px, transparent 12px); z-index: 2;}
-.sd-big-text { position: absolute; top: 120px; width: 100%; text-align: center; z-index: 3; }
-.sd-big-text h1 { font-family: 'Barlow', sans-serif; font-style: italic; font-weight: 900; font-size: 180px; color: var(--primary); line-height: 0.9; text-shadow: 10px 10px 0px rgba(0,0,0,0.9), 0 0 60px var(--primary-dim); letter-spacing: -2px; transition: 0.5s;}
-.sd-content { position: absolute; bottom: 150px; left: 0; width: 100%; height: 800px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; z-index: 10; padding-bottom: 50px;}
-.sd-player-img { max-height: 800px; filter: drop-shadow(0 30px 60px #000); margin-bottom: -50px; z-index: 5;}
-.sd-box { width: 90%; height: 250px; border-radius: 25px; border: 2px solid var(--primary) !important; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; padding: 40px; position: relative; z-index: 4; box-shadow: 0 30px 60px rgba(0,0,0,1);}
-.sd-title-wrapper { font-size: 50px; text-align: center; color: #fff; font-family: 'Montserrat'; font-weight: 800; text-shadow: 2px 2px 5px #000;}
-.sd-x { position: absolute; top: 20px; right: 25px; font-size: 40px; font-weight: 900; font-family: 'Barlow'; color: #888;}
+.sd-big-text { position: absolute; top: 80px; width: 100%; text-align: center; z-index: 3; }
+.sd-big-text h1 { font-family: 'Barlow', sans-serif; font-style: italic; font-weight: 900; font-size: 180px; color: var(--primary); line-height: 0.9; text-shadow: 10px 10px 0px rgba(0,0,0,0.9), 0 0 60px var(--primary-dim); letter-spacing: -2px;}
+.sd-box { position: absolute; bottom: 120px; left: 50%; transform: translateX(-50%); width: 85%; height: 210px; display: flex; z-index: 10; border-radius: 20px; overflow: hidden; border: 1px solid var(--primary) !important;}
+.sd-box.sd-title-wrapper { color: #fff; font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 38px; line-height: 1.15; width: 100%; max-height: 160px;}
+.sd-player-img { position:absolute; left:0; bottom:120px; height: 280px; z-index: 11;}
+.sd-x { position: absolute; top: 15px; right: 15px; font-size: 26px; font-weight: 900; font-family: 'Barlow'; color: #888;}
 
-/* 13. MAÇIN ADAMI (MOTM) */
-.motm-bg-logo { position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); width: 800px; opacity: 0.1; filter: grayscale(100%); z-index: 2;}
-.motm-panel { position: absolute; bottom: 80px; left: 50%; transform: translateX(-50%); width: 90%; text-align: center; padding: 40px; border-radius: 20px; z-index: 10;}
-.motm-panel h3 { font-family: 'Montserrat'; font-weight: 900; font-size: 26px; letter-spacing: 5px; margin-bottom: 5px;}
-.motm-panel h1 { font-family: 'Barlow'; font-style: italic; font-weight: 900; font-size: 70px; color: #fff; margin-bottom: 15px; text-shadow: 2px 2px 5px #000;}
-.motm-stats { display: flex; justify-content: center; align-items: center; gap: 40px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;}
-.m-stat span { font-family: 'Montserrat'; font-weight: 800; font-size: 18px; color: #888; letter-spacing: 2px;}
-.m-stat h2 { font-family: 'Barlow'; font-style: italic; font-weight: 900; font-size: 55px; color: var(--primary); text-shadow: 0 0 15px var(--primary-dim); transition: 0.5s;}
+.reels-wrapper { width: 270px; height: 480px; }
+.match-card.tpl-reels { width: 1080px; height: 1920px; transform: scale(0.25); }
+.rl-header { position: absolute; top: 110px; width: 100%; text-align: center; z-index: 10; }
+.rl-tag { font-family: 'Barlow', sans-serif; font-style: italic; font-weight: 900; font-size: 48px; line-height: 1; margin-bottom: 5px;}
+.rl-name { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 38px; text-transform: uppercase; color: #fff;}
+.rl-stats { position: absolute; bottom: 60px; left: 50%; transform: translateX(-50%); width: 92%; display: flex; justify-content: space-evenly; z-index: 10; padding: 25px 0; border-radius: 20px;}
+.rl-stat h2 { font-family: 'Barlow', sans-serif; font-weight: 900; font-size: 55px; line-height: 1; text-shadow: 0 0 20px var(--primary);}
+.rl-stat span { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 15px; color: #888;}
 
-/* 14. DÖNÜM NOKTASI */
-.mil-big-num { position: absolute; top: 150px; left: 50%; transform: translateX(-50%); font-family: 'Barlow'; font-style: italic; font-weight: 900; font-size: 500px; line-height: 0.8; z-index: 3; opacity: 0.8;}
-.mil-panel { position: absolute; bottom: 100px; left: 50%; transform: translateX(-50%); width: 90%; text-align: center; padding: 40px; border-radius: 20px; z-index: 10;}
-.mil-panel h1 { font-family: 'Barlow'; font-style: italic; font-weight: 900; font-size: 60px; color: #fff;}
-.mil-panel h3 { font-family: 'Montserrat'; font-weight: 900; font-size: 30px; letter-spacing: 4px; margin-top: 10px;}
+.motm-bg-logo { position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); width: 600px; opacity: 0.1; filter: grayscale(100%); z-index: 2;}
+.motm-panel { position: absolute; bottom: 50px; left: 50%; transform: translateX(-50%); width: 85%; text-align: center; padding: 25px; border-radius: 20px; z-index: 10;}
+.motm-panel h3 { font-family: 'Montserrat'; font-weight: 900; font-size: 20px; letter-spacing: 5px;}
+.motm-panel h1 { font-family: 'Barlow'; font-style: italic; font-weight: 900; font-size: 55px; color: #fff; margin-bottom: 15px;}
+.motm-stats { display: flex; justify-content: center; align-items: center; gap: 30px;}
+.m-stat h2 { font-family: 'Barlow'; font-style: italic; font-weight: 900; font-size: 40px; color: var(--primary);}
 
-/* 15. GELECEK FİKSTÜR */
-.fix-left { position: absolute; top: 0; left: 0; width: 45%; height: 100%; border-right: 5px solid var(--primary); z-index: 5; transition: 0.5s;}
-.fix-left img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(50%) contrast(120%); opacity: 0.8;}
-.fix-right { position: absolute; top: 0; right: 0; width: 55%; height: 100%; padding: 60px 50px; display: flex; flex-direction: column; justify-content: center; z-index: 10;}
-.fix-main-title { font-family: 'Barlow'; font-style: italic; font-weight: 900; font-size: 55px; line-height: 1; margin-bottom: 50px;}
-.fix-row { display: flex; align-items: center; padding: 30px; border-radius: 20px; margin-bottom: 30px;}
-.fix-logo { max-width: 90px; max-height: 90px; width: auto !important; height: auto !important; margin-right: 30px;}
-.fix-row h3 { font-family: 'Barlow'; font-style: italic; font-weight: 900; font-size: 40px; color: #fff; line-height: 1;}
-.fix-row span { font-family: 'Montserrat'; font-weight: 800; font-size: 20px; letter-spacing: 2px;}
+.mil-big-num { position: absolute; top: 100px; left: 50%; transform: translateX(-50%); font-family: 'Barlow'; font-style: italic; font-weight: 900; font-size: 350px; line-height: 0.8; z-index: 3; opacity: 0.8;}
+.mil-panel { position: absolute; bottom: 60px; left: 50%; transform: translateX(-50%); width: 90%; text-align: center; padding: 25px; border-radius: 20px; z-index: 10;}
+.mil-panel h1 { font-family: 'Barlow'; font-style: italic; font-weight: 900; font-size: 45px; color: #fff;}
+.mil-panel h3 { font-family: 'Montserrat'; font-weight: 900; font-size: 20px; letter-spacing: 4px;}
 
-/* 16. SAĞLIK RAPORU */
+.fix-left { position: absolute; top: 0; left: 0; width: 45%; height: 100%; border-right: 5px solid var(--primary); z-index: 5;}
+.fix-left img { width: 100%; height: 100%; object-fit: cover;}
+.fix-right { position: absolute; top: 0; right: 0; width: 55%; height: 100%; padding: 60px 40px; display: flex; flex-direction: column; justify-content: center; z-index: 10;}
+.fix-main-title { font-family: 'Barlow'; font-style: italic; font-weight: 900; font-size: 40px; margin-bottom: 30px;}
+.fix-row { display: flex; align-items: center; padding: 20px; border-radius: 15px; margin-bottom: 20px;}
+.fix-logo { max-width: 70px; max-height: 70px; margin-right: 20px;}
+.fix-row h3 { font-family: 'Barlow'; font-style: italic; font-weight: 900; font-size: 28px; color: #fff;}
+
 .hlt-glow { position: absolute; top:0; left:0; width:100%; height:100%; background: radial-gradient(circle at top, rgba(255,0,60,0.5) 0%, transparent 70%); mix-blend-mode: screen; z-index: 1;}
-.hlt-player { filter: grayscale(100%) contrast(110%) drop-shadow(0 30px 60px #000) !important; }
-.hlt-top-title { position: absolute; top: 120px; width: 100%; text-align: center; font-family: 'Barlow'; font-style: italic; font-weight: 900; font-size: 90px; color: #ff003c; text-shadow: 0 0 30px #ff003c, 0 0 60px rgba(255,0,60,0.5); z-index: 10; letter-spacing: 2px;}
-.hlt-panel { position: absolute; bottom: 100px; left: 50%; transform: translateX(-50%); width: 90%; background: rgba(10,0,0,0.8); border: 2px solid #ff003c; border-radius: 20px; padding: 50px; text-align: center; z-index: 10; box-shadow: 0 0 40px rgba(255,0,60,0.3);}
-.hlt-panel h1 { font-family: 'Barlow'; font-style: italic; font-weight: 900; font-size: 65px; color: #fff; margin-bottom: 30px;}
+.hlt-player { filter: grayscale(100%) contrast(110%) drop-shadow(0 20px 40px #000) !important; }
+.hlt-top-title { position: absolute; top: 80px; width: 100%; text-align: center; font-family: 'Barlow'; font-style: italic; font-weight: 900; font-size: 60px; color: #ff003c; text-shadow: 0 0 30px #ff003c; z-index: 10;}
+.hlt-panel { position: absolute; bottom: 60px; left: 50%; transform: translateX(-50%); width: 85%; background: rgba(10,0,0,0.8); border: 2px solid #ff003c; border-radius: 20px; padding: 30px; z-index: 10;}
+.hlt-panel h1 { font-family: 'Barlow'; font-style: italic; font-weight: 900; font-size: 45px; color: #fff; margin-bottom: 20px;}
 .hlt-info-box { display: flex; justify-content: space-evenly; align-items: center;}
-.hlt-info-box span { font-family: 'Montserrat'; font-weight: 900; font-size: 20px; color: #888; letter-spacing: 2px;}
-.hlt-info-box h3 { font-family: 'Barlow'; font-style: italic; font-weight: 900; font-size: 45px; color: #ff003c; text-shadow: 0 0 15px rgba(255,0,60,0.5); margin-top: 5px;}
-
-::-webkit-scrollbar { width: 12px; height: 12px; }
-::-webkit-scrollbar-thumb { background: #333; border-radius: 6px; border: 3px solid var(--gray); transition: 0.5s;}
-::-webkit-scrollbar-thumb:hover { background: var(--primary); }
-::-webkit-scrollbar-track { background: var(--gray); }
+.hlt-info-box span { font-family: 'Montserrat'; font-weight: 900; font-size: 14px; color: #888;}
+.hlt-info-box h3 { font-family: 'Barlow'; font-style: italic; font-weight: 900; font-size: 30px; color: #ff003c;}
