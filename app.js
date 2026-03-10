@@ -41,9 +41,9 @@ function autoScaleText() {
         let maxFont = 100; 
         if(el.classList.contains('team-name')) maxFont = 75; 
         if(el.classList.contains('out-sd-title')) maxFont = 65;
-        if(el.className.includes('out-hw-m') && !el.className.includes('score')) maxFont = 36; // Haftanın maçları
-        if(el.classList.contains('out-mg-venue')) maxFont = 24; // Stadyum ismi
-        if(el.classList.contains('pc-name')) maxFont = 30; // İlk 11
+        if(parent.classList.contains('hw-name')) maxFont = 45; // 17. Modül için tam ayar
+        if(el.classList.contains('out-mg-venue')) maxFont = 24; 
+        if(el.classList.contains('pc-name')) maxFont = 30; 
 
         el.style.fontSize = maxFont + 'px';
         
@@ -214,7 +214,7 @@ if (hwCountInput) {
         for(let i=1; i<=6; i++) {
             const inGroup = document.getElementById('hw-in-' + i); const outRow = document.getElementById('hw-out-' + i);
             if (inGroup && outRow) {
-                if (i <= count) { inGroup.style.display = 'block'; outRow.style.display = 'flex'; } 
+                if (i <= count) { inGroup.style.display = 'block'; outRow.style.display = 'grid'; } 
                 else { inGroup.style.display = 'none'; outRow.style.display = 'none'; }
             }
         }
@@ -246,7 +246,7 @@ window.addEventListener('load', () => {
 });
 
 // ==========================================
-// 🌟 YENİ NESİL FİZİKSEL İNDİRME MOTORU (KAYMAYI VE KARARMAYI 100% ÖNLER) 🌟
+// 🌟 YENİ NESİL FİZİKSEL İNDİRME MOTORU (KAYMAYI VE KARARMAYI BİTİRİR) 🌟
 // ==========================================
 function downloadTpl(elementId, fileName) {
     const card = document.getElementById(elementId);
@@ -259,7 +259,7 @@ function downloadTpl(elementId, fileName) {
 
     const originalTransform = card.style.transform;
 
-    // Görünmez Render Odası (HTML2Canvas için karanlık zemin şart)
+    // Görünmez Render Odası (Gerçek Boyutta)
     const renderRoom = document.createElement('div');
     renderRoom.style.position = 'fixed';
     renderRoom.style.top = '0';
@@ -269,6 +269,7 @@ function downloadTpl(elementId, fileName) {
     renderRoom.style.opacity = '0'; 
     renderRoom.style.pointerEvents = 'none';
     renderRoom.style.zIndex = '-9999';
+    // html2canvas'ın siyah basmasını önlemek için arka plan rengini karanlık veriyoruz
     renderRoom.style.backgroundColor = '#020202'; 
     document.body.appendChild(renderRoom);
 
@@ -296,6 +297,7 @@ function downloadTpl(elementId, fileName) {
             btn.style.backgroundColor = "";
         }).catch(err => {
             console.error("İndirme Hatası:", err);
+            alert("İndirme başarısız oldu. Lütfen sayfayı yenileyin.");
             wrapper.appendChild(card);
             card.style.transform = originalTransform;
             document.body.removeChild(renderRoom);
