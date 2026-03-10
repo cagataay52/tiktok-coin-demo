@@ -15,18 +15,20 @@ themeBtns.forEach(btn => {
 });
 
 const btnWatermark = document.getElementById('btn-watermark');
-btnWatermark.addEventListener('click', () => {
-    document.body.classList.toggle('watermark-on');
-    if(document.body.classList.contains('watermark-on')) {
-        btnWatermark.innerText = "🛡️ FİLİGRAN: AÇIK";
-        btnWatermark.style.background = "#ff003c";
-        localStorage.setItem('skoragi_wm', 'on');
-    } else {
-        btnWatermark.innerText = "🛡️ FİLİGRAN: KAPALI";
-        btnWatermark.style.background = "#2a0000";
-        localStorage.setItem('skoragi_wm', 'off');
-    }
-});
+if(btnWatermark) {
+    btnWatermark.addEventListener('click', () => {
+        document.body.classList.toggle('watermark-on');
+        if(document.body.classList.contains('watermark-on')) {
+            btnWatermark.innerText = "🛡️ FİLİGRAN: AÇIK";
+            btnWatermark.style.background = "#ff003c";
+            localStorage.setItem('skoragi_wm', 'on');
+        } else {
+            btnWatermark.innerText = "🛡️ FİLİGRAN: KAPALI";
+            btnWatermark.style.background = "#2a0000";
+            localStorage.setItem('skoragi_wm', 'off');
+        }
+    });
+}
 
 // ==========================================
 // 🌟 GÜVENLİ METİN KÜÇÜLTME MOTORU (ZIRHLARI KIRMAZ) 🌟
@@ -36,16 +38,14 @@ function autoScaleText() {
         const parent = el.parentElement;
         if(!parent) return;
 
-        // 🚨 TAKIM İSİMLERİ İÇİN FONT LİMİTİ 75'E ÇIKARILDI 🚨
         let maxFont = 100; 
         if(el.classList.contains('team-name')) maxFont = 75; 
         if(el.classList.contains('out-sd-title')) maxFont = 65;
-        if(el.className.includes('out-hw-m')) maxFont = 45; // Haftanın maçları
+        if(parent.classList.contains('hw-name')) maxFont = 45; // Haftanın maçları isimleri
         if(el.classList.contains('pc-name')) maxFont = 30; // İlk 11
 
         el.style.fontSize = maxFont + 'px';
         
-        // Kutuya sığmayana kadar kibarca küçült
         while ((el.scrollWidth > parent.clientWidth || el.scrollHeight > parent.clientHeight) && maxFont > 15) {
             maxFont -= 1;
             el.style.fontSize = maxFont + 'px';
@@ -90,7 +90,7 @@ function bindImage(inputId, targetIdOrClass, isBackground = false) {
     });
 }
 
-// BAĞLANTILAR (1'DEN 17'YE KADAR EKSİKSİZ)
+// 1-3 MODÜLLERİ
 bindText('mg-home-name', '.out-mg-home-name'); bindText('mg-away-name', '.out-mg-away-name');
 bindText('mg-time', '.out-mg-time', false); bindText('mg-venue', '.out-mg-venue');
 bindImage('mg-home-logo', '.out-mg-home-logo'); bindImage('mg-away-logo', '.out-mg-away-logo'); bindImage('mg-bg', '.out-mg-bg', true);
@@ -112,12 +112,11 @@ bindImage('stat-bg', '.out-stat-bg', true);
 function bindStat(idHome, idAway, outHome, outAway, barHome, barAway, isPercent = false) {
     const iHome = document.getElementById(idHome); const iAway = document.getElementById(idAway);
     function updateStats() {
-        const vHome = parseFloat(iHome.value) || 0; const vAway = parseFloat(iAway.value) || 0;
+        const vHome = parseFloat(iHome?.value) || 0; const vAway = parseFloat(iAway?.value) || 0;
         const total = vHome + vAway; let pHome = 50, pAway = 50;
         if (total > 0) { pHome = (vHome / total) * 100; pAway = (vAway / total) * 100; }
         
-        const oHome = document.querySelector(outHome);
-        const oAway = document.querySelector(outAway);
+        const oHome = document.querySelector(outHome); const oAway = document.querySelector(outAway);
         if(oHome) oHome.innerText = vHome + (isPercent ? '%' : '');
         if(oAway) oAway.innerText = vAway + (isPercent ? '%' : '');
         
@@ -126,12 +125,12 @@ function bindStat(idHome, idAway, outHome, outAway, barHome, barAway, isPercent 
     }
     if(iHome && iAway) { iHome.addEventListener('input', updateStats); iAway.addEventListener('input', updateStats); updateStats(); }
 }
-bindStat('stat-pos-home', 'stat-pos-away', '.out-stat-pos-home', '.out-stat-pos-away', 'bar-pos-home', 'bar-pos-away', true);
-bindStat('stat-shot-home', 'stat-shot-away', '.out-stat-shot-home', '.out-stat-shot-away', 'bar-shot-home', 'bar-shot-away');
-bindStat('stat-cor-home', 'stat-cor-away', '.out-stat-cor-home', '.out-stat-cor-away', 'bar-cor-home', 'bar-cor-away');
-bindStat('stat-foul-home', 'stat-foul-away', '.out-stat-foul-home', '.out-stat-foul-away', 'bar-foul-home', 'bar-foul-away');
+bindStat('stat-pos-home', 'stat-pos-away', '.out-stat-pos-home', '.out-stat-pos-away', 'bar-pos-home', null, true);
+bindStat('stat-shot-home', 'stat-shot-away', '.out-stat-shot-home', '.out-stat-shot-away', 'bar-shot-home', null);
+bindStat('stat-cor-home', 'stat-cor-away', '.out-stat-cor-home', '.out-stat-cor-away', 'bar-cor-home', null);
+bindStat('stat-foul-home', 'stat-foul-away', '.out-stat-foul-home', '.out-stat-foul-away', 'bar-foul-home', null);
 
-// 5. İLK 11 KADROSU
+// 5. İLK 11 (KUSURSUZ DİZİLİM)
 bindImage('k-logo', '.out-k-logo'); bindImage('k-bg', '.out-k-bg', true); 
 const positions433 = ['GK', 'RB', 'CB', 'CB', 'LB', 'CDM', 'CM', 'CM', 'RW', 'ST', 'LW'];
 const layout433 = [[8, 9, 10], [5, 6, 7], [1, 2, 3, 4], [0]]; 
@@ -168,6 +167,7 @@ if(kLineupInput) {
     });
 }
 
+// 6-16 MODÜLLERİ
 bindText('tr-name', '.out-tr-name'); bindImage('tr-logo', '.out-tr-logo'); bindImage('tr-img', '.out-tr-img');
 const trProbInput = document.getElementById('tr-prob');
 if (trProbInput) {
@@ -176,15 +176,8 @@ if (trProbInput) {
         const probC = document.getElementById('tr-prob-container');
         const doneC = document.getElementById('tr-done-container');
         if(probC && doneC) {
-            if(val === 0) {
-                probC.style.display = 'none';
-                doneC.style.display = 'block';
-            } else {
-                probC.style.display = 'block';
-                doneC.style.display = 'none';
-                document.getElementById('out-tr-bar').style.width = val + '%';
-                document.querySelector('.out-tr-prob').innerText = '%' + val;
-            }
+            if(val === 0) { probC.style.display = 'none'; doneC.style.display = 'block'; } 
+            else { probC.style.display = 'block'; doneC.style.display = 'none'; document.getElementById('out-tr-bar').style.width = val + '%'; document.querySelector('.out-tr-prob').innerText = '%' + val; }
         }
     });
 }
@@ -220,7 +213,7 @@ if (hwCountInput) {
         for(let i=1; i<=6; i++) {
             const inGroup = document.getElementById('hw-in-' + i); const outRow = document.getElementById('hw-out-' + i);
             if (inGroup && outRow) {
-                if (i <= count) { inGroup.style.display = 'block'; outRow.style.display = 'flex'; } 
+                if (i <= count) { inGroup.style.display = 'block'; outRow.style.display = 'grid'; } 
                 else { inGroup.style.display = 'none'; outRow.style.display = 'none'; }
             }
         }
@@ -252,7 +245,7 @@ window.addEventListener('load', () => {
 });
 
 // ==========================================
-// 🌟 YENİ NESİL FİZİKSEL İNDİRME MOTORU (KAYMA VE BOZULMAYI 100% ÖNLER) 🌟
+// 🌟 FİZİKSEL RENDER İNDİRME MOTORU (KAYMAYI VE KARARMAYI BİTİRİR) 🌟
 // ==========================================
 function downloadTpl(elementId, fileName) {
     const card = document.getElementById(elementId);
@@ -265,7 +258,7 @@ function downloadTpl(elementId, fileName) {
 
     const originalTransform = card.style.transform;
 
-    // Görünmez Render Odası (Gerçek Boyutta, Cam Efekti Çalışsın Diye Arkası Koyu)
+    // Görünmez Render Odası (Gerçek Boyutta)
     const renderRoom = document.createElement('div');
     renderRoom.style.position = 'fixed';
     renderRoom.style.top = '0';
@@ -275,7 +268,8 @@ function downloadTpl(elementId, fileName) {
     renderRoom.style.opacity = '0'; 
     renderRoom.style.pointerEvents = 'none';
     renderRoom.style.zIndex = '-9999';
-    renderRoom.style.backgroundColor = '#050505'; // Camın okunması için zemin şart
+    // html2canvas'ın siyah basmasını önlemek için arka plan rengini karanlık veriyoruz
+    renderRoom.style.backgroundColor = '#020202'; 
     document.body.appendChild(renderRoom);
 
     card.style.transform = 'none';
@@ -283,7 +277,7 @@ function downloadTpl(elementId, fileName) {
 
     setTimeout(() => {
         html2canvas(card, { 
-            scale: 2, // 2160x2700 Piksel HD İndirme
+            scale: 2, 
             backgroundColor: null, 
             useCORS: true, 
             logging: false 
