@@ -29,7 +29,7 @@ btnWatermark.addEventListener('click', () => {
 });
 
 // ==========================================
-// YARDIMCI FONKSİYONLAR
+// YARDIMCI FONKSİYONLAR (Orijinal Tasarım)
 // ==========================================
 function autoScaleText() {
     document.querySelectorAll('.auto-scale').forEach(el => {
@@ -91,7 +91,7 @@ function bindImage(inputId, targetIdOrClass, isBackground = false) {
     });
 }
 
-// 1, 2, 3. MG, HT, MS
+// BÜTÜN MODÜLLERİN BAĞLANTILARI GERİ GELDİ (1-16)
 bindText('mg-home-name', '.out-mg-home-name'); bindText('mg-away-name', '.out-mg-away-name');
 bindText('mg-time', '.out-mg-time', false); bindText('mg-venue', '.out-mg-venue');
 bindImage('mg-home-logo', '.out-mg-home-logo'); bindImage('mg-away-logo', '.out-mg-away-logo'); bindImage('mg-bg', 'bg-mac-gunu', true);
@@ -105,7 +105,6 @@ bindText('ms-home-score', '.out-ms-home-score', false); bindText('ms-away-score'
 bindText('ms-home-scorers', '.out-ms-home-scorers', false, true); bindText('ms-away-scorers', '.out-ms-away-scorers', false, true);
 bindImage('ms-home-logo', '.out-ms-home-logo'); bindImage('ms-away-logo', '.out-ms-away-logo'); bindImage('ms-bg', 'bg-mac-sonucu', true);
 
-// 4. İSTATİSTİK
 function bindStat(idHome, idAway, outHome, outAway, barHome, barAway, isPercent = false) {
     const iHome = document.getElementById(idHome); const iAway = document.getElementById(idAway);
     function updateStats() {
@@ -123,7 +122,7 @@ bindStat('stat-shot-home', 'stat-shot-away', '.out-stat-shot-home', '.out-stat-s
 bindStat('stat-cor-home', 'stat-cor-away', '.out-stat-cor-home', '.out-stat-cor-away', 'bar-cor-home', 'bar-cor-away');
 bindStat('stat-foul-home', 'stat-foul-away', '.out-stat-foul-home', '.out-stat-foul-away', 'bar-foul-home', 'bar-foul-away');
 
-// 5. İLK 11
+// İLK 11 (Orijinal Liste Mantığı)
 bindImage('k-logo', '.out-k-logo'); bindImage('k-bg', 'bg-kadro', true); 
 document.getElementById('k-lineup').addEventListener('input', function(e) {
     const listContainer = document.getElementById('out-k-lineup'); listContainer.innerHTML = ''; 
@@ -135,7 +134,6 @@ document.getElementById('k-lineup').addEventListener('input', function(e) {
     });
 });
 
-// 6. TRANSFER
 bindText('tr-name', '.out-tr-name'); bindImage('tr-logo', '.out-tr-logo'); bindImage('tr-img', '.out-tr-img');
 const trProbInput = document.getElementById('tr-prob');
 if (trProbInput) {
@@ -153,7 +151,6 @@ if (trProbInput) {
     });
 }
 
-// 7-12 Modülleri
 bindText('qt-author', '.out-qt-author'); bindText('qt-text', '.out-qt-text', false); bindImage('qt-img', '.out-qt-img');
 bindText('h2h-p1-name', '.out-h2h-p1-name'); bindText('h2h-p2-name', '.out-h2h-p2-name'); bindText('h2h-p1-stat', '.out-h2h-p1-stat', false); bindText('h2h-p2-stat', '.out-h2h-p2-stat', false); bindImage('h2h-p1-img', '.out-h2h-p1-img'); bindImage('h2h-p2-img', '.out-h2h-p2-img');
 bindText('pd-t1-name', '.out-pd-t1-name'); bindText('pd-t1-pts', '.out-pd-t1-pts', false); bindImage('pd-t1-logo', '.out-pd-t1-logo');
@@ -162,22 +159,14 @@ bindText('pd-t3-name', '.out-pd-t3-name'); bindText('pd-t3-pts', '.out-pd-t3-pts
 bindText('ref-name', '.out-ref-name'); bindImage('ref-img', '.out-ref-img'); bindImage('ref-logo-home', '.out-ref-logo-home'); bindImage('ref-logo-away', '.out-ref-logo-away');
 bindText('sd-news-title', '.out-sd-title', false, true); bindImage('sd-player-img', '.out-sd-player'); bindImage('sd-bg', 'bg-sondakika', true);
 bindText('r-player-name', '.out-r-name'); bindImage('r-player-img', '.out-r-player'); bindImage('r-bg', 'bg-reels', true);
-
-// 13. MOTM
 bindText('motm-name', '.out-motm-name'); bindImage('motm-img', '.out-motm-img'); bindImage('motm-logo', '.out-motm-logo');
 bindText('motm-s1-lbl', '.out-motm-s1-lbl'); bindText('motm-s1-val', '.out-motm-s1-val', false);
 bindText('motm-s2-lbl', '.out-motm-s2-lbl'); bindText('motm-s2-val', '.out-motm-s2-val', false);
-
-// 14. MILESTONE
 bindText('mil-name', '.out-mil-name'); bindText('mil-num', '.out-mil-num', false); bindText('mil-text', '.out-mil-text'); bindImage('mil-img', '.out-mil-img');
-
-// 15. FIXTURE
 bindImage('fix-img', '.out-fix-img');
 bindImage('fix1-logo', '.out-fix1-logo'); bindText('fix1-date', '.out-fix1-date'); bindText('fix1-tour', '.out-fix1-tour');
 bindImage('fix2-logo', '.out-fix2-logo'); bindText('fix2-date', '.out-fix2-date'); bindText('fix2-tour', '.out-fix2-tour');
 bindImage('fix3-logo', '.out-fix3-logo'); bindText('fix3-date', '.out-fix3-date'); bindText('fix3-tour', '.out-fix3-tour');
-
-// 16. HEALTH
 bindText('hlt-name', '.out-hlt-name'); bindImage('hlt-img', '.out-hlt-img'); bindText('hlt-type', '.out-hlt-type'); bindText('hlt-date', '.out-hlt-date');
 
 // ==========================================
@@ -196,7 +185,6 @@ window.addEventListener('load', () => {
     document.querySelectorAll('input[type="text"], input[type="number"], textarea').forEach(el => { el.dispatchEvent(new Event('input')); });
     autoScaleText(); setTimeout(autoScaleSimpleText, 100);
     
-    // Temayı Yükle
     const savedTheme = localStorage.getItem('skoragi_theme') || 'default';
     if (savedTheme !== 'default') {
         document.body.classList.add(`theme-${savedTheme}`);
@@ -204,7 +192,6 @@ window.addEventListener('load', () => {
         document.querySelector(`[data-theme="default"]`).classList.remove('active');
     }
     
-    // Filigranı Yükle
     if (localStorage.getItem('skoragi_wm') === 'on') {
         document.body.classList.add('watermark-on');
         btnWatermark.innerText = "🛡️ FİLİGRAN: AÇIK";
@@ -213,7 +200,7 @@ window.addEventListener('load', () => {
 });
 
 // ==========================================
-// 🌟 KUSURSUZ VE KAYMASIZ HD İNDİRME MOTORU 🌟
+// 🌟 YENİ NESİL KAYMASIZ HD İNDİRME MOTORU 🌟
 // ==========================================
 function downloadTpl(elementId, fileName) {
     const captureArea = document.getElementById(elementId);
@@ -229,7 +216,7 @@ function downloadTpl(elementId, fileName) {
     const originalLeft = captureArea.style.left;
     const originalZIndex = captureArea.style.zIndex;
 
-    // Gizli Çekim Modu (Kartı ekrandan kopar, ezilmesini önle, düz çek)
+    // GİZLİ ÇEKİM MODU: İçeriğin çökmesini, kaymasını ve saydamlaşmasını önler
     captureArea.style.transform = "none"; 
     captureArea.style.position = "fixed";
     captureArea.style.top = "0px";
@@ -238,12 +225,11 @@ function downloadTpl(elementId, fileName) {
 
     setTimeout(() => {
         html2canvas(captureArea, { 
-            scale: 2, 
+            scale: 2, // 800x800 * 2 = 1600x1600 Kalitesinde indirir
             backgroundColor: "#000", 
             useCORS: true, 
             logging: false 
         }).then(canvas => {
-            // Çekim bitti, eski yerine koy
             captureArea.style.transform = originalTransform;
             captureArea.style.position = originalPosition;
             captureArea.style.top = originalTop;
@@ -262,7 +248,7 @@ function downloadTpl(elementId, fileName) {
             btn.style.backgroundColor = "";
         }).catch(err => {
             console.error("İndirme Hatası:", err);
-            alert("İndirme sırasında hata oluştu. Sayfayı yenileyin.");
+            alert("İndirme sırasında hata oluştu. Lütfen sayfayı yenileyin.");
             captureArea.style.transform = originalTransform;
             captureArea.style.position = originalPosition;
             captureArea.style.top = originalTop;
