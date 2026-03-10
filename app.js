@@ -1,5 +1,5 @@
 // ==========================================
-// 1. TEMA VE FİLİGRAN MOTORU
+// 1. TEMA VE FİLİGRAN KONTROL MOTORU
 // ==========================================
 const themeBtns = document.querySelectorAll('.ts-btn:not(#btn-watermark)');
 themeBtns.forEach(btn => {
@@ -31,34 +31,36 @@ if(btnWatermark) {
 }
 
 // ==========================================
-// 2. YAZI KÜÇÜLTME MOTORU (ZIRHLI)
+// 2. GÜVENLİ METİN KÜÇÜLTME MOTORU
 // ==========================================
 function autoScaleText() {
-    document.querySelectorAll('.auto-scale-text').forEach(el => {
-        const parent = el.parentElement;
-        if(!parent) return;
+    try {
+        document.querySelectorAll('.auto-scale-text').forEach(el => {
+            const parent = el.parentElement;
+            if(!parent) return;
 
-        let maxFont = 100; 
-        if(el.classList.contains('team-name')) maxFont = 75; 
-        if(el.classList.contains('out-sd-title')) maxFont = 65;
-        if(parent.classList.contains('hw-name')) maxFont = 45; 
-        if(el.classList.contains('out-mg-venue')) maxFont = 24; 
-        if(el.classList.contains('pc-name')) maxFont = 30; 
+            let maxFont = 100; 
+            if(el.classList.contains('team-name')) maxFont = 75; 
+            if(el.classList.contains('out-sd-title')) maxFont = 65;
+            if(parent.classList.contains('hw-name')) maxFont = 45; 
+            if(el.classList.contains('out-mg-venue')) maxFont = 24; 
+            if(el.classList.contains('pc-name')) maxFont = 26; 
 
-        el.style.fontSize = maxFont + 'px';
-        
-        while ((el.scrollWidth > parent.clientWidth || el.scrollHeight > parent.clientHeight) && maxFont > 15) {
-            maxFont -= 1;
             el.style.fontSize = maxFont + 'px';
-        }
-    });
+            
+            let loops = 0; 
+            while ((el.scrollWidth > parent.clientWidth || el.scrollHeight > parent.clientHeight) && maxFont > 15 && loops < 100) {
+                maxFont -= 1;
+                el.style.fontSize = maxFont + 'px';
+                loops++;
+            }
+        });
+    } catch(e) { console.error("Metin küçültme hatası:", e); }
 }
 
 // ==========================================
 // 3. BAĞLANTI (BINDING) FONKSİYONLARI 
 // ==========================================
-
-// YAZI BAĞLAMA
 function bindText(inputId, targetClass, isUpper = true, isHtml = false) {
     const input = document.getElementById(inputId);
     if (!input) return;
@@ -70,19 +72,19 @@ function bindText(inputId, targetClass, isUpper = true, isHtml = false) {
     });
 }
 
-// RESİM BAĞLAMA (GÖRSEL YÜKLEME DÜZELTİLDİ!)
 function bindImage(inputId, targetSelector, isBackground = false) {
     const input = document.getElementById(inputId);
     if (!input) return;
+    
     input.addEventListener('change', function(e) {
         const file = e.target.files[0];
         if (!file) return;
+        
         const reader = new FileReader();
-        reader.onload = function(event) {
-            const result = event.target.result;
+        reader.onload = function(readEvent) {
+            const result = readEvent.target.result;
             
-            // İlk 11 logosu seçildiyse hafızaya al
-            if(inputId === 'k-logo') window.kLogoCached = result;
+            if (inputId === 'k-logo') window.kLogoCached = result;
 
             document.querySelectorAll(targetSelector).forEach(el => {
                 if (isBackground) {
@@ -92,10 +94,11 @@ function bindImage(inputId, targetSelector, isBackground = false) {
                 }
             });
             
-            // Eğer İlk 11 logosu yüklendiyse, kartları tekrar çiz ki logo yansısın
-            if(inputId === 'k-logo') {
-                const event = new Event('input');
-                document.getElementById('k-lineup').dispatchEvent(event);
+            if (inputId === 'k-logo') {
+                const lineupInput = document.getElementById('k-lineup');
+                if (lineupInput) {
+                    lineupInput.dispatchEvent(new Event('input'));
+                }
             }
         }
         reader.readAsDataURL(file);
@@ -144,8 +147,8 @@ bindStat('stat-shot-home', 'stat-shot-away', '.out-stat-shot-home', '.out-stat-s
 bindStat('stat-cor-home', 'stat-cor-away', '.out-stat-cor-home', '.out-stat-cor-away', 'bar-cor-home', null);
 bindStat('stat-foul-home', 'stat-foul-away', '.out-stat-foul-home', '.out-stat-foul-away', 'bar-foul-home', null);
 
-// MODÜL 5: İLK 11 (LOGO YÜKLENİR YÜKLENMEZ KARTLARA DAĞITILIR)
-window.kLogoCached = "https://media.api-sports.io/football/teams/9.png"; // Varsayılan Logo
+// MODÜL 5: İLK 11
+window.kLogoCached = "https://media.api-sports.io/football/teams/9.png"; 
 bindImage('k-logo', '.out-k-main-logo'); bindImage('k-bg', '.out-k-bg', true); 
 const positions433 = ['GK', 'RB', 'CB', 'CB', 'LB', 'CDM', 'CM', 'CM', 'RW', 'ST', 'LW'];
 const layout433 = [[8, 9, 10], [5, 6, 7], [1, 2, 3, 4], [0]]; 
@@ -217,13 +220,8 @@ bindText('hlt-name', '.out-hlt-name'); bindImage('hlt-img', '.out-hlt-img'); bin
 
 // MODÜL 17: HAFTANIN MAÇLARI
 bindText('hw-title-input', '.out-hw-title');
-bindImage('hw-bg', '#bg-hw', true);
 for(let i=1; i<=6; i++) {
-    bindText(`hw-m${i}-home`, `.out-hw-m${i}-home`); 
-    bindText(`hw-m${i}-score`, `.out-hw-m${i}-score`, false); 
-    bindText(`hw-m${i}-away`, `.out-hw-m${i}-away`); 
-    bindImage(`hw-m${i}-hlogo`, `.out-hw-m${i}-hlogo`); 
-    bindImage(`hw-m${i}-alogo`, `.out-hw-m${i}-alogo`);
+    bindText(`hw-m${i}-home`, `.out-hw-m${i}-home`); bindText(`hw-m${i}-score`, `.out-hw-m${i}-score`, false); bindText(`hw-m${i}-away`, `.out-hw-m${i}-away`); bindImage(`hw-m${i}-hlogo`, `.out-hw-m${i}-hlogo`); bindImage(`hw-m${i}-alogo`, `.out-hw-m${i}-alogo`);
 }
 const hwCountInput = document.getElementById('hw-match-count');
 if (hwCountInput) {
@@ -241,7 +239,7 @@ if (hwCountInput) {
 }
 
 // ==========================================
-// 5. OTOMATİK KAYIT SİSTEMİ (SADECE YAZILAR İÇİN)
+// 5. OTOMATİK KAYIT
 // ==========================================
 const savedData = JSON.parse(localStorage.getItem('skoragi_data')) || {};
 document.querySelectorAll('input[type="text"], input[type="number"], textarea').forEach(el => {
@@ -253,7 +251,6 @@ document.querySelectorAll('input[type="text"], input[type="number"], textarea').
 });
 
 window.addEventListener('load', () => {
-    // Tüm yazıları ve ilk 11 kartlarını ilk girişte tetikle
     document.querySelectorAll('input[type="text"], input[type="number"], textarea').forEach(el => { el.dispatchEvent(new Event('input')); });
     setTimeout(autoScaleText, 200);
     
@@ -279,7 +276,6 @@ function downloadTpl(elementId, fileName) {
 
     const originalTransform = card.style.transform;
 
-    // Görünmez Render Odası (Gerçek Boyutta)
     const renderRoom = document.createElement('div');
     renderRoom.style.position = 'fixed';
     renderRoom.style.top = '0';
@@ -313,7 +309,7 @@ function downloadTpl(elementId, fileName) {
             btn.style.backgroundColor = "";
         }).catch(err => {
             console.error("İndirme Hatası:", err);
-            alert("İndirme başarısız oldu. Lütfen sayfayı yenileyin.");
+            alert("İndirme başarısız oldu.");
             wrapper.appendChild(card);
             card.style.transform = originalTransform;
             document.body.removeChild(renderRoom);
