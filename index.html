@@ -33,7 +33,7 @@
             <div class="mg-content">
                 <div class="mg-teams">
                     <div class="mg-team"><div class="premium-logo-container"><img src="https://media.api-sports.io/football/teams/9.png" class="mg-logo out-mg-home-logo"></div><span class="mg-name out-mg-home-name auto-text">FENERBAHÇE</span></div>
-                    <div class="mg-center"><div class="mg-time out-mg-time">20:00</div><div class="vs-badge neon-glow">VS</div><div class="mg-venue out-mg-venue auto-text">ŞÜKRÜ SARACOĞLU</div></div>
+                    <div class="mg-center"><div class="mg-time out-mg-time">20:00</div><div class="mg-venue out-mg-venue auto-text">ŞÜKRÜ SARACOĞLU</div></div>
                     <div class="mg-team"><div class="premium-logo-container"><img src="https://media.api-sports.io/football/teams/11.png" class="mg-logo out-mg-away-logo"></div><span class="mg-name out-mg-away-name auto-text">GALATASARAY</span></div>
                 </div><div class="mg-bottom"><h1 class="mg-title">MAÇ GÜNÜ</h1></div>
             </div><div class="card-footer">@skoragi</div>
@@ -67,7 +67,6 @@
         </div><div class="module-preview"><div class="preview-wrapper"><div class="match-card" id="tpl-mac-sonucu">
             <div class="bg-layer" id="bg-mac-sonucu" style="opacity:0.3;"></div><div class="brand-glow"></div><div class="brand-gradient-bottom"></div>
             <div class="ms-content">
-                <div class="iy-badge crystal-panel neon-glow" style="font-size:20px;letter-spacing:2px;">MAÇ SONUCU</div>
                 <div class="ft-scoreboard" style="margin-top:-10px;">
                     <div class="ft-team"><div class="premium-logo-container"><img src="https://media.api-sports.io/football/teams/9.png" class="mg-logo out-ms-home-logo"></div><span class="mg-name out-ms-home-name auto-text">FENERBAHÇE</span></div>
                     <div class="ft-score neon-text"><span class="out-ms-home-score">2</span> - <span class="out-ms-away-score">1</span></div>
@@ -110,6 +109,75 @@
             <div class="bg-layer" id="bg-kadro" style="opacity:0.4;"></div><div class="pitch-container"><div class="pitch-lines"></div></div><div class="brand-glow"></div>
             <div class="kadro-header"><img src="https://media.api-sports.io/football/teams/9.png" class="kadro-logo out-k-logo"><h1 class="kadro-title crystal-panel neon-glow">İLK 11 KADROSU</h1></div>
             <div class="kadro-list" id="out-k-lineup"></div><div class="card-footer">@skoragi</div>
+        </div></div></div></div>
+
+        <div class="studio-module"><div class="module-panel">
+            <h2>17. HAFTANIN MAÇLARI 🗓️</h2>
+            <p style="color:#888; font-size:12px; margin-bottom:15px;">Fikstür için saat (20:00), biten maçlar için skor (2-1) girebilirsiniz.</p>
+            
+            <div class="input-group" style="background:#111; padding:15px; border-radius:10px; margin-bottom:10px; border-left:3px solid var(--primary);">
+                <label style="color:var(--primary);">Maç 1 (Ev - Skor - Dep)</label>
+                <div style="display:flex;gap:5px;margin-bottom:5px;"><input type="text" id="hw-m1-home" value="FENERBAHÇE" style="flex:2;"><input type="text" id="hw-m1-score" value="2-1" style="flex:1; text-align:center;"><input type="text" id="hw-m1-away" value="GALATASARAY" style="flex:2;"></div>
+                <div style="display:flex;gap:5px;"><input type="file" id="hw-m1-hlogo"><input type="file" id="hw-m1-alogo"></div>
+            </div>
+            
+            <div class="input-group" style="background:#111; padding:15px; border-radius:10px; margin-bottom:10px; border-left:3px solid var(--primary);">
+                <label style="color:var(--primary);">Maç 2 (Ev - Skor - Dep)</label>
+                <div style="display:flex;gap:5px;margin-bottom:5px;"><input type="text" id="hw-m2-home" value="BEŞİKTAŞ" style="flex:2;"><input type="text" id="hw-m2-score" value="20:00" style="flex:1; text-align:center;"><input type="text" id="hw-m2-away" value="TRABZONSPOR" style="flex:2;"></div>
+                <div style="display:flex;gap:5px;"><input type="file" id="hw-m2-hlogo"><input type="file" id="hw-m2-alogo"></div>
+            </div>
+
+            <div class="input-group" style="background:#111; padding:15px; border-radius:10px; margin-bottom:10px; border-left:3px solid var(--primary);">
+                <label style="color:var(--primary);">Maç 3 (Ev - Skor - Dep)</label>
+                <div style="display:flex;gap:5px;margin-bottom:5px;"><input type="text" id="hw-m3-home" value="SİVASSPOR" style="flex:2;"><input type="text" id="hw-m3-score" value="1-0" style="flex:1; text-align:center;"><input type="text" id="hw-m3-away" value="KASIMPAŞA" style="flex:2;"></div>
+                <div style="display:flex;gap:5px;"><input type="file" id="hw-m3-hlogo"><input type="file" id="hw-m3-alogo"></div>
+            </div>
+
+            <div class="input-group" style="background:#111; padding:15px; border-radius:10px; margin-bottom:10px; border-left:3px solid var(--primary);">
+                <label style="color:var(--primary);">Maç 4 (Ev - Skor - Dep)</label>
+                <div style="display:flex;gap:5px;margin-bottom:5px;"><input type="text" id="hw-m4-home" value="BAŞAKŞEHİR" style="flex:2;"><input type="text" id="hw-m4-score" value="3-3" style="flex:1; text-align:center;"><input type="text" id="hw-m4-away" value="KONYASPOR" style="flex:2;"></div>
+                <div style="display:flex;gap:5px;"><input type="file" id="hw-m4-hlogo"><input type="file" id="hw-m4-alogo"></div>
+            </div>
+
+            <div class="input-group" style="background:#111; padding:15px; border-radius:10px; margin-bottom:10px; border-left:3px solid var(--primary);">
+                <label style="color:var(--primary);">Maç 5 (Ev - Skor - Dep)</label>
+                <div style="display:flex;gap:5px;margin-bottom:5px;"><input type="text" id="hw-m5-home" value="ANTALYASPOR" style="flex:2;"><input type="text" id="hw-m5-score" value="19:00" style="flex:1; text-align:center;"><input type="text" id="hw-m5-away" value="ALANYASPOR" style="flex:2;"></div>
+                <div style="display:flex;gap:5px;"><input type="file" id="hw-m5-hlogo"><input type="file" id="hw-m5-alogo"></div>
+            </div>
+
+            <div class="input-group"><label>Arka Plan</label><input type="file" id="hw-bg"></div>
+            <button class="download-btn" onclick="downloadTpl('tpl-haftanin-maclari', 'haftanin-maclari')">İNDİR</button>
+        </div><div class="module-preview"><div class="preview-wrapper"><div class="match-card" id="tpl-haftanin-maclari">
+            <div class="bg-layer" id="bg-hw" style="opacity:0.3;"></div><div class="brand-glow" style="opacity:0.7;"></div><div class="brand-gradient-bottom"></div>
+            <h1 class="hw-title neon-text">HAFTANIN MAÇLARI</h1>
+            <div class="hw-container">
+                <div class="hw-row crystal-panel neon-border">
+                    <div class="hw-team hw-home"><span class="out-hw-m1-home auto-text">FENERBAHÇE</span><img src="https://media.api-sports.io/football/teams/9.png" class="out-hw-m1-hlogo"></div>
+                    <div class="hw-score neon-glow out-hw-m1-score">2-1</div>
+                    <div class="hw-team hw-away"><img src="https://media.api-sports.io/football/teams/11.png" class="out-hw-m1-alogo"><span class="out-hw-m1-away auto-text">GALATASARAY</span></div>
+                </div>
+                <div class="hw-row crystal-panel">
+                    <div class="hw-team hw-home"><span class="out-hw-m2-home auto-text">BEŞİKTAŞ</span><img src="https://media.api-sports.io/football/teams/10.png" class="out-hw-m2-hlogo"></div>
+                    <div class="hw-score neon-glow out-hw-m2-score" style="background:#222; color:#fff; border-color:#555;">20:00</div>
+                    <div class="hw-team hw-away"><img src="https://media.api-sports.io/football/teams/61.png" class="out-hw-m2-alogo"><span class="out-hw-m2-away auto-text">TRABZONSPOR</span></div>
+                </div>
+                <div class="hw-row crystal-panel">
+                    <div class="hw-team hw-home"><span class="out-hw-m3-home auto-text">SİVASSPOR</span><img src="https://media.api-sports.io/football/teams/102.png" class="out-hw-m3-hlogo"></div>
+                    <div class="hw-score neon-glow out-hw-m3-score">1-0</div>
+                    <div class="hw-team hw-away"><img src="https://media.api-sports.io/football/teams/99.png" class="out-hw-m3-alogo"><span class="out-hw-m3-away auto-text">KASIMPAŞA</span></div>
+                </div>
+                <div class="hw-row crystal-panel">
+                    <div class="hw-team hw-home"><span class="out-hw-m4-home auto-text">BAŞAKŞEHİR</span><img src="https://media.api-sports.io/football/teams/13.png" class="out-hw-m4-hlogo"></div>
+                    <div class="hw-score neon-glow out-hw-m4-score">3-3</div>
+                    <div class="hw-team hw-away"><img src="https://media.api-sports.io/football/teams/92.png" class="out-hw-m4-alogo"><span class="out-hw-m4-away auto-text">KONYASPOR</span></div>
+                </div>
+                <div class="hw-row crystal-panel">
+                    <div class="hw-team hw-home"><span class="out-hw-m5-home auto-text">ANTALYASPOR</span><img src="https://media.api-sports.io/football/teams/100.png" class="out-hw-m5-hlogo"></div>
+                    <div class="hw-score neon-glow out-hw-m5-score" style="background:#222; color:#fff; border-color:#555;">19:00</div>
+                    <div class="hw-team hw-away"><img src="https://media.api-sports.io/football/teams/103.png" class="out-hw-m5-alogo"><span class="out-hw-m5-away auto-text">ALANYASPOR</span></div>
+                </div>
+            </div>
+            <div class="card-footer">@skoragi</div>
         </div></div></div></div>
 
         <div class="studio-module"><div class="module-panel">
@@ -183,7 +251,7 @@
         </div><div class="module-preview"><div class="preview-wrapper"><div class="match-card" id="tpl-referee">
             <div class="bg-layer" style="opacity:0.3;"></div><div class="brand-glow" style="background: radial-gradient(circle at top, var(--bg-grad-1) 0%, transparent 60%);"></div>
             <img src="https://creazilla-store.fra1.digitaloceanspaces.com/cliparts/3133642/soccer-player-clipart-xl.png" class="ref-img out-ref-img">
-            <div class="ref-teams"><img src="https://media.api-sports.io/football/teams/9.png" class="ref-logo out-ref-logo-home"><div class="vs-badge neon-glow" style="margin:0 20px; font-size:18px;">VS</div><img src="https://media.api-sports.io/football/teams/11.png" class="ref-logo out-ref-logo-away"></div>
+            <div class="ref-teams"><img src="https://media.api-sports.io/football/teams/9.png" class="ref-logo out-ref-logo-home"><div style="width: 100px;"></div><img src="https://media.api-sports.io/football/teams/11.png" class="ref-logo out-ref-logo-away"></div>
             <div class="ref-panel crystal-panel neon-border"><h3>MAÇIN HAKEMİ</h3><h2 class="out-ref-name auto-text neon-text">HALİL UMUT MELER</h2></div>
             <div class="card-footer">@skoragi</div>
         </div></div></div></div>
@@ -199,11 +267,10 @@
             <div class="brand-glow" style="background: radial-gradient(circle at top left, var(--bg-grad-1) 0%, transparent 80%);"></div>
             <div class="sd-pattern"></div>
             <div class="sd-big-text"><h1>SON<br>DAKİKA</h1></div>
-            <div class="sd-content">
-                <img src="https://creazilla-store.fra1.digitaloceanspaces.com/cliparts/3133642/soccer-player-clipart-xl.png" id="out-sd-player" class="sd-player-img">
-                <div class="sd-box crystal-panel neon-border"><div class="sd-title-wrapper auto-scale out-sd-title">Derbinin Kazananı Belli Oldu!</div><span class="sd-x">X</span></div>
-            </div>
-            <div class="card-footer">@skoragi</div>
+            <div class="sd-box crystal-panel neon-border">
+                <div class="sd-box-left"><img src="https://creazilla-store.fra1.digitaloceanspaces.com/cliparts/3133642/soccer-player-clipart-xl.png" id="out-sd-player" class="auto-resize-img"></div>
+                <div class="sd-box-right sd-text-container"><div class="sd-title-wrapper auto-scale out-sd-title">Derbinin Kazananı Belli Oldu!</div><span class="sd-x">X</span></div>
+            </div><div class="card-footer">@skoragi</div>
         </div></div></div></div>
 
         <div class="studio-module"><div class="module-panel">
