@@ -28,6 +28,9 @@ btnWatermark.addEventListener('click', () => {
     }
 });
 
+// ==========================================
+// YARDIMCI FONKSİYONLAR 
+// ==========================================
 function autoScaleText() {
     document.querySelectorAll('.auto-scale').forEach(el => {
         let fontSize = 45; 
@@ -88,6 +91,7 @@ function bindImage(inputId, targetIdOrClass, isBackground = false) {
     });
 }
 
+// BÜTÜN MODÜLLERİN BAĞLANTILARI
 bindText('mg-home-name', '.out-mg-home-name'); bindText('mg-away-name', '.out-mg-away-name');
 bindText('mg-time', '.out-mg-time', false); bindText('mg-venue', '.out-mg-venue');
 bindImage('mg-home-logo', '.out-mg-home-logo'); bindImage('mg-away-logo', '.out-mg-away-logo'); bindImage('mg-bg', 'bg-mac-gunu', true);
@@ -164,13 +168,42 @@ bindImage('fix2-logo', '.out-fix2-logo'); bindText('fix2-date', '.out-fix2-date'
 bindImage('fix3-logo', '.out-fix3-logo'); bindText('fix3-date', '.out-fix3-date'); bindText('fix3-tour', '.out-fix3-tour');
 bindText('hlt-name', '.out-hlt-name'); bindImage('hlt-img', '.out-hlt-img'); bindText('hlt-type', '.out-hlt-type'); bindText('hlt-date', '.out-hlt-date');
 
-// 🌟 YENİ EKLENEN MODÜL: HAFTANIN MAÇLARI (17) 🌟
-bindText('hw-m1-home', '.out-hw-m1-home'); bindText('hw-m1-score', '.out-hw-m1-score', false); bindText('hw-m1-away', '.out-hw-m1-away'); bindImage('hw-m1-hlogo', '.out-hw-m1-hlogo'); bindImage('hw-m1-alogo', '.out-hw-m1-alogo');
-bindText('hw-m2-home', '.out-hw-m2-home'); bindText('hw-m2-score', '.out-hw-m2-score', false); bindText('hw-m2-away', '.out-hw-m2-away'); bindImage('hw-m2-hlogo', '.out-hw-m2-hlogo'); bindImage('hw-m2-alogo', '.out-hw-m2-alogo');
-bindText('hw-m3-home', '.out-hw-m3-home'); bindText('hw-m3-score', '.out-hw-m3-score', false); bindText('hw-m3-away', '.out-hw-m3-away'); bindImage('hw-m3-hlogo', '.out-hw-m3-hlogo'); bindImage('hw-m3-alogo', '.out-hw-m3-alogo');
-bindText('hw-m4-home', '.out-hw-m4-home'); bindText('hw-m4-score', '.out-hw-m4-score', false); bindText('hw-m4-away', '.out-hw-m4-away'); bindImage('hw-m4-hlogo', '.out-hw-m4-hlogo'); bindImage('hw-m4-alogo', '.out-hw-m4-alogo');
-bindText('hw-m5-home', '.out-hw-m5-home'); bindText('hw-m5-score', '.out-hw-m5-score', false); bindText('hw-m5-away', '.out-hw-m5-away'); bindImage('hw-m5-hlogo', '.out-hw-m5-hlogo'); bindImage('hw-m5-alogo', '.out-hw-m5-alogo');
+// 🌟 17. HAFTANIN MAÇLARI - DİNAMİK GÖSTERİM KODU 🌟
+bindText('hw-title-input', '.out-hw-title');
 bindImage('hw-bg', 'bg-hw', true);
+
+// 6 maçın bağlamaları
+for(let i=1; i<=6; i++) {
+    bindText(`hw-m${i}-home`, `.out-hw-m${i}-home`);
+    bindText(`hw-m${i}-score`, `.out-hw-m${i}-score`, false);
+    bindText(`hw-m${i}-away`, `.out-hw-m${i}-away`);
+    bindImage(`hw-m${i}-hlogo`, `.out-hw-m${i}-hlogo`);
+    bindImage(`hw-m${i}-alogo`, `.out-hw-m${i}-alogo`);
+}
+
+// Gösterilecek Maç Sayısı Şalteri
+const hwCountInput = document.getElementById('hw-match-count');
+if (hwCountInput) {
+    hwCountInput.addEventListener('input', function(e) {
+        let count = parseInt(e.target.value) || 5;
+        if (count > 6) count = 6;
+        if (count < 1) count = 1;
+        
+        for(let i=1; i<=6; i++) {
+            const inGroup = document.getElementById('hw-in-' + i);
+            const outRow = document.getElementById('hw-out-' + i);
+            if (inGroup && outRow) {
+                if (i <= count) {
+                    inGroup.style.display = 'block';
+                    outRow.style.display = 'flex';
+                } else {
+                    inGroup.style.display = 'none';
+                    outRow.style.display = 'none';
+                }
+            }
+        }
+    });
+}
 
 // ==========================================
 // 💾 OTOMATİK KAYIT VE AYAR YÜKLEME 💾
@@ -203,7 +236,7 @@ window.addEventListener('load', () => {
 });
 
 // ==========================================
-// 🌟 GÜVENLİ VE KESİLMEYEN İNDİRME MOTORU (ORİJİNAL) 🌟
+// 🌟 GÜVENLİ İNDİRME MOTORU (ORİJİNAL) 🌟
 // ==========================================
 function downloadTpl(elementId, fileName) {
     const captureArea = document.getElementById(elementId);
@@ -250,7 +283,7 @@ function downloadTpl(elementId, fileName) {
             btn.style.backgroundColor = "";
         }).catch(err => {
             console.error("İndirme Hatası:", err);
-            alert("İndirme sırasında hata oluştu. Sayfayı yenileyin.");
+            alert("İndirme sırasında hata oluştu. Lütfen sayfayı yenileyin.");
             captureArea.style.transform = originalTransform;
             captureArea.style.position = originalPosition;
             captureArea.style.top = originalTop;
