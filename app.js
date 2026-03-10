@@ -32,19 +32,19 @@ btnWatermark.addEventListener('click', () => {
 // 🌟 GÜVENLİ METİN KÜÇÜLTME MOTORU (ZIRHLARI KIRMAZ) 🌟
 // ==========================================
 function autoScaleText() {
-    // Cam panelleri kırmaması için başlangıç boyutu optimal seviyeye çekildi
     document.querySelectorAll('.auto-scale-text').forEach(el => {
-        let maxFont = 100; // Başlangıç
-        if(el.classList.contains('team-name')) maxFont = 55;
-        if(el.classList.contains('quote-text')) maxFont = 60;
-        if(el.classList.contains('out-mg-venue')) maxFont = 32;
-        if(el.classList.contains('out-h2h-p1-name')) maxFont = 50;
-        if(el.classList.contains('pc-name')) maxFont = 26; // İlk 11
+        const parent = el.parentElement;
+        if(!parent) return;
+
+        let maxFont = 100; 
+        if(el.classList.contains('team-name')) maxFont = 60;
+        if(el.classList.contains('out-sd-title')) maxFont = 65;
+        if(el.classList.contains('out-hw-m1-home')) maxFont = 45; 
+        if(el.classList.contains('pc-name')) maxFont = 30; 
 
         el.style.fontSize = maxFont + 'px';
         
-        // Taştığı sürece yazıyı piksel piksel küçült
-        while ((el.scrollWidth > el.parentElement.clientWidth || el.scrollHeight > el.parentElement.clientHeight) && maxFont > 15) {
+        while ((el.scrollWidth > parent.clientWidth || el.scrollHeight > parent.clientHeight) && maxFont > 15) {
             maxFont -= 1;
             el.style.fontSize = maxFont + 'px';
         }
@@ -91,16 +91,16 @@ function bindImage(inputId, targetIdOrClass, isBackground = false) {
 // BAĞLANTILAR
 bindText('mg-home-name', '.out-mg-home-name'); bindText('mg-away-name', '.out-mg-away-name');
 bindText('mg-time', '.out-mg-time', false); bindText('mg-venue', '.out-mg-venue');
-bindImage('mg-home-logo', '.out-mg-home-logo'); bindImage('mg-away-logo', '.out-mg-away-logo'); bindImage('mg-bg', 'bg-mac-gunu', true);
+bindImage('mg-home-logo', '.out-mg-home-logo'); bindImage('mg-away-logo', '.out-mg-away-logo'); bindImage('mg-bg', '.out-mg-bg', true);
 
 bindText('iy-home-name', '.out-iy-home-name'); bindText('iy-away-name', '.out-iy-away-name');
 bindText('iy-home-score', '.out-iy-home-score', false); bindText('iy-away-score', '.out-iy-away-score', false);
-bindImage('iy-home-logo', '.out-iy-home-logo'); bindImage('iy-away-logo', '.out-iy-away-logo'); bindImage('iy-bg', 'bg-ilk-yari', true);
+bindImage('iy-home-logo', '.out-iy-home-logo'); bindImage('iy-away-logo', '.out-iy-away-logo'); bindImage('iy-bg', '.out-iy-bg', true);
 
 bindText('ms-home-name', '.out-ms-home-name'); bindText('ms-away-name', '.out-ms-away-name');
 bindText('ms-home-score', '.out-ms-home-score', false); bindText('ms-away-score', '.out-ms-away-score', false);
 bindText('ms-home-scorers', '.out-ms-home-scorers', false, true); bindText('ms-away-scorers', '.out-ms-away-scorers', false, true);
-bindImage('ms-home-logo', '.out-ms-home-logo'); bindImage('ms-away-logo', '.out-ms-away-logo'); bindImage('ms-bg', 'bg-mac-sonucu', true);
+bindImage('ms-home-logo', '.out-ms-home-logo'); bindImage('ms-away-logo', '.out-ms-away-logo'); bindImage('ms-bg', '.out-ms-bg', true);
 
 function bindStat(idHome, idAway, outHome, outAway, barHome, barAway, isPercent = false) {
     const iHome = document.getElementById(idHome); const iAway = document.getElementById(idAway);
@@ -122,54 +122,59 @@ bindStat('stat-foul-home', 'stat-foul-away', '.out-stat-foul-home', '.out-stat-f
 // ==========================================
 // 🌟 İLK 11 (GERÇEK 4-3-3 SAHA DİZİLİM MANTIĞI) 🌟
 // ==========================================
-bindImage('k-logo', '.out-k-logo'); bindImage('k-bg', 'bg-kadro', true); 
+bindImage('k-logo', '.out-k-logo'); bindImage('k-bg', '.out-k-bg', true); 
 const positions433 = ['GK', 'RB', 'CB', 'CB', 'LB', 'CDM', 'CM', 'CM', 'RW', 'ST', 'LW'];
-// Taktik sıralaması: ATT(3), MID(3), DEF(4), GK(1)
-const layout433 = [[8, 9, 10], [5, 6, 7], [1, 2, 3, 4], [0]];
+const layout433 = [[8, 9, 10], [5, 6, 7], [1, 2, 3, 4], [0]]; // Forvet, Orta, Defans, Kaleci
 
-document.getElementById('k-lineup').addEventListener('input', function(e) {
-    const pitch = document.getElementById('out-k-lineup-pitch'); 
-    if(!pitch) return;
-    pitch.innerHTML = ''; 
-    
-    const players = e.target.value.split('\n').map(p => p.trim()).filter(p => p !== '');
-    
-    layout433.forEach(rowIndices => {
-        const rowDiv = document.createElement('div');
-        rowDiv.className = 'kadro-row';
-        rowIndices.forEach(index => {
-            if(players[index]) {
-                const pos = positions433[index];
-                const isPrimary = (index === 0 || index > 7); 
-                const card = document.createElement('div'); 
-                card.className = `glass-panel player-card-vertical ${isPrimary ? 'neon-border' : ''}`;
-                card.innerHTML = `
-                    <div class="pc-logo-container"><img src="https://creazilla-store.fra1.digitaloceanspaces.com/cliparts/3133642/soccer-player-clipart-xl.png"></div>
-                    <div class="name-box"><span class="pc-name auto-scale-text">${players[index].toUpperCase()}</span></div>
-                    <div class="pc-meta"><b>${index + 1}</b> ${pos}</div>
-                `;
-                rowDiv.appendChild(card);
-            }
+const kLineupInput = document.getElementById('k-lineup');
+if(kLineupInput) {
+    kLineupInput.addEventListener('input', function(e) {
+        const pitch = document.getElementById('out-k-lineup-pitch'); 
+        if(!pitch) return;
+        pitch.innerHTML = ''; 
+        
+        const players = e.target.value.split('\n').map(p => p.trim()).filter(p => p !== '');
+        
+        layout433.forEach(rowIndices => {
+            const rowDiv = document.createElement('div');
+            rowDiv.className = 'kadro-row';
+            rowIndices.forEach(index => {
+                if(players[index]) {
+                    const pos = positions433[index];
+                    const isPrimary = (index === 0 || index > 7); 
+                    const card = document.createElement('div'); 
+                    card.className = `glass-panel player-card-vertical ${isPrimary ? 'neon-border' : ''}`;
+                    card.innerHTML = `
+                        <div class="pc-logo-container"><img src="https://creazilla-store.fra1.digitaloceanspaces.com/cliparts/3133642/soccer-player-clipart-xl.png" class="out-k-logo"></div>
+                        <div class="name-box"><span class="pc-name auto-scale-text">${players[index].toUpperCase()}</span></div>
+                        <div class="pc-meta"><b>${index + 1}</b> ${pos}</div>
+                    `;
+                    rowDiv.appendChild(card);
+                }
+            });
+            if(rowDiv.children.length > 0) pitch.appendChild(rowDiv);
         });
-        if(rowDiv.children.length > 0) pitch.appendChild(rowDiv);
+        setTimeout(autoScaleText, 50);
     });
-    setTimeout(autoScaleText, 10);
-});
-
+}
 
 bindText('tr-name', '.out-tr-name'); bindImage('tr-logo', '.out-tr-logo'); bindImage('tr-img', '.out-tr-img');
 const trProbInput = document.getElementById('tr-prob');
 if (trProbInput) {
     trProbInput.addEventListener('input', function(e) {
         const val = parseInt(e.target.value) || 0;
-        if(val === 0) {
-            document.getElementById('tr-prob-container').style.display = 'none';
-            document.getElementById('tr-done-container').style.display = 'block';
-        } else {
-            document.getElementById('tr-prob-container').style.display = 'block';
-            document.getElementById('tr-done-container').style.display = 'none';
-            document.getElementById('out-tr-bar').style.width = val + '%';
-            document.querySelector('.out-tr-prob').innerText = '%' + val;
+        const probC = document.getElementById('tr-prob-container');
+        const doneC = document.getElementById('tr-done-container');
+        if(probC && doneC) {
+            if(val === 0) {
+                probC.style.display = 'none';
+                doneC.style.display = 'block';
+            } else {
+                probC.style.display = 'block';
+                doneC.style.display = 'none';
+                document.getElementById('out-tr-bar').style.width = val + '%';
+                document.querySelector('.out-tr-prob').innerText = '%' + val;
+            }
         }
     });
 }
@@ -179,7 +184,20 @@ bindText('h2h-p1-name', '.out-h2h-p1-name'); bindText('h2h-p2-name', '.out-h2h-p
 bindText('pd-t1-name', '.out-pd-t1-name'); bindText('pd-t1-pts', '.out-pd-t1-pts', false); bindImage('pd-t1-logo', '.out-pd-t1-logo');
 bindText('pd-t2-name', '.out-pd-t2-name'); bindText('pd-t2-pts', '.out-pd-t2-pts', false); bindImage('pd-t2-logo', '.out-pd-t2-logo');
 bindText('pd-t3-name', '.out-pd-t3-name'); bindText('pd-t3-pts', '.out-pd-t3-pts', false); bindImage('pd-t3-logo', '.out-pd-t3-logo');
+bindText('ref-name', '.out-ref-name'); bindImage('ref-img', '.out-ref-img'); bindImage('ref-logo-home', '.out-ref-logo-home'); bindImage('ref-logo-away', '.out-ref-logo-away');
+bindText('sd-news-title', '.out-sd-title', false, true); bindImage('sd-player-img', '.out-sd-player'); bindImage('sd-bg', '.out-sd-bg', true);
+bindText('r-player-name', '.out-r-name'); bindImage('r-player-img', '.out-r-player'); bindImage('r-bg', '.out-r-bg', true);
+bindText('motm-name', '.out-motm-name'); bindImage('motm-img', '.out-motm-img'); bindImage('motm-logo', '.out-motm-logo');
+bindText('motm-s1-lbl', '.out-motm-s1-lbl'); bindText('motm-s1-val', '.out-motm-s1-val', false);
+bindText('motm-s2-lbl', '.out-motm-s2-lbl'); bindText('motm-s2-val', '.out-motm-s2-val', false);
+bindText('mil-name', '.out-mil-name'); bindText('mil-num', '.out-mil-num', false); bindText('mil-text', '.out-mil-text'); bindImage('mil-img', '.out-mil-img');
+bindImage('fix-img', '.out-fix-img');
+bindImage('fix1-logo', '.out-fix1-logo'); bindText('fix1-date', '.out-fix1-date'); bindText('fix1-tour', '.out-fix1-tour');
+bindImage('fix2-logo', '.out-fix2-logo'); bindText('fix2-date', '.out-fix2-date'); bindText('fix2-tour', '.out-fix2-tour');
+bindImage('fix3-logo', '.out-fix3-logo'); bindText('fix3-date', '.out-fix3-date'); bindText('fix3-tour', '.out-fix3-tour');
+bindText('hlt-name', '.out-hlt-name'); bindImage('hlt-img', '.out-hlt-img'); bindText('hlt-type', '.out-hlt-type'); bindText('hlt-date', '.out-hlt-date');
 
+// HAFTANIN MAÇLARI
 bindText('hw-title-input', '.out-hw-title');
 for(let i=1; i<=6; i++) {
     bindText(`hw-m${i}-home`, `.out-hw-m${i}-home`); bindText(`hw-m${i}-score`, `.out-hw-m${i}-score`, false); bindText(`hw-m${i}-away`, `.out-hw-m${i}-away`); bindImage(`hw-m${i}-hlogo`, `.out-hw-m${i}-hlogo`); bindImage(`hw-m${i}-alogo`, `.out-hw-m${i}-alogo`);
@@ -192,7 +210,7 @@ if (hwCountInput) {
         for(let i=1; i<=6; i++) {
             const inGroup = document.getElementById('hw-in-' + i); const outRow = document.getElementById('hw-out-' + i);
             if (inGroup && outRow) {
-                if (i <= count) { inGroup.style.display = 'block'; outRow.style.display = 'flex'; } 
+                if (i <= count) { inGroup.style.display = 'block'; outRow.style.display = 'grid'; } 
                 else { inGroup.style.display = 'none'; outRow.style.display = 'none'; }
             }
         }
@@ -224,7 +242,7 @@ window.addEventListener('load', () => {
 });
 
 // ==========================================
-// 🌟 GÜVENLİ İNDİRME MOTORU (KAYMA VE BOZULMA ENGELLENDİ) 🌟
+// 🌟 FİZİKSEL RENDER İNDİRME MOTORU (KAYMAYI VE KARARMAYI BİTİRİR) 🌟
 // ==========================================
 function downloadTpl(elementId, fileName) {
     const card = document.getElementById(elementId);
@@ -237,7 +255,7 @@ function downloadTpl(elementId, fileName) {
 
     const originalTransform = card.style.transform;
 
-    // 1. html2canvas'ın şaşırmaması için görünmez bir devasa fiziksel oda yaratıyoruz
+    // html2canvas'ın şaşırmaması için görünmez devasa bir fiziksel oda yaratıyoruz
     const renderRoom = document.createElement('div');
     renderRoom.style.position = 'fixed';
     renderRoom.style.top = '0';
@@ -249,19 +267,19 @@ function downloadTpl(elementId, fileName) {
     renderRoom.style.zIndex = '-9999';
     document.body.appendChild(renderRoom);
 
-    // 2. Kartı stüdyodan alıp bu odaya tam boyutuyla koyuyoruz (Esnek kutular milim oynamaz)
+    // Kartı stüdyodan alıp bu odaya tam boyutuyla koyuyoruz
     card.style.transform = 'none';
     renderRoom.appendChild(card);
 
-    // 3. Tarayıcıya yeni düzeni çizmesi için zaman veriyoruz
+    // Tarayıcıya yeni düzeni çizmesi için zaman veriyoruz
     setTimeout(() => {
         html2canvas(card, { 
-            scale: 2, // Sosyal Medya için 2160x2700 HD Çözünürlük
+            scale: 2, // 2160x2700 Kalite
             backgroundColor: "#050505", 
             useCORS: true, 
             logging: false 
         }).then(canvas => {
-            // 4. Kartı stüdyodaki küçük yerine geri koy
+            // Kartı stüdyodaki yerine geri koy
             wrapper.appendChild(card);
             card.style.transform = originalTransform;
             document.body.removeChild(renderRoom);
@@ -276,11 +294,12 @@ function downloadTpl(elementId, fileName) {
             btn.style.backgroundColor = "";
         }).catch(err => {
             console.error("İndirme Hatası:", err);
+            alert("İndirme başarısız oldu.");
             wrapper.appendChild(card);
             card.style.transform = originalTransform;
             document.body.removeChild(renderRoom);
             btn.innerText = originalBtnText;
             btn.style.backgroundColor = "";
         });
-    }, 500); // 0.5 saniye bekle
+    }, 500); 
 }
