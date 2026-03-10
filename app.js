@@ -29,16 +29,18 @@ btnWatermark.addEventListener('click', () => {
 });
 
 // ==========================================
-// YARDIMCI FONKSİYONLAR 
+// YARDIMCI FONKSİYONLAR (Boyutlar 1080p için büyütüldü)
 // ==========================================
 function autoScaleText() {
     document.querySelectorAll('.auto-scale').forEach(el => {
-        let fontSize = 45; 
+        let fontSize = 80; 
+        if(el.classList.contains('out-sd-title')) fontSize = 60;
+        
         el.style.fontSize = fontSize + 'px';
         while (el.scrollHeight > el.parentElement.clientHeight || el.scrollWidth > el.parentElement.clientWidth) {
             fontSize--; 
             el.style.fontSize = fontSize + 'px';
-            if (fontSize <= 14) break; 
+            if (fontSize <= 25) break; 
         }
     });
 }
@@ -168,11 +170,10 @@ bindImage('fix2-logo', '.out-fix2-logo'); bindText('fix2-date', '.out-fix2-date'
 bindImage('fix3-logo', '.out-fix3-logo'); bindText('fix3-date', '.out-fix3-date'); bindText('fix3-tour', '.out-fix3-tour');
 bindText('hlt-name', '.out-hlt-name'); bindImage('hlt-img', '.out-hlt-img'); bindText('hlt-type', '.out-hlt-type'); bindText('hlt-date', '.out-hlt-date');
 
-// 🌟 17. HAFTANIN MAÇLARI - DİNAMİK GÖSTERİM KODU 🌟
+// 17. HAFTANIN MAÇLARI DİNAMİK GÖSTERİM KODU
 bindText('hw-title-input', '.out-hw-title');
 bindImage('hw-bg', 'bg-hw', true);
 
-// 6 maçın bağlamaları
 for(let i=1; i<=6; i++) {
     bindText(`hw-m${i}-home`, `.out-hw-m${i}-home`);
     bindText(`hw-m${i}-score`, `.out-hw-m${i}-score`, false);
@@ -181,7 +182,6 @@ for(let i=1; i<=6; i++) {
     bindImage(`hw-m${i}-alogo`, `.out-hw-m${i}-alogo`);
 }
 
-// Gösterilecek Maç Sayısı Şalteri
 const hwCountInput = document.getElementById('hw-match-count');
 if (hwCountInput) {
     hwCountInput.addEventListener('input', function(e) {
@@ -236,7 +236,7 @@ window.addEventListener('load', () => {
 });
 
 // ==========================================
-// 🌟 GÜVENLİ İNDİRME MOTORU (ORİJİNAL) 🌟
+// 🌟 GÜVENLİ İNDİRME MOTORU 🌟
 // ==========================================
 function downloadTpl(elementId, fileName) {
     const captureArea = document.getElementById(elementId);
@@ -252,6 +252,7 @@ function downloadTpl(elementId, fileName) {
     const originalLeft = captureArea.style.left;
     const originalZIndex = captureArea.style.zIndex;
 
+    // Kartı düz çekim için serbest bırak
     captureArea.style.transform = "none"; 
     captureArea.style.position = "fixed";
     captureArea.style.top = "0px";
@@ -260,11 +261,12 @@ function downloadTpl(elementId, fileName) {
 
     setTimeout(() => {
         html2canvas(captureArea, { 
-            scale: 2, 
+            scale: 2, // 1080x1350 * 2 = 2160x2700 Ultra HD Kalite
             backgroundColor: "#000", 
             useCORS: true, 
             logging: false 
         }).then(canvas => {
+            // Ekrana geri döndür
             captureArea.style.transform = originalTransform;
             captureArea.style.position = originalPosition;
             captureArea.style.top = originalTop;
