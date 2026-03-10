@@ -306,3 +306,112 @@ function downloadTpl(elementId, fileName) {
         });
     }, 500); 
 }
+
+// ==========================================
+// SADECE GÖRSEL YÜKLEME DÜZELTMESİ (AŞAĞIDAKİLERİ EKLE)
+// ==========================================
+
+// Yardımcı fonksiyon: Dosya girdisini bir görsel önizlemesine bağlar
+function bindImagePreview(inputId, outputSelectors, isBackground = false) {
+    const fileInput = document.getElementById(inputId);
+    if (!fileInput) return;
+
+    fileInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            const result = event.target.result;
+            // Bir selector stringi veya dizi kabul eder
+            const selectors = Array.isArray(outputSelectors) ? outputSelectors : [outputSelectors];
+            
+            selectors.forEach(selector => {
+                const outputElement = document.querySelector(selector);
+                if (!outputElement) return;
+
+                if (isBackground) {
+                    outputElement.style.backgroundImage = `url('${result}')`;
+                } else {
+                    outputElement.src = result;
+                }
+            });
+        };
+        reader.readAsDataURL(file);
+    });
+}
+
+// 1. Maç Günü
+bindImagePreview('mg-home-logo', '.out-mg-home-logo');
+bindImagePreview('mg-away-logo', '.out-mg-away-logo');
+bindImagePreview('mg-bg', '.out-mg-bg', true);
+
+// 2. İlk Yarı Sonucu
+bindImagePreview('iy-home-logo', '.out-iy-home-logo');
+bindImagePreview('iy-away-logo', '.out-iy-away-logo');
+bindImagePreview('iy-bg', '.out-iy-bg', true);
+
+// 3. Maç Sonucu
+bindImagePreview('ms-home-logo', '.out-ms-home-logo');
+bindImagePreview('ms-away-logo', '.out-ms-away-logo');
+bindImagePreview('ms-bg', '.out-ms-bg', true);
+
+// 4. İstatistik
+bindImagePreview('stat-home-logo', '.out-stat-home-logo');
+bindImagePreview('stat-away-logo', '.out-stat-away-logo');
+bindImagePreview('stat-bg', '.out-stat-bg', true);
+
+// 5. İlk 11 Kadrosu
+bindImagePreview('k-logo', '.out-k-logo');
+bindImagePreview('k-bg', '.out-k-bg', true);
+
+// 6. Transfer Merkez
+bindImagePreview('tr-logo', '.out-tr-logo');
+bindImagePreview('tr-img', '.out-tr-img');
+
+// 7. Flaş Açıklama
+bindImagePreview('qt-img', '.out-qt-img');
+
+// 8. Karşılaştırma
+bindImagePreview('h2h-p1-img', '.out-h2h-p1-img');
+bindImagePreview('h2h-p2-img', '.out-h2h-p2-img');
+
+// 9. Puan Durumu
+bindImagePreview('pd-t1-logo', '.out-pd-t1-logo');
+bindImagePreview('pd-t2-logo', '.out-pd-t2-logo');
+bindImagePreview('pd-t3-logo', '.out-pd-t3-logo');
+
+// 10. Maçın Hakemi
+bindImagePreview('ref-img', '.out-ref-img');
+bindImagePreview('ref-logo-home', '.out-ref-logo-home');
+bindImagePreview('ref-logo-away', '.out-ref-logo-away');
+
+// 11. Son Dakika
+bindImagePreview('sd-player-img', '.out-sd-player');
+bindImagePreview('sd-bg', '.out-sd-bg', true);
+
+// 12. Reels
+bindImagePreview('r-player-img', '.out-r-player');
+bindImagePreview('r-bg', '.out-r-bg', true);
+
+// 13. Maçın Adamı
+bindImagePreview('motm-img', '.out-motm-img');
+bindImagePreview('motm-logo', '.out-motm-logo');
+
+// 14. Dönüm Noktası
+bindImagePreview('mil-img', '.out-mil-img');
+
+// 15. Gelecek Fikstür
+bindImagePreview('fix-img', '.out-fix-img');
+bindImagePreview('fix1-logo', '.out-fix1-logo');
+bindImagePreview('fix2-logo', '.out-fix2-logo');
+bindImagePreview('fix3-logo', '.out-fix3-logo');
+
+// 16. Sağlık Raporu
+bindImagePreview('hlt-img', '.out-hlt-img');
+
+// 17. Haftanın Maçları (Döngü ile tüm maçlar için)
+for (let i = 1; i <= 6; i++) {
+    bindImagePreview(`hw-m${i}-hlogo`, `.out-hw-m${i}-hlogo`);
+    bindImagePreview(`hw-m${i}-alogo`, `.out-hw-m${i}-alogo`);
+}
