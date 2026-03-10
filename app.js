@@ -72,45 +72,50 @@ function bindText(inputId, targetClass, isUpper = true, isHtml = false) {
     });
 }
 
-// 🚨 BÜTÜN KİLİTLENMELERİ VE DONMALARI BİTİREN YENİ GÖRSEL MOTORU 🚨
+// 🚨 BÜTÜN KİLİTLENMELERİ VE MAVİLEŞME SORUNUNU ÇÖZEN GÖRSEL MOTORU 🚨
 function bindImage(inputId, targetSelector, isBackground = false) {
     const input = document.getElementById(inputId);
     if (!input) return;
-    
-    input.addEventListener('change', function(e) {
-        try {
-            const file = e.target.files[0];
-            if (!file) return;
-            
-            // Tarayıcıyı donduran eski FileReader yerine anında okuyan Blob URL Teknolojisi!
-            const objectUrl = URL.createObjectURL(file);
-            
-            if (inputId === 'k-logo') window.kLogoCached = objectUrl;
 
+    // 1. ÇÖZÜM: Aynı fotoğrafı iki kez seçebilmek için input'u TIKLAMA anında sıfırla.
+    // (Burası kilitlenmeyi önler)
+    input.addEventListener('click', function(e) {
+        e.target.value = ''; 
+    });
+    
+    // 2. Fotoğraf seçildiğinde hatasız oku ve bas
+    input.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        
+        // 3. ÇÖZÜM: Mavileşme sorununu çözen eski teknolojiye (FileReader) geri döndük
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            const result = event.target.result;
+            
+            // İlk 11 logosunu hafızaya al
+            if (inputId === 'k-logo') window.kLogoCached = result;
+
+            // Fotoğrafı şablona bas
             document.querySelectorAll(targetSelector).forEach(el => {
                 if (isBackground) {
-                    el.style.backgroundImage = `url('${objectUrl}')`;
+                    el.style.backgroundImage = `url('${result}')`;
                 } else {
-                    el.src = objectUrl;
+                    el.src = result;
                 }
             });
             
+            // İlk 11 logosu güncellendiyse dizilimi tetikle
             if (inputId === 'k-logo') {
                 const lineupInput = document.getElementById('k-lineup');
                 if (lineupInput) {
                     lineupInput.dispatchEvent(new Event('input'));
                 }
             }
+        };
 
-            // Aynı fotoğrafı tekrar seçebilmen için girdiyi güvenlice temizle
-            setTimeout(() => {
-                e.target.value = '';
-            }, 1000);
-
-        } catch(err) {
-            console.error("Görsel yüklenirken hata oluştu:", err);
-            alert("Görsel yüklenemedi. Lütfen geçerli bir resim dosyası seçtiğinizden emin olun.");
-        }
+        // Dosyayı Base64 olarak okut
+        reader.readAsDataURL(file);
     });
 }
 
@@ -220,6 +225,7 @@ bindText('r-player-name', '.out-r-name'); bindImage('r-player-img', '.out-r-play
 bindText('motm-name', '.out-motm-name'); bindImage('motm-img', '.out-motm-img'); bindImage('motm-logo', '.out-motm-logo');
 bindText('motm-s1-lbl', '.out-motm-s1-lbl'); bindText('motm-s1-val', '.out-motm-s1-val', false);
 bindText('motm-s2-lbl', '.out-motm-s2-lbl'); bindText('motm-s2-val', '.out-motm-s2-val', false);
+bindText('motm-s3-lbl', '.out-motm-s3-lbl'); bindText('motm-s3-val', '.out-motm-s3-val', false);
 bindText('mil-name', '.out-mil-name'); bindText('mil-num', '.out-mil-num', false); bindText('mil-text', '.out-mil-text'); bindImage('mil-img', '.out-mil-img');
 bindImage('fix-img', '.out-fix-img');
 bindImage('fix1-logo', '.out-fix1-logo'); bindText('fix1-date', '.out-fix1-date'); bindText('fix1-tour', '.out-fix1-tour');
