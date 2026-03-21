@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Haber Ağı V20 | Kesin Hizalama</title>
+    <title>Haber Ağı V21 | Cross-Platform Motoru</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
@@ -18,6 +18,7 @@
 
         .preview-container { display: flex; justify-content: center; align-items: flex-start; height: 100%; overflow-y: auto; padding-top: 2rem; padding-bottom: 5rem; }
         
+        /* GÖRÜNEN KANVAS */
         .capture-area { 
             width: 1080px; height: 1350px; min-width: 1080px; min-height: 1350px; 
             flex-shrink: 0; background-color: #0f172a; box-shadow: 0 0 50px rgba(0, 0, 0, 0.8); 
@@ -38,6 +39,10 @@
         .break-words { word-break: break-word; }
         ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: #0f172a; } ::-webkit-scrollbar-thumb { background: var(--theme-color); border-radius: 3px; }
         input[type="file"]::file-selector-button { background: var(--theme-color); color: white; border: none; padding: 6px 12px; border-radius: 6px; font-weight: 600; cursor: pointer; transition: opacity 0.3s; margin-right: 12px; }
+
+        /* KUSURSUZ HİZALAMA SINIFLARI */
+        .flex-center-y { display: flex; align-items: center; justify-content: center; }
+        .logo-box { width: 48px; height: 48px; border-radius: 12px; }
     </style>
 </head>
 <body class="h-screen flex flex-col overflow-hidden">
@@ -47,7 +52,7 @@
             <div class="w-12 h-12 rounded-xl theme-bg flex items-center justify-center font-black text-white text-2xl transition-all duration-300">H</div>
             <div>
                 <h1 class="text-2xl font-black tracking-widest leading-none">HABER AĞI</h1>
-                <p class="text-[10px] theme-text font-bold tracking-widest uppercase mt-1">V20 | KESİN HİZALAMA</p>
+                <p class="text-[10px] theme-text font-bold tracking-widest uppercase mt-1">V21 | GÖLGE RENDER MOTORU (Mobil Uyumlu)</p>
             </div>
         </div>
 
@@ -141,7 +146,7 @@
                     <div id="overlay-layer" class="absolute inset-0 bg-overlay blur-overlay"></div>
 
                     <div id="view-reels" class="template-view absolute inset-0 flex flex-col justify-center items-center bg-black hidden z-10">
-                        <video id="reels-video" class="absolute inset-0 w-full h-full object-cover" loop muted playsinline></video>
+                        <video id="reels-video" class="absolute inset-0 w-full h-full object-cover" loop muted playsinline crossorigin="anonymous"></video>
                     </div>
 
                     <div id="logo-wrapper" class="absolute top-12 left-12 z-50 bg-slate-900/80 backdrop-blur-2xl rounded-2xl border border-white/20 shadow-2xl inline-block" style="padding: 16px 24px; line-height: 0; white-space: nowrap;">
@@ -164,78 +169,6 @@
                         </div>
                     </div>
 
-                    <div id="view-manset" class="template-view absolute inset-0 flex flex-col justify-center items-center p-14 z-10">
-                        <div class="glass-card w-full flex flex-col h-[1050px] mt-16">
-                            <div class="w-full flex-none h-[500px] relative"><img id="preview-m-image" src="https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=800" class="w-full h-full object-cover"><div class="absolute inset-0 bg-gradient-to-t from-[#0f172a] via-[#0f172a]/20 to-transparent"></div></div>
-                            <div class="flex-1 p-14 flex flex-col justify-start relative">
-                                <span id="preview-m-tag" class="theme-text text-[32px] font-bold tracking-widest uppercase mb-6 inline-block" style="line-height: 1;">TEKNOLOJİ</span>
-                                <div class="flex-1 flex flex-col gap-6">
-                                    <h2 id="preview-m-title" class="text-[72px] font-black text-white drop-shadow-lg break-words shrink-0" style="line-height: 1.1;">YAPAY ZEKA İŞ DÜNYASINI DEĞİŞTİRİYOR</h2>
-                                    <p id="preview-m-detail" class="text-[42px] font-medium text-slate-300 leading-snug break-words">Şirketler uyum sağlamak için yarışıyor.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="view-altbant" class="template-view absolute inset-0 flex flex-col justify-end p-0 hidden z-10">
-                        <div class="w-full flex flex-col bg-slate-900/95 backdrop-blur-2xl border-t-8 theme-border">
-                            <div class="theme-bg inline-block self-start" style="padding: 16px 40px;">
-                                <span id="preview-ab-tag" class="text-[40px] font-black text-white tracking-widest uppercase block" style="line-height: 1;">SICAK GELİŞME</span>
-                            </div>
-                            <div class="p-12 pb-8">
-                                <h1 id="preview-ab-title" class="text-[80px] font-black text-white tracking-tight uppercase mb-4 break-words" style="line-height: 1.1;">BORSADA SERT DÜŞÜŞ</h1>
-                                <p id="preview-ab-detail" class="text-[46px] font-medium text-slate-300 leading-snug break-words">Küresel satış baskısı yansıdı.</p>
-                            </div>
-                            <div class="w-full h-3 theme-bg opacity-50"></div>
-                        </div>
-                    </div>
-                    
-                    <div id="view-aciklama" class="template-view absolute inset-0 flex flex-col justify-center items-center p-14 hidden z-10"><div class="glass-card w-full h-[1050px] mt-16 flex flex-col items-center p-20 text-center relative"><div class="absolute top-0 left-0 w-full h-4 theme-bg"></div><img id="preview-a-logo" src="https://via.placeholder.com/300x300.png?text=LOGO" class="w-48 h-48 object-contain mb-10"><h2 id="preview-a-title" class="text-[64px] font-black text-white mb-12 border-b-2 border-slate-600 pb-8 w-full uppercase tracking-wide" style="line-height: 1.1;">KAMUOYUNA DUYURU</h2><p id="preview-a-text" class="text-[44px] text-slate-300 leading-relaxed break-words w-full text-justify flex-1 overflow-hidden">Hukuki süreç başlatılmıştır.</p></div></div>
-                    
-                    <div id="view-yazar" class="template-view absolute inset-0 flex flex-col justify-center items-center p-14 hidden z-10">
-                        <div class="glass-card w-full h-[1050px] mt-16 flex flex-row p-0 overflow-hidden">
-                            <div class="w-2/5 h-full relative border-r border-slate-700/50">
-                                <img id="preview-y-img" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=600" class="w-full h-full object-cover grayscale opacity-80 mix-blend-luminosity">
-                                <div class="absolute inset-0 bg-gradient-to-r from-transparent to-[#0f172a]"></div>
-                                <div class="absolute bottom-10 left-0 w-full text-center">
-                                    <div class="theme-bg rounded inline-block" style="padding: 12px 24px;">
-                                        <span id="preview-y-tag" class="text-white text-xl font-bold tracking-widest uppercase block" style="line-height: 1;">GÜNÜN YAZISI</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="w-3/5 h-full p-16 flex flex-col justify-center relative">
-                                <span class="absolute top-10 left-10 text-[180px] theme-text opacity-20 serif-font leading-none">"</span>
-                                <h2 id="preview-y-name" class="text-[64px] font-black text-white mb-12 border-b border-slate-600/50 pb-6 relative z-10" style="line-height: 1.1;">Fatih Altaylı</h2>
-                                <p id="preview-y-text" class="text-[46px] text-slate-200 italic leading-[1.4] break-words relative z-10">Orta sınıf diye bir şey kalmayacak.</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div id="view-podcast" class="template-view absolute inset-0 flex flex-col justify-center items-center p-14 hidden z-10">
-                        <div class="glass-card w-full h-[1050px] mt-16 flex flex-col relative p-16 pt-24">
-                            <div class="absolute -top-16 left-1/2 transform -translate-x-1/2 rounded-full theme-bg border-[12px] border-[#0f172a] shadow-2xl z-20 inline-block text-center" style="padding: 24px;">
-                                <span class="text-white text-5xl block" style="line-height: 1;">🎙️</span>
-                            </div>
-                            <div class="flex items-center gap-10 mb-12 relative z-20">
-                                <img id="preview-pc-img" src="https://images.unsplash.com/photo-1557862921-37829c790f19?w=400" class="w-48 h-48 rounded-3xl object-cover border-4 theme-border">
-                                <div class="flex-1 bg-slate-900/40 p-6 rounded-2xl border border-white/10">
-                                    <h2 id="preview-pc-name" class="text-[60px] font-black text-white mb-4" style="line-height: 1.1;">Celal Şengör</h2>
-                                    <div class="bg-slate-950 rounded-md inline-block" style="padding: 12px 20px;">
-                                        <span id="preview-pc-tag" class="text-[28px] theme-text font-bold tracking-widest uppercase block" style="line-height: 1;">TEKE TEK BİLİM</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="relative flex-1 bg-slate-800/20 rounded-3xl p-10 border border-slate-700/30 flex items-center z-10">
-                                <span class="absolute top-0 left-4 text-[200px] theme-text opacity-10 serif-font leading-none z-0">"</span>
-                                <p id="preview-pc-text" class="text-[52px] font-medium text-white italic leading-[1.4] break-words relative z-10 w-full text-center">Mars'a gitmek bir macera değil, zorunluluktur.</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div id="view-alinti" class="template-view absolute inset-0 flex items-center justify-center p-14 hidden z-10"><div class="glass-card w-full p-20 flex flex-col text-center justify-center mt-16 min-h-[600px]"><p id="preview-al-text" class="text-[68px] serif-font italic text-white leading-tight mb-16 break-words">Geleceği tahmin etmenin en iyi yolu onu yaratmaktır.</p><div class="w-24 h-1 theme-bg mx-auto mb-8"></div><h3 id="preview-al-person" class="text-[44px] font-bold text-slate-400 tracking-wide uppercase">Peter Drucker</h3></div></div>
-                    <div id="view-tweet" class="template-view absolute inset-0 flex items-center justify-center p-14 hidden z-10"><div class="glass-card w-[950px] p-16 flex flex-col mt-16"><div class="flex items-center gap-6 mb-12"><img id="preview-tw-avatar" src="https://via.placeholder.com/200" class="w-32 h-32 rounded-full object-cover border border-slate-600 shrink-0"><div class="flex-1 overflow-hidden"><h3 id="preview-tw-name" class="text-[46px] font-bold text-white flex items-center gap-3 truncate" style="line-height: 1.1;">Elon Musk</h3><p id="preview-tw-handle" class="text-[36px] text-slate-400 truncate mt-2">@elonmusk</p></div></div><p id="preview-tw-text" class="text-[54px] font-normal text-white leading-[1.3] break-words">Yapay zeka modelleri artık kod yazıyor. 🚀</p></div></div>
-                    <div id="view-liste" class="template-view absolute inset-0 flex flex-col justify-center p-14 hidden z-10"><div class="glass-card w-full p-16 h-[1050px] mt-16 flex flex-col theme-border border-l-[16px] transition-colors"><h2 id="preview-l-title" class="text-[72px] font-black text-white mb-16 break-words flex-none" style="line-height: 1.1;">DÜNYANIN EN DEĞERLİ 3 ŞİRKETİ</h2><div id="preview-list-container" class="flex-1 flex flex-col justify-center gap-6 overflow-hidden"></div></div></div>
-                    
                     <div id="view-piyasa" class="template-view absolute inset-0 flex flex-col justify-center items-center p-14 hidden z-10">
                         <h2 class="text-[64px] font-black text-white mb-12 uppercase tracking-widest drop-shadow-lg mt-16 border-b-4 theme-border pb-4">PİYASALAR</h2>
                         <div class="grid grid-cols-2 gap-8 w-full px-4">
@@ -257,7 +190,15 @@
                             </div>
                         </div>
                     </div>
-                    
+
+                    <div id="view-manset" class="template-view absolute inset-0 flex flex-col justify-center items-center p-14 z-10"><div class="glass-card w-full flex flex-col h-[1050px] mt-16"><div class="w-full flex-none h-[500px] relative"><img id="preview-m-image" src="https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=800" class="w-full h-full object-cover"><div class="absolute inset-0 bg-gradient-to-t from-[#0f172a] via-[#0f172a]/20 to-transparent"></div></div><div class="flex-1 p-14 flex flex-col justify-start relative"><span id="preview-m-tag" class="theme-text text-[32px] font-bold tracking-widest uppercase mb-6 inline-block" style="line-height: 1;">TEKNOLOJİ</span><div class="flex-1 flex flex-col gap-6"><h2 id="preview-m-title" class="text-[72px] font-black text-white drop-shadow-lg break-words shrink-0" style="line-height: 1.1;">YAPAY ZEKA İŞ DÜNYASINI DEĞİŞTİRİYOR</h2><p id="preview-m-detail" class="text-[42px] font-medium text-slate-300 leading-snug break-words">Şirketler uyum sağlamak için yarışıyor.</p></div></div></div></div>
+                    <div id="view-altbant" class="template-view absolute inset-0 flex flex-col justify-end p-0 hidden z-10"><div class="w-full flex flex-col bg-slate-900/95 backdrop-blur-2xl border-t-8 theme-border"><div class="theme-bg inline-block self-start" style="padding: 16px 40px;"><span id="preview-ab-tag" class="text-[40px] font-black text-white tracking-widest uppercase block" style="line-height: 1;">SICAK GELİŞME</span></div><div class="p-12 pb-8"><h1 id="preview-ab-title" class="text-[80px] font-black text-white tracking-tight uppercase mb-4 break-words" style="line-height: 1.1;">BORSADA SERT DÜŞÜŞ</h1><p id="preview-ab-detail" class="text-[46px] font-medium text-slate-300 leading-snug break-words">Küresel satış baskısı yansıdı.</p></div><div class="w-full h-3 theme-bg opacity-50"></div></div></div>
+                    <div id="view-aciklama" class="template-view absolute inset-0 flex flex-col justify-center items-center p-14 hidden z-10"><div class="glass-card w-full h-[1050px] mt-16 flex flex-col items-center p-20 text-center relative"><div class="absolute top-0 left-0 w-full h-4 theme-bg"></div><img id="preview-a-logo" src="https://via.placeholder.com/300x300.png?text=LOGO" class="w-48 h-48 object-contain mb-10"><h2 id="preview-a-title" class="text-[64px] font-black text-white mb-12 border-b-2 border-slate-600 pb-8 w-full uppercase tracking-wide" style="line-height: 1.1;">KAMUOYUNA DUYURU</h2><p id="preview-a-text" class="text-[44px] text-slate-300 leading-relaxed break-words w-full text-justify flex-1 overflow-hidden">Hukuki süreç başlatılmıştır.</p></div></div>
+                    <div id="view-yazar" class="template-view absolute inset-0 flex flex-col justify-center items-center p-14 hidden z-10"><div class="glass-card w-full h-[1050px] mt-16 flex flex-row p-0 overflow-hidden"><div class="w-2/5 h-full relative border-r border-slate-700/50"><img id="preview-y-img" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=600" class="w-full h-full object-cover grayscale opacity-80 mix-blend-luminosity"><div class="absolute inset-0 bg-gradient-to-r from-transparent to-[#0f172a]"></div><div class="absolute bottom-10 left-0 w-full text-center"><div class="theme-bg rounded inline-block" style="padding: 12px 24px;"><span id="preview-y-tag" class="text-white text-xl font-bold tracking-widest uppercase block" style="line-height: 1;">GÜNÜN YAZISI</span></div></div></div><div class="w-3/5 h-full p-16 flex flex-col justify-center relative"><span class="absolute top-10 left-10 text-[180px] theme-text opacity-20 serif-font leading-none">"</span><h2 id="preview-y-name" class="text-[64px] font-black text-white mb-12 border-b border-slate-600/50 pb-6 relative z-10" style="line-height: 1.1;">Fatih Altaylı</h2><p id="preview-y-text" class="text-[46px] text-slate-200 italic leading-[1.4] break-words relative z-10">Orta sınıf diye bir şey kalmayacak.</p></div></div></div>
+                    <div id="view-podcast" class="template-view absolute inset-0 flex flex-col justify-center items-center p-14 hidden z-10"><div class="glass-card w-full h-[1050px] mt-16 flex flex-col relative p-16 pt-24"><div class="absolute -top-16 left-1/2 transform -translate-x-1/2 rounded-full theme-bg border-[12px] border-[#0f172a] shadow-2xl z-20 inline-block text-center" style="padding: 24px;"><span class="text-white text-5xl block" style="line-height: 1;">🎙️</span></div><div class="flex items-center gap-10 mb-12 relative z-20"><img id="preview-pc-img" src="https://images.unsplash.com/photo-1557862921-37829c790f19?w=400" class="w-48 h-48 rounded-3xl object-cover border-4 theme-border"><div class="flex-1 bg-slate-900/40 p-6 rounded-2xl border border-white/10"><h2 id="preview-pc-name" class="text-[60px] font-black text-white mb-4" style="line-height: 1.1;">Celal Şengör</h2><div class="bg-slate-950 rounded-md inline-block" style="padding: 12px 20px;"><span id="preview-pc-tag" class="text-[28px] theme-text font-bold tracking-widest uppercase block" style="line-height: 1;">TEKE TEK BİLİM</span></div></div></div><div class="relative flex-1 bg-slate-800/20 rounded-3xl p-10 border border-slate-700/30 flex items-center z-10"><span class="absolute top-0 left-4 text-[200px] theme-text opacity-10 serif-font leading-none z-0">"</span><p id="preview-pc-text" class="text-[52px] font-medium text-white italic leading-[1.4] break-words relative z-10 w-full text-center">Mars'a gitmek bir macera değil, zorunluluktur.</p></div></div></div>
+                    <div id="view-alinti" class="template-view absolute inset-0 flex items-center justify-center p-14 hidden z-10"><div class="glass-card w-full p-20 flex flex-col text-center justify-center mt-16 min-h-[600px]"><p id="preview-al-text" class="text-[68px] serif-font italic text-white leading-tight mb-16 break-words">Geleceği tahmin etmenin en iyi yolu onu yaratmaktır.</p><div class="w-24 h-1 theme-bg mx-auto mb-8"></div><h3 id="preview-al-person" class="text-[44px] font-bold text-slate-400 tracking-wide uppercase">Peter Drucker</h3></div></div>
+                    <div id="view-tweet" class="template-view absolute inset-0 flex items-center justify-center p-14 hidden z-10"><div class="glass-card w-[950px] p-16 flex flex-col mt-16"><div class="flex items-center gap-6 mb-12"><img id="preview-tw-avatar" src="https://via.placeholder.com/200" class="w-32 h-32 rounded-full object-cover border border-slate-600 shrink-0"><div class="flex-1 overflow-hidden"><h3 id="preview-tw-name" class="text-[46px] font-bold text-white flex items-center gap-3 truncate" style="line-height: 1.1;">Elon Musk</h3><p id="preview-tw-handle" class="text-[36px] text-slate-400 truncate mt-2">@elonmusk</p></div></div><p id="preview-tw-text" class="text-[54px] font-normal text-white leading-[1.3] break-words">Yapay zeka modelleri artık kod yazıyor. 🚀</p></div></div>
+                    <div id="view-liste" class="template-view absolute inset-0 flex flex-col justify-center p-14 hidden z-10"><div class="glass-card w-full p-16 h-[1050px] mt-16 flex flex-col theme-border border-l-[16px] transition-colors"><h2 id="preview-l-title" class="text-[72px] font-black text-white mb-16 break-words flex-none" style="line-height: 1.1;">DÜNYANIN EN DEĞERLİ 3 ŞİRKETİ</h2><div id="preview-list-container" class="flex-1 flex flex-col justify-center gap-6 overflow-hidden"></div></div></div>
                     <div id="view-karsilastirma" class="template-view absolute inset-0 flex flex-col justify-center items-center p-14 hidden z-10"><div class="glass-card w-full p-12 flex flex-col h-[1050px] mt-16"><div class="flex w-full h-[500px] gap-8 relative mb-12 flex-none"><div class="w-1/2 h-full rounded-3xl overflow-hidden border-4 border-slate-700/50"><img id="preview-k-img1" src="https://via.placeholder.com/400" class="w-full h-full object-cover"></div><div class="w-1/2 h-full rounded-3xl overflow-hidden border-4 border-slate-700/50"><img id="preview-k-img2" src="https://via.placeholder.com/400" class="w-full h-full object-cover"></div><div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-full theme-bg border-[12px] border-[#0f172a] shadow-2xl z-10 inline-block text-center" style="padding: 24px 20px;"><span class="text-white text-[44px] font-black italic block" style="line-height: 1;">VS</span></div></div><div class="flex-1 flex flex-col justify-center text-center overflow-hidden"><h2 id="preview-k-title" class="text-[64px] font-black text-white mb-6 break-words" style="line-height: 1.1;">KİRALAR VS ASGARİ ÜCRET</h2><p id="preview-k-detail" class="text-[40px] font-medium text-slate-300 leading-snug break-words">Büyükşehirlerde kriz büyüyor.</p></div></div></div>
                     <div id="view-anket" class="template-view absolute inset-0 flex flex-col justify-center items-center p-14 hidden z-10"><div class="glass-card w-full h-[1050px] mt-16 p-16 flex flex-col border-t-[12px] theme-border"><h2 id="preview-an-title" class="text-[64px] font-black text-white mb-16 text-center flex-none break-words" style="line-height: 1.1;">SİZCE KİM KAZANIR?</h2><div id="preview-anket-container" class="flex-1 flex flex-col justify-center gap-10 w-full px-4 overflow-hidden"></div></div></div>
                     <div id="view-dunya" class="template-view absolute inset-0 flex flex-col justify-center items-center p-14 hidden z-10"><div class="absolute top-[30%] left-[60%] w-32 h-32 flex items-center justify-center z-0 opacity-50"><div class="absolute w-full h-full border-4 theme-border rounded-full animate-ping"></div><div class="w-8 h-8 theme-bg rounded-full"></div></div><div class="glass-card w-[950px] p-16 mt-[400px] flex flex-col text-center border-t-[12px] theme-border shadow-2xl relative z-10"><span id="preview-w-loc" class="text-[32px] theme-text font-bold tracking-widest uppercase mb-6 drop-shadow-lg inline-block" style="line-height: 1;">ORTADOĞU</span><h2 id="preview-w-title" class="text-[72px] font-black text-white mb-6 break-words" style="line-height: 1.1;">BÖLGEDE TANSİYON YÜKSELİYOR</h2><p id="preview-w-detail" class="text-[40px] font-medium text-slate-300 leading-snug break-words mt-4">Askeri hareketlilik doğrulandı. Piyasalar tedirgin.</p></div></div>
@@ -282,7 +223,6 @@
                 captureArea.style.height = '1920px';
                 captureArea.style.minHeight = '1920px';
                 captureArea.style.transform = 'scale(0.24)';
-                
                 btn916.classList.replace('bg-slate-700', 'bg-indigo-600');
                 btn916.classList.remove('border', 'border-slate-600');
                 btn45.classList.replace('bg-indigo-600', 'bg-slate-700');
@@ -292,7 +232,6 @@
                 captureArea.style.height = '1350px';
                 captureArea.style.minHeight = '1350px';
                 captureArea.style.transform = 'scale(0.35)';
-                
                 btn45.classList.replace('bg-slate-700', 'bg-indigo-600');
                 btn45.classList.remove('border', 'border-slate-600');
                 btn916.classList.replace('bg-indigo-600', 'bg-slate-700');
@@ -321,7 +260,7 @@
                 let padSize = listItemsData.length > 5 ? 'px-5 py-4' : 'px-8 py-6';
                 previewContainer.innerHTML += `
                     <div class="flex items-center gap-6 bg-slate-800/40 ${padSize} rounded-2xl border border-slate-700/50">
-                        <div class="rounded-full theme-bg shrink-0 inline-block text-center" style="padding: 12px 24px;">
+                        <div class="rounded-full theme-bg inline-block text-center" style="padding: 12px 24px;">
                             <span class="font-black text-white text-3xl block" style="line-height: 1;">${index + 1}</span>
                         </div>
                         <p class="${textSize} font-medium text-white truncate w-full" style="line-height: 1;">${item}</p>
@@ -378,10 +317,7 @@
             } else {
                 bgUploadContainer.classList.remove('hidden'); overlay.classList.remove('hidden');
                 btnDownload.innerHTML = '📸 Çıktı Al';
-                
-                if(template === 'dunya') { mapBg.classList.remove('hidden'); mainBg.classList.add('hidden'); } 
-                else { mapBg.classList.add('hidden'); mainBg.classList.remove('hidden'); }
-
+                if(template === 'dunya') { mapBg.classList.remove('hidden'); mainBg.classList.add('hidden'); } else { mapBg.classList.add('hidden'); mainBg.classList.remove('hidden'); }
                 if(template === 'sondakika') { overlay.className = "absolute inset-0"; overlay.style.background = "linear-gradient(to top, rgba(2,6,23,1) 0%, rgba(2,6,23,0.6) 50%, rgba(2,6,23,0) 100%)"; } 
                 else if (template === 'altbant') { overlay.className = "absolute inset-0"; overlay.style.background = "none"; } 
                 else { overlay.className = "absolute inset-0 bg-overlay blur-overlay"; overlay.style.background = "linear-gradient(to top, rgba(2,6,23,0.95) 0%, rgba(2,6,23,0.7) 40%, rgba(2,6,23,0.4) 100%)"; }
@@ -485,39 +421,67 @@
             drawFrame();
         }
 
+        // ==========================================
+        // V21 GÖLGE MOTORU: KESİN ÇÖZÜM
+        // ==========================================
         async function downloadImage() {
-            const captureArea = document.getElementById('capture-area');
             const btn = document.getElementById('download-btn');
-            btn.innerHTML = 'İşleniyor...';
+            btn.innerHTML = '⏳ İşleniyor...';
             
-            // FONT YÜKLEME VE SCROLL KİLİDİ
+            // 1. Fontların yüklenmesini ve scroll pozisyonunu bekle/sıfırla
             await document.fonts.ready;
             window.scrollTo(0, 0);
+
+            // 2. Orijinal alanı hiç bozmadan KLONLA
+            const originalArea = document.getElementById('capture-area');
+            const clone = originalArea.cloneNode(true);
             
-            captureArea.style.transform = "none"; 
+            // 3. Klonu arka planda, ekrana sığma stresi olmayan güvenli bir yere al
+            const shadowContainer = document.createElement('div');
+            shadowContainer.style.position = 'fixed';
+            shadowContainer.style.top = '-10000px'; 
+            shadowContainer.style.left = '-10000px';
+            shadowContainer.style.width = '1080px';
+            shadowContainer.style.height = currentHeight + 'px';
             
-            setTimeout(() => {
-                html2canvas(captureArea, { 
-                    scale: 1.5, 
-                    useCORS: true, 
-                    backgroundColor: "#0f172a", 
-                    width: 1080, 
-                    height: 1350,
+            // Klonun üzerindeki küçültmeyi (scale) KALDIR
+            clone.style.transform = 'none';
+            clone.style.position = 'relative';
+            
+            // Klonu gizli alana yerleştir
+            shadowContainer.appendChild(clone);
+            document.body.appendChild(shadowContainer);
+
+            // Motorun klonu işlemesi için küçücük bir zaman tanı
+            await new Promise(resolve => setTimeout(resolve, 100));
+
+            try {
+                // 4. Fotoğrafı tamamen KLON üzerinden çek (Mobil reflow etkilemez)
+                const canvas = await html2canvas(clone, {
+                    scale: 1.5,
+                    useCORS: true,
+                    backgroundColor: "#0f172a",
+                    width: 1080,
+                    height: currentHeight,
+                    windowWidth: 1080,
+                    windowHeight: currentHeight,
+                    scrollX: 0,
+                    scrollY: 0,
                     logging: false
-                }).then(canvas => {
-                    let link = document.createElement('a');
-                    link.download = `HaberAgi_${currentTemplate}_${Date.now()}.png`;
-                    link.href = canvas.toDataURL("image/png", 1.0);
-                    link.click();
-                    
-                    captureArea.style.transform = "scale(0.35)"; 
-                    btn.innerHTML = '📸 Çıktı Al';
-                }).catch(err => {
-                    console.log(err);
-                    captureArea.style.transform = "scale(0.35)";
-                    btn.innerHTML = '📸 Hata!';
                 });
-            }, 300);
+
+                let link = document.createElement('a');
+                link.download = `HaberAgi_${currentTemplate}_${Date.now()}.png`;
+                link.href = canvas.toDataURL("image/png", 1.0);
+                link.click();
+            } catch (err) {
+                console.error(err);
+                alert('İndirme hatası! Lütfen tekrar deneyin.');
+            } finally {
+                // 5. İşlem bitince klonu sil, buton yazısını eski haline getir
+                document.body.removeChild(shadowContainer);
+                btn.innerHTML = '📸 Çıktı Al';
+            }
         }
         
         renderDynamicListForm();
