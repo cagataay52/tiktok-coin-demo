@@ -84,13 +84,16 @@
                     <button onclick="setTemplate('podcast')" class="bg-slate-800 hover:bg-slate-700 text-white py-2 rounded-lg font-semibold text-xs border border-slate-600 transition">🎙️ Podcast</button>
                     <button onclick="setTemplate('alinti')" class="bg-slate-800 hover:bg-slate-700 text-white py-2 rounded-lg font-semibold text-xs border border-slate-600 transition">💬 Söz</button>
                 </div>
-                <div class="grid grid-cols-6 gap-2">
+                <div class="grid grid-cols-6 gap-2 mb-3">
                     <button onclick="setTemplate('tweet')" class="bg-slate-800 hover:bg-slate-700 text-white py-2 rounded-lg font-semibold text-[10px] border border-slate-600 transition">🐦 Tweet</button>
                     <button onclick="setTemplate('liste')" class="bg-slate-800 hover:bg-slate-700 text-white py-2 rounded-lg font-semibold text-[10px] border border-slate-600 transition">📑 Liste</button>
                     <button onclick="setTemplate('piyasa')" class="bg-slate-800 hover:bg-slate-700 text-white py-2 rounded-lg font-semibold text-[10px] border border-slate-600 transition">📈 Piyasa</button>
                     <button onclick="setTemplate('karsilastirma')" class="bg-slate-800 hover:bg-slate-700 text-white py-2 rounded-lg font-semibold text-[10px] border border-slate-600 transition">⚔️ VS</button>
                     <button onclick="setTemplate('anket')" class="bg-amber-500/20 text-amber-400 py-2 rounded-lg font-semibold text-[10px] border border-amber-500/30 transition">📊 Anket</button>
                     <button onclick="setTemplate('dunya')" class="bg-blue-500/20 text-blue-400 py-2 rounded-lg font-semibold text-[10px] border border-blue-500/30 transition">🌍 Küresel</button>
+                </div>
+                <div class="grid grid-cols-1 gap-2">
+                    <button onclick="setTemplate('skor')" class="bg-blue-900/40 hover:bg-blue-800 text-blue-300 py-2 rounded-lg font-bold text-xs border border-blue-700/50 transition flex items-center justify-center gap-2">⚽ Skor Ağı (Maç Sonucu)</button>
                 </div>
             </div>
 
@@ -141,6 +144,29 @@
             <div id="form-karsilastirma" class="space-y-4 template-form hidden"><div class="grid grid-cols-2 gap-3"><div class="bg-slate-800 p-3 rounded-xl border border-slate-700"><label class="block text-xs text-slate-400 mb-2">Sol Görsel</label><input type="file" accept="image/*" onchange="handleFileUpload(this, 'preview-k-img1')" class="w-full text-xs text-slate-400"></div><div class="bg-slate-800 p-3 rounded-xl border border-slate-700"><label class="block text-xs text-slate-400 mb-2">Sağ Görsel</label><input type="file" accept="image/*" onchange="handleFileUpload(this, 'preview-k-img2')" class="w-full text-xs text-slate-400"></div></div><textarea id="k-title" oninput="updatePreview()" class="w-full bg-slate-800 border-slate-700 rounded-lg p-3 text-white font-bold" rows="2">KİRALAR VS ASGARİ ÜCRET</textarea><textarea id="k-detail" oninput="updatePreview()" class="w-full bg-slate-800 border-slate-700 rounded-lg p-3 text-white text-sm" rows="2">Büyükşehirlerde kriz büyüyor.</textarea></div>
             <div id="form-anket" class="space-y-4 template-form hidden"><input type="text" id="an-title" oninput="updatePreview()" class="w-full bg-slate-800 border-slate-700 rounded-lg p-3 text-white font-bold" value="SİZCE KİM KAZANIR?"><div id="dynamic-anket-container" class="space-y-2"></div><div class="flex gap-2"><button onclick="addAnketItem()" class="flex-1 theme-bg text-white py-2 rounded-lg font-bold text-sm">+ Şık</button><button onclick="removeAnketItem()" class="flex-1 bg-slate-700 text-white py-2 rounded-lg font-bold text-sm">- Sil</button></div></div>
             <div id="form-dunya" class="space-y-4 template-form hidden"><input type="text" id="w-loc" oninput="updatePreview()" class="w-full bg-slate-800 border-slate-700 rounded-lg p-3 text-white font-bold" value="ORTADOĞU"><textarea id="w-title" oninput="updatePreview()" class="w-full bg-slate-800 border-slate-700 rounded-lg p-3 text-white font-black text-xl" rows="2">BÖLGEDE TANSİYON YÜKSELİYOR</textarea><textarea id="w-detail" oninput="updatePreview()" class="w-full bg-slate-800 border-slate-700 rounded-lg p-3 text-white" rows="3">Askeri hareketlilik doğrulandı. Piyasalar tedirgin.</textarea></div>
+
+            <div id="form-skor" class="space-y-4 template-form hidden">
+                <input type="text" id="skor-turnuva" oninput="updatePreview()" class="w-full bg-slate-800 border-slate-700 rounded-lg p-3 text-white font-bold" value="SÜPER LİG">
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="bg-slate-800 p-3 rounded-xl border border-slate-700">
+                        <label class="block text-xs text-slate-400 mb-1">Ev Sahibi</label>
+                        <input type="text" id="skor-ev" oninput="updatePreview()" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white text-center font-bold" value="FENERBAHÇE">
+                    </div>
+                    <div class="bg-slate-800 p-3 rounded-xl border border-slate-700">
+                        <label class="block text-xs text-slate-400 mb-1">Deplasman</label>
+                        <input type="text" id="skor-deplasman" oninput="updatePreview()" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white text-center font-bold" value="GALATASARAY">
+                    </div>
+                    <div class="bg-slate-800 p-3 rounded-xl border border-slate-700">
+                        <label class="block text-xs text-slate-400 mb-1">Ev Skoru</label>
+                        <input type="text" id="skor-ev-skor" oninput="updatePreview()" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white text-center text-3xl font-black" value="2">
+                    </div>
+                    <div class="bg-slate-800 p-3 rounded-xl border border-slate-700">
+                        <label class="block text-xs text-slate-400 mb-1">Dep Skoru</label>
+                        <input type="text" id="skor-dep-skor" oninput="updatePreview()" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white text-center text-3xl font-black" value="0">
+                    </div>
+                </div>
+                <textarea id="skor-detay" oninput="updatePreview()" class="w-full bg-slate-800 border-slate-700 rounded-lg p-3 text-white text-sm" rows="2">Kadıköy'de muhteşem zafer!</textarea>
+            </div>
 
         </div>
 
@@ -233,6 +259,7 @@
                     <div id="view-podcast" class="template-view absolute inset-0 flex flex-col justify-center items-center p-14 hidden z-10"><div class="glass-card w-full h-[1050px] mt-16 flex flex-col relative p-16 pt-24"><div class="absolute -top-16 left-1/2 transform -translate-x-1/2 w-32 h-32 rounded-full theme-bg flex items-center justify-center border-[12px] border-[#0f172a] shadow-2xl z-20"><span class="text-white text-5xl">🎙️</span></div><div class="flex items-center gap-10 mb-12 relative z-20"><img id="preview-pc-img" src="https://images.unsplash.com/photo-1557862921-37829c790f19?w=400" class="w-48 h-48 rounded-3xl object-cover border-4 theme-border"><div class="flex-1 bg-slate-900/40 p-6 rounded-2xl border border-white/10"><h2 id="preview-pc-name" class="text-[60px] font-black text-white mb-4">Celal Şengör</h2><div class="bg-slate-950 px-4 py-2 rounded-md inline-block"><span id="preview-pc-tag" class="text-[28px] theme-text font-bold tracking-widest uppercase">TEKE TEK BİLİM</span></div></div></div><div class="relative flex-1 bg-slate-800/20 rounded-3xl p-10 border border-slate-700/30 flex items-center z-10"><span class="absolute top-0 left-4 text-[200px] theme-text opacity-10 serif-font leading-none z-0">"</span><p id="preview-pc-text" class="text-[52px] font-medium text-white italic leading-[1.4] break-words relative z-10 w-full text-center">Mars'a gitmek bir macera değil, zorunluluktur.</p></div></div></div>
                     
                     <div id="view-alinti" class="template-view absolute inset-0 flex items-center justify-center p-14 hidden z-10"><div class="glass-card w-full p-20 flex flex-col text-center justify-center mt-16 min-h-[600px]"><p id="preview-al-text" class="text-[68px] serif-font italic text-white leading-tight mb-16 break-words">Geleceği tahmin etmenin en iyi yolu onu yaratmaktır.</p><div class="w-24 h-1 theme-bg mx-auto mb-8"></div><h3 id="preview-al-person" class="text-[44px] font-bold text-slate-400 tracking-wide uppercase">Peter Drucker</h3></div></div>
+                    
                     <div id="view-tweet" class="template-view absolute inset-0 flex items-center justify-center p-14 hidden z-10"><div class="glass-card w-[950px] p-16 flex flex-col mt-16"><div class="flex items-center gap-6 mb-12"><img id="preview-tw-avatar" src="https://via.placeholder.com/200" class="w-32 h-32 rounded-full object-cover border border-slate-600 shrink-0"><div class="flex-1 overflow-hidden"><h3 id="preview-tw-name" class="text-[46px] font-bold text-white flex items-center gap-3 truncate">Elon Musk</h3><p id="preview-tw-handle" class="text-[36px] text-slate-400 truncate mt-2">@elonmusk</p></div></div><p id="preview-tw-text" class="text-[54px] font-normal text-white leading-[1.3] break-words">Yapay zeka modelleri artık kod yazıyor. 🚀</p></div></div>
                     
                     <div id="view-liste" class="template-view absolute inset-0 flex flex-col justify-center p-14 hidden z-10"><div class="glass-card w-full p-16 h-[1050px] mt-16 flex flex-col theme-border border-l-[16px] transition-colors"><h2 id="preview-l-title" class="text-[72px] font-black text-white mb-16 break-words flex-none">DÜNYANIN EN DEĞERLİ 3 ŞİRKETİ</h2><div id="preview-list-container" class="flex-1 flex flex-col justify-center gap-6 overflow-hidden"></div></div></div>
@@ -242,6 +269,37 @@
                     <div id="view-anket" class="template-view absolute inset-0 flex flex-col justify-center items-center p-14 hidden z-10"><div class="glass-card w-full h-[1050px] mt-16 p-16 flex flex-col border-t-[12px] theme-border"><h2 id="preview-an-title" class="text-[64px] font-black text-white mb-16 text-center flex-none break-words">SİZCE KİM KAZANIR?</h2><div id="preview-anket-container" class="flex-1 flex flex-col justify-center gap-10 w-full px-4 overflow-hidden"></div></div></div>
                     
                     <div id="view-dunya" class="template-view absolute inset-0 flex flex-col justify-center items-center p-14 hidden z-10"><div class="absolute top-[30%] left-[60%] w-32 h-32 flex items-center justify-center z-0 opacity-50"><div class="absolute w-full h-full border-4 theme-border rounded-full animate-ping"></div><div class="w-8 h-8 theme-bg rounded-full"></div></div><div class="glass-card w-[950px] p-16 mt-[400px] flex flex-col text-center border-t-[12px] theme-border shadow-2xl relative z-10"><div class="theme-bg px-4 py-2 rounded inline-block mb-6"><span id="preview-w-loc" class="text-[28px] text-white font-bold tracking-widest uppercase">ORTADOĞU</span></div><h2 id="preview-w-title" class="text-[72px] font-black text-white mb-6 break-words">BÖLGEDE TANSİYON YÜKSELİYOR</h2><p id="preview-w-detail" class="text-[40px] font-medium text-slate-300 leading-snug break-words mt-4">Askeri hareketlilik doğrulandı. Piyasalar tedirgin.</p></div></div>
+
+                    <div id="view-skor" class="template-view absolute inset-0 flex flex-col justify-center items-center p-14 hidden z-10">
+                        <div class="glass-card w-full h-[1050px] mt-16 flex flex-col items-center justify-center p-12 border-t-[12px] theme-border relative overflow-hidden">
+                            <div class="absolute inset-0 bg-slate-900/40 mix-blend-overlay"></div>
+                            <div class="theme-bg px-8 py-3 rounded-full mb-16 z-10 shadow-xl">
+                                <span id="preview-skor-turnuva" class="text-white text-[32px] font-bold tracking-widest uppercase">SÜPER LİG</span>
+                            </div>
+                            <div class="flex items-center justify-between w-full px-4 z-10 mb-16">
+                                <div class="flex flex-col items-center w-2/5">
+                                    <div class="w-48 h-48 bg-slate-800/80 rounded-full flex items-center justify-center border-4 border-slate-600 mb-8 shadow-2xl">
+                                        <span class="text-[80px]">🛡️</span>
+                                    </div>
+                                    <h2 id="preview-skor-ev" class="text-[52px] font-black text-white text-center break-words w-full leading-tight">FENERBAHÇE</h2>
+                                </div>
+                                <div class="flex items-center justify-center w-1/5 gap-6">
+                                    <span id="preview-skor-ev-skor" class="text-[140px] font-black theme-text drop-shadow-2xl">2</span>
+                                    <span class="text-[80px] text-slate-600 font-black">-</span>
+                                    <span id="preview-skor-dep-skor" class="text-[140px] font-black text-white drop-shadow-2xl">0</span>
+                                </div>
+                                <div class="flex flex-col items-center w-2/5">
+                                    <div class="w-48 h-48 bg-slate-800/80 rounded-full flex items-center justify-center border-4 border-slate-600 mb-8 shadow-2xl">
+                                        <span class="text-[80px]">🛡️</span>
+                                    </div>
+                                    <h2 id="preview-skor-deplasman" class="text-[52px] font-black text-white text-center break-words w-full leading-tight">GALATASARAY</h2>
+                                </div>
+                            </div>
+                            <div class="bg-slate-900/80 backdrop-blur-xl w-[90%] p-8 rounded-3xl border border-slate-700 text-center z-10 mt-auto shadow-2xl">
+                                <p id="preview-skor-detay" class="text-[44px] font-semibold text-slate-200 leading-snug">Kadıköy'de muhteşem zafer!</p>
+                            </div>
+                        </div>
+                    </div>
 
                 </div>
             </div>
@@ -350,6 +408,7 @@
                 if(template === 'dunya') { mapBg.classList.remove('hidden'); mainBg.classList.add('hidden'); } else { mapBg.classList.add('hidden'); mainBg.classList.remove('hidden'); }
                 if(template === 'sondakika') { overlay.className = "absolute inset-0"; overlay.style.background = "linear-gradient(to top, rgba(2,6,23,1) 0%, rgba(2,6,23,0.6) 50%, rgba(2,6,23,0) 100%)"; } 
                 else if (template === 'altbant') { overlay.className = "absolute inset-0"; overlay.style.background = "none"; } 
+                else if (template === 'skor') { overlay.className = "absolute inset-0"; overlay.style.background = "linear-gradient(to top, rgba(2,6,23,0.98) 0%, rgba(2,6,23,0.8) 40%, rgba(2,6,23,0.6) 100%)"; }
                 else { overlay.className = "absolute inset-0 bg-overlay blur-overlay"; overlay.style.background = "linear-gradient(to top, rgba(2,6,23,0.95) 0%, rgba(2,6,23,0.7) 40%, rgba(2,6,23,0.4) 100%)"; }
             }
 
@@ -401,6 +460,7 @@
                 else if (currentTemplate === 'piyasa') { document.getElementById('preview-p-dolar-val').innerText = document.getElementById('p-dolar-val').value; document.getElementById('preview-p-euro-val').innerText = document.getElementById('p-euro-val').value; document.getElementById('preview-p-altin-val').innerText = document.getElementById('p-altin-val').value; document.getElementById('preview-p-borsa-val').innerText = document.getElementById('p-borsa-val').value; } 
                 else if (currentTemplate === 'karsilastirma') { document.getElementById('preview-k-title').innerText = document.getElementById('k-title').value; document.getElementById('preview-k-detail').innerText = document.getElementById('k-detail').value; } 
                 else if (currentTemplate === 'dunya') { document.getElementById('preview-w-loc').innerText = document.getElementById('w-loc').value; document.getElementById('preview-w-title').innerText = document.getElementById('w-title').value; document.getElementById('preview-w-detail').innerText = document.getElementById('w-detail').value; }
+                else if (currentTemplate === 'skor') { document.getElementById('preview-skor-turnuva').innerText = document.getElementById('skor-turnuva').value; document.getElementById('preview-skor-ev').innerText = document.getElementById('skor-ev').value; document.getElementById('preview-skor-deplasman').innerText = document.getElementById('skor-deplasman').value; document.getElementById('preview-skor-ev-skor').innerText = document.getElementById('skor-ev-skor').value; document.getElementById('preview-skor-dep-skor').innerText = document.getElementById('skor-dep-skor').value; document.getElementById('preview-skor-detay').innerText = document.getElementById('skor-detay').value; }
             } catch (e) {}
         }
 
@@ -416,7 +476,7 @@
             
             const logoContainer = document.getElementById('logo-wrapper');
             
-            // Video Modu için html-to-image kullanıyoruz (html2canvas'tan daha stabil)
+            // Video Modu için html-to-image kullanıyoruz
             const logoDataUrl = await htmlToImage.toPng(logoContainer, { backgroundColor: null, pixelRatio: 1.5 });
             const logoImg = new Image();
             logoImg.src = logoDataUrl;
@@ -471,11 +531,10 @@
             
             setTimeout(async () => {
                 try {
-                    // Html2Canvas KESİNLİKLE KULLANILMIYOR. Tamamen htmlToImage motoru!
                     const dataUrl = await htmlToImage.toPng(captureArea, { 
                         pixelRatio: 1.5, 
                         backgroundColor: "#0f172a",
-                        style: { transform: 'none' } // Ölçeklendirme hatasını bloke eder
+                        style: { transform: 'none' } 
                     });
                     
                     let link = document.createElement('a');
