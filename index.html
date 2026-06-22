@@ -8,7 +8,6 @@
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
     
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -32,7 +31,7 @@
         <header class="top-header">
             <h1 class="insta-logo">Swipper</h1>
             <div class="header-icons">
-                <button class="icon-btn"><i class="fa-regular fa-heart"></i></button>
+                <button class="icon-btn" id="theme-toggle-btn"><i class="fa-regular fa-moon"></i></button>
             </div>
         </header>
 
@@ -45,7 +44,7 @@
                         <span class="plus-icon"><i class="fa-solid fa-plus"></i></span>
                         <span>Hikayen</span>
                     </div>
-                    </div>
+                </div>
                 <div id="feed-container"></div>
             </section>
 
@@ -53,27 +52,39 @@
                 <div class="search-bar-container">
                     <div class="search-bar">
                         <i class="fa-solid fa-magnifying-glass"></i>
-                        <input type="text" id="search-input" placeholder="Ara">
+                        <input type="text" id="search-input" placeholder="Gerçek kullanıcıları ara...">
                     </div>
                 </div>
-                <div class="explore-grid" id="explore-grid"></div>
+                <div id="search-results" class="user-list"></div>
             </section>
 
             <section id="dm-tab" class="tab-content">
-                <div class="dm-header">
-                    <h3 id="dm-username-title">Mesajlar</h3>
-                    <i class="fa-regular fa-pen-to-square" style="font-size: 20px;"></i>
-                </div>
-                <div id="dm-list" class="user-list">
+                <div id="dm-list-container">
+                    <div class="dm-header">
+                        <h3>Mesajlar</h3>
                     </div>
+                    <div id="dm-list" class="user-list"></div>
+                </div>
+                
+                <div id="dm-chat-container" style="display: none;">
+                    <div class="chat-header">
+                        <button id="back-to-dm-list" class="icon-btn"><i class="fa-solid fa-arrow-left"></i></button>
+                        <img id="chat-user-avatar" src="" class="post-avatar" style="margin-left: 10px;">
+                        <span id="chat-user-username" class="post-author"></span>
+                    </div>
+                    <div id="chat-messages" class="chat-messages-box"></div>
+                    <div class="chat-input-container">
+                        <input type="text" id="chat-message-input" placeholder="Mesaj yaz...">
+                        <button id="send-message-btn" class="icon-btn"><i class="fa-solid fa-paper-plane" style="color: var(--blue);"></i></button>
+                    </div>
+                </div>
             </section>
 
             <section id="profile-tab" class="tab-content">
                 <div class="profile-top-bar">
-                    <span class="profile-username" id="display-username"><i class="fa-solid fa-lock" style="font-size:12px;"></i> yukleniyor</span>
+                    <span class="profile-username" id="display-username">@yukleniyor</span>
                     <div style="display: flex; gap: 15px;">
-                        <button class="icon-btn" id="logout-btn"><i class="fa-solid fa-right-from-bracket"></i></button>
-                        <button class="icon-btn"><i class="fa-solid fa-bars"></i></button>
+                        <button class="icon-btn" id="logout-btn"><i class="fa-solid fa-right-from-bracket" style="color: #ed4956;"></i></button>
                     </div>
                 </div>
                 
@@ -84,25 +95,22 @@
                     </div>
                     <div class="profile-stats">
                         <div class="stat"><strong id="post-count">0</strong><span>Gönderi</span></div>
-                        <div class="stat"><strong>1.2B</strong><span>Takipçi</span></div>
-                        <div class="stat"><strong>450</strong><span>Takip</span></div>
+                        <div class="stat"><strong>0</strong><span>Takipçi</span></div>
+                        <div class="stat"><strong>0</strong><span>Takip</span></div>
                     </div>
                 </div>
                 
                 <div class="profile-bio-section">
-                    <strong class="profile-name" id="display-name">Çağatay Kılıç</strong>
+                    <strong class="profile-name" id="display-name">Yükleniyor...</strong>
                     <p class="profile-bio-text" id="display-bio">Biyografi yükleniyor...</p>
                 </div>
                 
                 <div class="profile-actions">
                     <button class="edit-profile-btn" id="edit-profile-trigger">Profili Düzenle</button>
-                    <button class="edit-profile-btn">Profili Paylaş</button>
                 </div>
 
                 <div class="profile-tabs">
                     <div class="p-tab active"><i class="fa-solid fa-table-cells"></i></div>
-                    <div class="p-tab"><i class="fa-solid fa-clapperboard"></i></div>
-                    <div class="p-tab"><i class="fa-regular fa-user"></i></div>
                 </div>
                 <div class="profile-grid" id="profile-grid-container"></div>
             </section>
@@ -112,7 +120,7 @@
         <nav class="bottom-nav">
             <a href="#" class="nav-item active" data-target="home-tab"><i class="fa-solid fa-house"></i></a>
             <a href="#" class="nav-item" data-target="explore-tab"><i class="fa-solid fa-magnifying-glass"></i></a>
-            <a href="#" class="nav-item" id="nav-add-btn"><i class="fa-regular fa-square-plus" style="font-size: 28px;"></i></a>
+            <a href="#" class="nav-item" id="nav-add-btn"><i class="fa-regular fa-square-plus" style="font-size: 26px;"></i></a>
             <a href="#" class="nav-item" data-target="dm-tab"><i class="fa-brands fa-facebook-messenger"></i></a>
             <a href="#" class="nav-item" data-target="profile-tab"><img src="https://i.pravatar.cc/150?img=11" class="nav-profile-pic" id="nav-profile-img"></a>
         </nav>
@@ -125,7 +133,7 @@
                 <button class="close-btn"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="input-group">
-                <label>Adın</label>
+                <label>Ad Soyad</label>
                 <input type="text" id="input-name" class="custom-input">
             </div>
             <div class="input-group">
@@ -136,7 +144,7 @@
                 <label>Biyografi</label>
                 <textarea id="input-bio" class="custom-textarea" style="height: 60px;"></textarea>
             </div>
-            <button id="save-profile-btn" class="primary-btn" style="margin-top: 10px;">Kaydet</button>
+            <button id="save-profile-btn" class="primary-btn">Kaydet</button>
         </div>
     </div>
 
@@ -149,9 +157,6 @@
             <div class="create-option" id="btn-create-story-menu">
                 <i class="fa-solid fa-circle-plus"></i><span>Hikaye Paylaş</span>
             </div>
-            <div class="create-option" id="btn-create-reel">
-                <i class="fa-solid fa-clapperboard"></i><span>Reels Videosu</span>
-            </div>
         </div>
     </div>
 
@@ -161,12 +166,12 @@
                 <h3>Yeni Gönderi</h3>
                 <button class="close-btn" id="close-post"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <div class="image-upload-preview" id="post-image-preview" style="display: none; position: relative;">
-                <img id="preview-img" src="" style="width: 100%; border-radius: 8px; max-height: 300px; object-fit: cover;">
+            <div class="image-upload-preview" id="post-image-preview" style="display: none;">
+                <img id="preview-img" src="" style="width: 100%; border-radius: 8px; max-height: 250px; object-fit: cover;">
             </div>
-            <button id="select-post-image" class="secondary-btn" style="margin-bottom: 10px;">Galeriden Seç</button>
-            <textarea id="post-content-input" class="custom-textarea" placeholder="Açıklama yaz..." style="height: 80px; border:none; border-bottom: 1px solid var(--border-color);"></textarea>
-            <button id="save-post-btn" class="primary-btn" style="margin-top: 10px;">Paylaş</button>
+            <button id="select-post-image" class="secondary-btn" style="margin-bottom: 10px;">Galeriden Fotoğraf Seç</button>
+            <textarea id="post-content-input" class="custom-textarea" placeholder="Açıklama yaz..." style="height: 60px;"></textarea>
+            <button id="save-post-btn" class="primary-btn">Paylaş</button>
         </div>
     </div>
 
