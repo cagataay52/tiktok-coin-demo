@@ -24,13 +24,13 @@ document.addEventListener("DOMContentLoaded", () => {
     let postsCache = {}; 
     let selectedPostImageBase64 = null;
     let activeChatUserId = null;
-    let activeChatId = null; // Gerçek zamanlı oda ID'si
+    let activeChatId = null; 
     let storyTimer = null;
     let currentSharePostId = null; 
     let currentEditPostId = null;  
     let currentEditPostCaption = "";
 
-    // Sohbet odası ID'si üretici (Benzersiz ID)
+    // Sohbet odası ID'sini alfabetik sırala (uid1_uid2) - Karışmayı engeller
     function getChatRoomId(uid1, uid2) {
         return uid1 < uid2 ? uid1 + '_' + uid2 : uid2 + '_' + uid1;
     }
@@ -166,6 +166,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const postModal = document.getElementById('post-modal');
     
     document.getElementById('header-add-btn').onclick = (e) => { e.preventDefault(); createOptionsModal.style.display = "flex"; };
+    
     document.getElementById('btn-create-post').onclick = () => {
         createOptionsModal.style.display = "none";
         postModal.style.display = "flex";
@@ -207,7 +208,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     };
 
-    // --- 5. HİKAYELER (24 SAAT) ---
+    // --- 5. HİKAYELER ---
     const storyUpload = document.getElementById('story-image-upload');
     document.getElementById('add-story-btn').onclick = () => storyUpload.click();
     document.getElementById('btn-create-story-menu').onclick = () => { createOptionsModal.style.display = "none"; storyUpload.click(); };
@@ -291,7 +292,6 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById('story-viewer-modal').style.display = "none";
         document.getElementById('story-progress-bar').style.width = '0%';
     }
-    document.getElementById('close-story-viewer').onclick = closeStory;
 
     // --- 6. AKIŞ VE PROFİL YÖNETİMİ ---
     function generatePostHTML(id, post, uData, showOptions) {
@@ -449,7 +449,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     };
 
-    // --- 9. BAŞKASININ PROFİLİNE GİRME VE MESAJ GÖNDERME ---
+    // --- 9. KEŞFET VE BAŞKASININ PROFİLİ ---
     document.getElementById('search-input').oninput = function() {
         const results = document.getElementById('search-results');
         results.innerHTML = "";
@@ -458,7 +458,6 @@ document.addEventListener("DOMContentLoaded", () => {
             if(uid === currentUser.uid) return;
             const u = usersCache[uid];
             if(u.username.toLowerCase().includes(queryVal) || u.name.toLowerCase().includes(queryVal)) {
-                // Tıklandığında direkt DM'ye değil, profiline git
                 results.insertAdjacentHTML('beforeend', `
                     <div class="user-item" onclick="openOtherProfile('${uid}')">
                         <img src="${u.avatar}">
@@ -509,12 +508,27 @@ document.addEventListener("DOMContentLoaded", () => {
         Object.keys(usersCache).forEach(uid => {
             if(uid === currentUser.uid) return;
             const u = usersCache[uid];
+            const chatId = getChatRoomId(currentUser.uid, uid);
+
+            // Başlangıçta boş şablon
             list.insertAdjacentHTML('beforeend', `
                 <div class="user-item" onclick="openChatWith('${uid}')">
                     <img src="${u.avatar}">
-                    <div class="user-info"><span class="name">${u.name}</span><span class="msg-preview">Mesaj göndermek için tıkla</span></div>
+                    <div class="user-info">
+                        <span class="name">${u.name}</span>
+                        <span class="msg-preview" id="preview-${uid}">Sohbeti başlat...</span>
+                    </div>
                 </div>
             `);
+
+            // Son mesajı canlı çek (Sadece en son 1 mesajı alır, kasmayı önler)
+            db.collection('chats').doc(chatId).collection('messages').orderBy('createdAt', 'desc').limit(1).onSnapshot(snap => {
+                if(!snap.empty) {
+                    const lastMsg = snap.docs[0].data();
+                    const pre = document.getElementById(`preview-${uid}`);
+                    if(pre) pre.innerText = (lastMsg.senderId === currentUser.uid ? "Sen: " : "") + lastMsg.text;
+                }
+            });
         });
     }
 
@@ -541,16 +555,27 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById('dm-list-container').style.display = "block";
     };
 
-    document.getElementById('send-message-btn').onclick = () => {
-        const text = document.getElementById('chat-message-input').value;
+    function sendChatMessage() {
+        const inputEl = document.getElementById('chat-message-input');
+        const text = inputEl.value;
         if(text.trim() === "" || !activeChatId) return;
 
         db.collection('chats').doc(activeChatId).collection('messages').add({
             senderId: currentUser.uid,
             text: text,
             createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        }).then(() => document.getElementById('chat-message-input').value = "");
-    };
+        }).then(() => inputEl.value = "");
+    }
+
+    document.getElementById('send-message-btn').onclick = sendChatMessage;
+
+    // Klavyeden Enter'a basınca mesaj göndersin
+    document.getElementById('chat-message-input').addEventListener("keypress", function(event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            sendChatMessage();
+        }
+    });
 
     function loadLiveChatMessages() {
         if(!activeChatId) return;
@@ -563,7 +588,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 const cls = msg.senderId === currentUser.uid ? 'sent' : 'received';
                 box.insertAdjacentHTML('beforeend', `<div class="chat-msg ${cls}">${msg.text}</div>`);
             });
-            box.scrollTop = box.scrollHeight; 
+            box.scrollTop = box.scrollHeight; // Yeni mesaj gelince en aşağı kaydırır
         });
     }
 
@@ -629,6 +654,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // --- 13. TÜM MODALLARI BOŞLUĞA TIKLAYINCA KAPATMA ---
     document.querySelectorAll('.modal').forEach(modal => {
         modal.addEventListener('click', (e) => {
+            // Eğer doğrudan siyah/saydam alana tıklandıysa
             if(e.target === modal) modal.style.display = "none";
         });
     });
