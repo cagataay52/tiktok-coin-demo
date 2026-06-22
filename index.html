@@ -14,7 +14,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
     
-    <link rel="stylesheet" href="style.css?v=4">
+    <link rel="stylesheet" href="style.css?v=5">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body class="light-mode"> 
@@ -32,7 +32,6 @@
     </div>
 
     <div id="app-container" style="display: none;">
-        
         <header class="top-header">
             <h1 class="insta-logo">Swipper</h1>
             <div class="header-icons">
@@ -42,7 +41,6 @@
         </header>
 
         <main id="main-content">
-            
             <section id="home-tab" class="tab-content active">
                 <div class="stories-container" id="stories-wrapper">
                     <div class="story create-story" id="add-story-btn">
@@ -70,12 +68,9 @@
 
             <section id="dm-tab" class="tab-content">
                 <div id="dm-list-container">
-                    <div class="dm-header">
-                        <h3>Mesajlar</h3>
-                    </div>
+                    <div class="dm-header"><h3>Mesajlar</h3></div>
                     <div id="dm-list" class="user-list"></div>
                 </div>
-                
                 <div id="dm-chat-container" style="display: none;">
                     <div class="chat-header">
                         <button id="back-to-dm-list" class="icon-btn"><i class="fa-solid fa-arrow-left"></i></button>
@@ -95,7 +90,6 @@
                     <span class="profile-username" id="display-username">@yukleniyor</span>
                     <button class="icon-btn" id="logout-btn"><i class="fa-solid fa-right-from-bracket" style="color: #ed4956; font-size: 18px;"></i></button>
                 </div>
-                
                 <div class="profile-header">
                     <div class="avatar-container" id="avatar-container">
                         <img src="" class="profile-avatar" id="main-profile-pic">
@@ -107,22 +101,18 @@
                         <div class="stat"><strong>0</strong><span>Takip</span></div>
                     </div>
                 </div>
-                
                 <div class="profile-bio-section">
                     <strong class="profile-name" id="display-name">Yükleniyor...</strong>
                     <p class="profile-bio-text" id="display-bio">Biyografi yükleniyor...</p>
                 </div>
-                
                 <div class="profile-actions">
                     <button class="edit-profile-btn" id="edit-profile-trigger">Profili Düzenle</button>
                     <button class="edit-profile-btn" id="theme-toggle-btn"><i class="fa-regular fa-moon"></i> Tema</button>
                 </div>
-
                 <div class="profile-tabs">
                     <div class="p-tab active" data-target="p-grid"><i class="fa-solid fa-table-cells"></i></div>
                     <div class="p-tab" data-target="p-tweets"><i class="fa-solid fa-bars-staggered"></i></div>
                 </div>
-                
                 <div id="p-grid" class="profile-tab-content active"></div>
                 <div id="p-tweets" class="profile-tab-content"></div>
             </section>
@@ -133,7 +123,6 @@
                     <span class="profile-username" id="other-profile-username">@kullanici</span>
                     <div style="width: 24px;"></div>
                 </div>
-                
                 <div class="profile-header">
                     <div class="avatar-container"><img src="" class="profile-avatar" id="other-profile-pic"></div>
                     <div class="profile-stats">
@@ -142,16 +131,13 @@
                         <div class="stat"><strong>0</strong><span>Takip</span></div>
                     </div>
                 </div>
-                
                 <div class="profile-bio-section">
                     <strong class="profile-name" id="other-profile-name">İsim Yükleniyor...</strong>
                     <p class="profile-bio-text" id="other-profile-bio">Biyografi yükleniyor...</p>
                 </div>
-                
                 <div class="profile-actions">
                     <button class="primary-btn" id="other-profile-msg-btn" style="width: 100%;">Mesaj Gönder</button>
                 </div>
-
                 <div class="profile-tabs"><div class="p-tab active"><i class="fa-solid fa-table-cells"></i></div></div>
                 <div class="profile-grid" id="other-profile-grid"></div>
             </section>
@@ -188,26 +174,33 @@
             <div id="story-progress-bar" style="height: 100%; background: white; width: 0%; border-radius: 3px;"></div>
         </div>
         <img id="story-viewer-img" src="" style="width: 100%; height: 100%; object-fit: contain;">
+        
+        <div class="story-reply-container" style="position: absolute; bottom: 20px; left: 15px; right: 15px; display: flex; gap: 10px; z-index: 3001;">
+            <input type="text" id="story-reply-input" placeholder="Mesaj gönder..." style="flex: 1; padding: 12px 20px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.3); background: transparent; color: white; outline: none;">
+            <button id="send-story-reply" style="background: none; border: none; color: white; font-size: 20px; cursor: pointer;"><i class="fa-solid fa-paper-plane"></i></button>
+        </div>
+    </div>
+
+    <div id="comments-modal" class="modal">
+        <div class="modal-content bottom-sheet" style="height: 70vh; padding: 0; display: flex; flex-direction: column;">
+            <div class="modal-drag-handle" style="margin-top: 15px;"></div>
+            <div class="modal-header" style="padding: 0 15px 15px 15px; border-bottom: 1px solid var(--border-color); text-align: center;">
+                <h3 style="width: 100%; text-align: center;">Yorumlar</h3>
+            </div>
+            <div id="comments-list" style="flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 15px;"></div>
+            <div class="chat-input-container" style="position: relative; bottom: 0; border-radius: 0 0 16px 16px;">
+                <input type="text" id="comment-input" placeholder="Yorum ekle...">
+                <button id="send-comment-btn" class="icon-btn"><i class="fa-solid fa-paper-plane" style="color: var(--blue);"></i></button>
+            </div>
+        </div>
     </div>
 
     <div id="edit-profile-modal" class="modal">
         <div class="modal-content bottom-sheet">
-            <div class="modal-header">
-                <h3>Profili Düzenle</h3>
-                <button class="close-btn"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            <div class="input-group">
-                <label>Ad Soyad</label>
-                <input type="text" id="input-name" class="custom-input">
-            </div>
-            <div class="input-group">
-                <label>Kullanıcı Adı</label>
-                <input type="text" id="input-username" class="custom-input">
-            </div>
-            <div class="input-group">
-                <label>Biyografi</label>
-                <textarea id="input-bio" class="custom-textarea" style="height: 60px;"></textarea>
-            </div>
+            <div class="modal-header"><h3>Profili Düzenle</h3><button class="close-btn"><i class="fa-solid fa-xmark"></i></button></div>
+            <div class="input-group"><label>Ad Soyad</label><input type="text" id="input-name" class="custom-input"></div>
+            <div class="input-group"><label>Kullanıcı Adı</label><input type="text" id="input-username" class="custom-input"></div>
+            <div class="input-group"><label>Biyografi</label><textarea id="input-bio" class="custom-textarea" style="height: 60px;"></textarea></div>
             <button id="save-profile-btn" class="primary-btn">Kaydet</button>
         </div>
     </div>
@@ -215,40 +208,38 @@
     <div id="create-options-modal" class="modal">
         <div class="modal-content bottom-sheet" style="padding: 10px 0;">
             <div class="modal-drag-handle"></div>
-            <div class="create-option" id="btn-create-post">
-                <i class="fa-solid fa-table-cells"></i><span>Gönderi veya Tweet Paylaş</span>
-            </div>
-            <div class="create-option" id="btn-create-story-menu">
-                <i class="fa-solid fa-circle-plus"></i><span>Hikaye Paylaş</span>
-            </div>
+            <div class="create-option" id="btn-create-post"><i class="fa-solid fa-table-cells"></i><span>Gönderi veya Tweet Paylaş</span></div>
+            <div class="create-option" id="btn-create-reel"><i class="fa-solid fa-clapperboard"></i><span>Reels Videosu Paylaş</span></div>
+            <div class="create-option" id="btn-create-story-menu"><i class="fa-solid fa-circle-plus"></i><span>Hikaye Paylaş</span></div>
+        </div>
+    </div>
+
+    <div id="reel-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header"><h3>Yeni Reels Paylaş</h3><button class="close-btn" id="close-reel"><i class="fa-solid fa-xmark"></i></button></div>
+            <p style="font-size: 12px; color: #ed4956; text-align: center; margin-bottom: 5px;">Sistem sınırı: Lütfen 1MB altı çok kısa bir video seçin.</p>
+            <textarea id="reel-content-input" class="custom-textarea" placeholder="Video açıklaması..." style="height: 60px; border: none; border-bottom: 1px solid var(--border-color); font-size: 14px;"></textarea>
+            <button id="select-reel-video" class="secondary-btn" style="margin-top: 10px;"><i class="fa-solid fa-video"></i> Video Seç</button>
+            <button id="save-reel-btn" class="primary-btn" style="margin-top: 10px; display: none;">Reels Paylaş</button>
         </div>
     </div>
 
     <div id="post-options-modal" class="modal">
         <div class="modal-content bottom-sheet" style="padding: 0;">
             <div class="modal-drag-handle" style="margin-top: 15px;"></div>
-            <div class="create-option" id="opt-edit-post">
-                <i class="fa-solid fa-pen"></i><span>Düzenle</span>
-            </div>
-            <div class="create-option" id="opt-del-post" style="color: #ed4956; border-bottom:none;">
-                <i class="fa-solid fa-trash" style="color: #ed4956;"></i><span>Sil</span>
-            </div>
+            <div class="create-option" id="opt-edit-post"><i class="fa-solid fa-pen"></i><span>Düzenle</span></div>
+            <div class="create-option" id="opt-del-post" style="color: #ed4956; border-bottom:none;"><i class="fa-solid fa-trash" style="color: #ed4956;"></i><span>Sil</span></div>
         </div>
     </div>
 
     <div id="post-modal" class="modal">
         <div class="modal-content">
-            <div class="modal-header">
-                <h3>Yeni Paylaşım</h3>
-                <button class="close-btn" id="close-post"><i class="fa-solid fa-xmark"></i></button>
-            </div>
+            <div class="modal-header"><h3>Yeni Paylaşım</h3><button class="close-btn" id="close-post"><i class="fa-solid fa-xmark"></i></button></div>
             <textarea id="post-content-input" class="custom-textarea" placeholder="Neler düşünüyorsun?" style="height: 80px; border: none; border-bottom: 1px solid var(--border-color); font-size: 16px;"></textarea>
-            
             <div class="image-upload-preview" id="post-image-preview" style="display: none; position: relative;">
                 <img id="preview-img" src="" style="width: 100%; border-radius: 8px; max-height: 250px; object-fit: cover;">
                 <button id="remove-post-image" style="position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.6); color: white; border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer;"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            
             <button id="select-post-image" class="secondary-btn" style="margin-top: 10px;"><i class="fa-regular fa-image"></i> Fotoğraf Ekle</button>
             <button id="save-post-btn" class="primary-btn" style="margin-top: 10px;">Paylaş</button>
         </div>
@@ -256,10 +247,7 @@
 
     <div id="edit-post-modal" class="modal">
         <div class="modal-content">
-            <div class="modal-header">
-                <h3>Gönderiyi Düzenle</h3>
-                <button class="close-btn"><i class="fa-solid fa-xmark"></i></button>
-            </div>
+            <div class="modal-header"><h3>Gönderiyi Düzenle</h3><button class="close-btn"><i class="fa-solid fa-xmark"></i></button></div>
             <textarea id="edit-post-input" class="custom-textarea" style="height: 100px; font-size: 15px;"></textarea>
             <button id="update-post-btn" class="primary-btn">Değişiklikleri Kaydet</button>
         </div>
@@ -267,10 +255,7 @@
 
     <div id="share-modal" class="modal">
         <div class="modal-content bottom-sheet">
-            <div class="modal-header">
-                <h3>Gönderiyi Paylaş</h3>
-                <button class="close-btn"><i class="fa-solid fa-xmark"></i></button>
-            </div>
+            <div class="modal-header"><h3>Gönderiyi Paylaş</h3><button class="close-btn"><i class="fa-solid fa-xmark"></i></button></div>
             <div id="share-users-list" class="user-list" style="max-height: 250px; overflow-y: auto;"></div>
         </div>
     </div>
@@ -278,6 +263,7 @@
     <input type="file" id="profile-upload" accept="image/*" style="display: none;">
     <input type="file" id="post-image-upload" accept="image/*" style="display: none;">
     <input type="file" id="story-image-upload" accept="image/*" style="display: none;">
+    <input type="file" id="reel-video-upload" accept="video/mp4,video/x-m4v,video/*" style="display: none;">
 
     <script src="app.js"></script>
 </body>
