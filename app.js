@@ -1,4 +1,3 @@
-// FIREBASE KONFİGÜRASYONU
 const firebaseConfig = {
     apiKey: "AIzaSyCTbvB4-LBG-jP8zNkJhLNEaQfQpTAdEjA",
     authDomain: "swipper-2f2a4.firebaseapp.com",
@@ -21,11 +20,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const authError = document.getElementById('auth-error');
     
     let currentUser = null;
-    let usersCache = {}; // Tüm kullanıcıları hafızada tutup senkronize etmek için
+    let usersCache = {}; 
     let selectedPostImageBase64 = null;
     let activeChatUserId = null;
+    let storyTimer = null;
 
-    // --- GEÇİCİ GÖRSEL SIKIŞTIRICI (Firestore 1MB Sınırını Aşma Motoru) ---
+    // GÖRSEL SIKIŞTIRICI
     function compressAndConvert(file, callback) {
         const reader = new FileReader();
         reader.onload = function(e) {
@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 const canvas = document.createElement('canvas');
                 let width = img.width;
                 let height = img.height;
-                const MAX_SIZE = 500; // Maksimum 500px genişlik/yükseklik
+                const MAX_SIZE = 800; // Kaliteyi biraz artırdık (800px)
 
                 if (width > height) {
                     if (width > MAX_SIZE) { height *= MAX_SIZE / width; width = MAX_SIZE; }
@@ -45,8 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 const ctx = canvas.getContext('2d');
                 ctx.drawImage(img, 0, 0, width, height);
                 
-                // JPEG formatında %60 kalitede sıkıştırıp Base64 çıktısı verir
-                const compressedBase64 = canvas.toDataURL('image/jpeg', 0.6);
+                const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
                 callback(compressedBase64);
             };
             img.src = e.target.result;
@@ -74,19 +73,17 @@ document.addEventListener("DOMContentLoaded", () => {
         authError.style.display = "block";
     }
 
-    // --- 2. GERÇEK ZAMANLI KULLANICI MOTORU VE KORUMASI ---
+    // --- 2. GERÇEK ZAMANLI KULLANICI MOTORU ---
     auth.onAuthStateChanged((user) => {
         if (user) {
             currentUser = user;
             authScreen.style.display = "none";
             appContainer.style.display = "block";
             
-            // Tüm veritabanı kullanıcılarını canlı dinlemeye al (Arama ve DM'leri senkronize tutar)
             db.collection('users').onSnapshot(snapshot => {
                 usersCache = {};
                 snapshot.forEach(doc => { usersCache[doc.id] = doc.data(); });
                 
-                // Kendi profilimiz yoksa varsayılan olarak Firestore'da oluştur
                 if (!usersCache[user.uid]) {
                     const defaultProfile = {
                         name: user.email.split('@')[0],
@@ -102,14 +99,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 renderExplore();
                 renderDMList();
                 renderStories();
-            }, err => {
-                // VERİTABANI KURALI HATASI ALIRSA KULLANICIYI BİLGİLENDİR
-                alert("Firestore İzin Hatası! Lütfen Firebase Console -> Firestore Database -> Rules sekmesinden kuralları 'allow read, write: if true;' olarak güncelleyin.");
             });
 
             loadRealtimePosts();
             loadProfileGrid();
-            loadLiveChatMessages();
         } else {
             currentUser = null;
             authScreen.style.display = "flex";
@@ -149,7 +142,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     };
 
-    // --- 4. PROFİL RESMİ DEĞİŞTİRME ---
     const profileUpload = document.getElementById('profile-upload');
     document.getElementById('avatar-container').onclick = () => profileUpload.click();
     profileUpload.onchange = (e) => {
@@ -159,7 +151,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     };
 
-    // --- 5. GÖNDERİ PAYLAŞMA ---
+    // --- 4. TWEET / GÖNDERİ PAYLAŞMA (GÖRSEL İSTEĞE BAĞLI) ---
     const createOptionsModal = document.getElementById('create-options-modal');
     const postModal = document.getElementById('post-modal');
     
@@ -169,6 +161,7 @@ document.addEventListener("DOMContentLoaded", () => {
         createOptionsModal.style.display = "none";
         postModal.style.display = "flex";
         document.getElementById('post-image-preview').style.display = "none";
+        document.getElementById('post-content-input').value = "";
         selectedPostImageBase64 = null;
     };
 
@@ -182,12 +175,23 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     };
 
+    document.getElementById('remove-post-image').onclick = () => {
+        selectedPostImageBase64 = null;
+        document.getElementById('post-image-preview').style.display = "none";
+        document.getElementById('post-image-upload').value = "";
+    };
+
     document.getElementById('save-post-btn').onclick = () => {
         const caption = document.getElementById('post-content-input').value;
-        if(!selectedPostImageBase64) { alert("Lütfen bir fotoğraf seçin!"); return; }
+        
+        // Eğer ne metin ne de fotoğraf yoksa uyarı ver
+        if(!selectedPostImageBase64 && caption.trim() === "") { 
+            alert("Lütfen metin yazın veya bir fotoğraf seçin!"); 
+            return; 
+        }
         
         db.collection('posts').add({
-            imageUrl: selectedPostImageBase64,
+            imageUrl: selectedPostImageBase64 || null, // Görsel yoksa null gönder
             caption: caption,
             authorId: currentUser.uid,
             createdAt: firebase.firestore.FieldValue.serverTimestamp(),
@@ -195,10 +199,11 @@ document.addEventListener("DOMContentLoaded", () => {
         }).then(() => {
             postModal.style.display = "none";
             document.getElementById('post-content-input').value = "";
+            selectedPostImageBase64 = null;
         });
     };
 
-    // --- 6. HİKAYE PAYLAŞMA ---
+    // --- 5. HİKAYE PAYLAŞMA VE İZLEME MOTORU ---
     const storyUpload = document.getElementById('story-image-upload');
     document.getElementById('add-story-btn').onclick = () => storyUpload.click();
     document.getElementById('btn-create-story-menu').onclick = () => { createOptionsModal.style.display = "none"; storyUpload.click(); };
@@ -210,34 +215,88 @@ document.addEventListener("DOMContentLoaded", () => {
                 imageUrl: compressedBase64,
                 authorId: currentUser.uid,
                 createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            }).then(() => alert("Hikayen başarıyla yüklendi!"));
+            });
         });
     };
 
     function renderStories() {
-        const wrapper = document.getElementById('stories-wrapper');
-        const myBtn = wrapper.children[0];
-        wrapper.innerHTML = "";
-        wrapper.appendChild(myBtn);
+        db.collection('stories').orderBy('createdAt', 'desc').onSnapshot(snapshot => {
+            const wrapper = document.getElementById('stories-wrapper');
+            const myBtn = wrapper.children[0];
+            wrapper.innerHTML = "";
+            wrapper.appendChild(myBtn);
 
-        db.collection('stories').orderBy('createdAt', 'desc').get().then(snapshot => {
+            const seenUsers = new Set(); // Her kullanıcının sadece 1 (en son) hikayesi görünsün
+            
+            // Eğer kendi hikayemiz varsa listeye ekleyelim
+            let hasMyStory = false;
+
             snapshot.forEach(doc => {
                 const story = doc.data();
+                
+                if (story.authorId === currentUser.uid && !hasMyStory) {
+                    hasMyStory = true;
+                    // Kendi "Hikayen" butonumuzu tıklanabilir hale getir
+                    myBtn.onclick = () => openStory(story.imageUrl, usersCache[currentUser.uid].username, usersCache[currentUser.uid].avatar);
+                    myBtn.querySelector('.story-ring').style.background = "var(--insta-gradient)"; // Renklendir
+                    myBtn.querySelector('.plus-icon').style.display = "none"; // Artı işaretini kaldır
+                }
+                
+                if (seenUsers.has(story.authorId) || story.authorId === currentUser.uid) return;
+                seenUsers.add(story.authorId);
+
                 const uData = usersCache[story.authorId];
-                if(!uData || story.authorId === currentUser.uid) return;
+                if(!uData) return;
 
                 wrapper.insertAdjacentHTML('beforeend', `
-                    <div class="story" onclick="viewStory('${story.imageUrl}')">
+                    <div class="story" onclick="openStory('${story.imageUrl}', '${uData.username}', '${uData.avatar}')">
                         <div class="story-ring"><img src="${uData.avatar}"></div>
                         <span>${uData.username}</span>
                     </div>
                 `);
             });
+            
+            // Eğer kendi hikayemiz yoksa artı butonu işlevini geri ver
+            if(!hasMyStory) {
+                myBtn.onclick = () => storyUpload.click();
+                myBtn.querySelector('.story-ring').style.background = "transparent";
+                myBtn.querySelector('.plus-icon').style.display = "flex";
+            }
         });
     }
-    window.viewStory = (src) => alert("Hikaye Görüntüleniyor. Tam ekran modülü yakında aktifleşecek.");
 
-    // --- 7. AKIŞ VE GRID YÜKLEME ---
+    // Gerçek Hikaye İzleme Olayı
+    window.openStory = (imgUrl, username, avatar) => {
+        clearTimeout(storyTimer);
+        document.getElementById('story-viewer-img').src = imgUrl;
+        document.getElementById('story-viewer-username').innerText = username;
+        document.getElementById('story-viewer-avatar').src = avatar;
+        document.getElementById('story-viewer-modal').style.display = "flex";
+
+        // İlerleme çubuğu animasyonu
+        const bar = document.getElementById('story-progress-bar');
+        bar.style.transition = 'none';
+        bar.style.width = '0%';
+        setTimeout(() => {
+            bar.style.transition = 'width 5s linear';
+            bar.style.width = '100%';
+        }, 50);
+
+        // 5 Saniye sonra otomatik kapat
+        storyTimer = setTimeout(() => {
+            closeStory();
+        }, 5000);
+    };
+
+    function closeStory() {
+        clearTimeout(storyTimer);
+        document.getElementById('story-viewer-modal').style.display = "none";
+        document.getElementById('story-progress-bar').style.width = '0%';
+    }
+
+    document.getElementById('close-story-viewer').onclick = closeStory;
+
+    // --- 6. AKIŞ VE GRID YÜKLEME (Hibrit Tasarım) ---
     function loadRealtimePosts() {
         db.collection("posts").orderBy("createdAt", "desc").onSnapshot(snapshot => {
             const feed = document.getElementById('feed-container');
@@ -246,13 +305,27 @@ document.addEventListener("DOMContentLoaded", () => {
                 const post = doc.data();
                 const uData = usersCache[post.authorId] || { username: "kullanici", avatar: "https://i.pravatar.cc/150" };
                 
+                let timeStr = "Az önce";
+                if(post.createdAt) {
+                    timeStr = post.createdAt.toDate().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                }
+
+                // Resim yoksa (sadece tweet ise) resim etiketini hiç basma
+                const imgHTML = post.imageUrl ? `<img class="post-image" src="${post.imageUrl}">` : '';
+                
+                // Metin yoksa caption'ı hiç basma
+                const captionHTML = post.caption.trim() !== "" ? `<div class="post-caption">${post.imageUrl ? `<span>${uData.username}</span>` : ''}${post.caption}</div>` : '';
+
                 feed.insertAdjacentHTML('beforeend', `
                     <div class="post">
-                        <div class="post-header"><img class="post-avatar" src="${uData.avatar}"><span class="post-author">${uData.username}</span></div>
-                        <img class="post-image" src="${post.imageUrl}">
+                        <div class="post-header">
+                            <img class="post-avatar" src="${uData.avatar}">
+                            <span class="post-author">${uData.username}</span>
+                            <span class="post-time-feed">· ${timeStr}</span>
+                        </div>
+                        ${!post.imageUrl ? captionHTML : ''} ${imgHTML}
                         <div class="post-actions"><i class="fa-regular fa-heart"></i><i class="fa-regular fa-comment"></i></div>
-                        <div class="post-caption"><span>${uData.username}</span>${post.caption}</div>
-                    </div>
+                        ${post.imageUrl ? captionHTML : ''} </div>
                 `);
             });
         });
@@ -267,14 +340,17 @@ document.addEventListener("DOMContentLoaded", () => {
                 const post = doc.data();
                 if(post.authorId === currentUser.uid) {
                     count++;
-                    container.insertAdjacentHTML('beforeend', `<div class="grid-item"><img src="${post.imageUrl}"></div>`);
+                    // Sadece resimli olanları ızgaraya ekle
+                    if(post.imageUrl) {
+                        container.insertAdjacentHTML('beforeend', `<div class="grid-item"><img src="${post.imageUrl}"></div>`);
+                    }
                 }
             });
             document.getElementById('post-count').innerText = count;
         });
     }
 
-    // --- 8. GERÇEK KULLANICI KEŞFET VE ARAMA SİSTEMİ ---
+    // --- 7. KEŞFET (ARAMA) ---
     function renderExplore() {
         const results = document.getElementById('search-results');
         results.innerHTML = "";
@@ -295,7 +371,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     document.getElementById('search-input').oninput = renderExplore;
 
-    // --- 9. GERÇEK ZAMANLI DM (MESAJLAŞMA) MOTORU ---
+    // --- 8. GERÇEK ZAMANLI DM ---
     function renderDMList() {
         const list = document.getElementById('dm-list');
         list.innerHTML = "";
@@ -306,7 +382,7 @@ document.addEventListener("DOMContentLoaded", () => {
             list.insertAdjacentHTML('beforeend', `
                 <div class="user-item" onclick="openChatWith('${uid}')">
                     <img src="${u.avatar}">
-                    <div class="user-info"><span class="name">${u.name}</span><span class="msg-preview">Sohbeti açmak için tıkla</span></div>
+                    <div class="user-info"><span class="name">${u.name}</span><span class="msg-preview">Mesaj göndermek için tıkla</span></div>
                 </div>
             `);
         });
@@ -320,7 +396,6 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById('chat-user-avatar').src = u.avatar;
         document.getElementById('chat-user-username').innerText = u.username;
         
-        // Aktif tabı mesajlar yap
         document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
         document.getElementById('dm-tab').classList.add('active');
         
@@ -355,18 +430,17 @@ document.addEventListener("DOMContentLoaded", () => {
             box.innerHTML = "";
             snapshot.forEach(doc => {
                 const msg = doc.data();
-                // Sadece iki kullanıcı arasındaki mesajları filtrele
                 if((msg.senderId === currentUser.uid && msg.receiverId === activeChatUserId) || 
                    (msg.senderId === activeChatUserId && msg.receiverId === currentUser.uid)) {
                     const cls = msg.senderId === currentUser.uid ? 'sent' : 'received';
                     box.insertAdjacentHTML('beforeend', `<div class="chat-msg ${cls}">${msg.text}</div>`);
                 }
             });
-            box.scrollTop = box.scrollHeight; // Sohbeti otomatik aşağı kaydır
+            box.scrollTop = box.scrollHeight; 
         });
     }
 
-    // --- 10. SEKME VE KARANLIK MOD AYARLARI ---
+    // --- 9. SEKME VE KARANLIK MOD AYARLARI ---
     document.getElementById('theme-toggle-btn').onclick = () => {
         document.body.classList.toggle('dark-mode');
         const icon = document.getElementById('theme-toggle-btn').children[0];
@@ -384,7 +458,6 @@ document.addEventListener("DOMContentLoaded", () => {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
             document.getElementById(item.dataset.target).classList.add('active');
             
-            // Eğer DM sekmesine basıldıysa sohbet listesini sıfırla
             if(item.dataset.target === 'dm-tab') {
                 document.getElementById('dm-chat-container').style.display = "none";
                 document.getElementById('dm-list-container').style.display = "block";
@@ -393,5 +466,9 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    document.querySelectorAll('.close-btn').forEach(btn => btn.onclick = (e) => e.target.closest('.modal').style.display = "none");
+    document.querySelectorAll('.close-btn').forEach(btn => btn.onclick = (e) => {
+        if(e.target.id !== 'close-story-viewer') {
+            e.target.closest('.modal').style.display = "none";
+        }
+    });
 });

@@ -52,7 +52,7 @@
                 <div class="search-bar-container">
                     <div class="search-bar">
                         <i class="fa-solid fa-magnifying-glass"></i>
-                        <input type="text" id="search-input" placeholder="Gerçek kullanıcıları ara...">
+                        <input type="text" id="search-input" placeholder="Kullanıcı ara...">
                     </div>
                 </div>
                 <div id="search-results" class="user-list"></div>
@@ -126,6 +126,20 @@
         </nav>
     </div>
 
+    <div id="story-viewer-modal" class="modal" style="background: #000; z-index: 3000;">
+        <div class="story-viewer-header" style="position: absolute; top: 20px; left: 0; width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 0 15px; z-index: 3001;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <img id="story-viewer-avatar" src="" style="width: 36px; height: 36px; border-radius: 50%; object-fit: cover;">
+                <span id="story-viewer-username" style="color: white; font-weight: 600; font-size: 14px;"></span>
+            </div>
+            <button class="close-btn" id="close-story-viewer" style="color: white; font-size: 28px;">&times;</button>
+        </div>
+        <div style="position: absolute; top: 10px; left: 10px; right: 10px; height: 3px; background: rgba(255,255,255,0.3); border-radius: 3px; z-index: 3001;">
+            <div id="story-progress-bar" style="height: 100%; background: white; width: 0%; border-radius: 3px;"></div>
+        </div>
+        <img id="story-viewer-img" src="" style="width: 100%; height: 100%; object-fit: contain;">
+    </div>
+
     <div id="edit-profile-modal" class="modal">
         <div class="modal-content bottom-sheet">
             <div class="modal-header">
@@ -152,7 +166,7 @@
         <div class="modal-content bottom-sheet" style="padding: 10px 0;">
             <div class="modal-drag-handle"></div>
             <div class="create-option" id="btn-create-post">
-                <i class="fa-solid fa-table-cells"></i><span>Gönderi Paylaş</span>
+                <i class="fa-solid fa-table-cells"></i><span>Gönderi veya Tweet Paylaş</span>
             </div>
             <div class="create-option" id="btn-create-story-menu">
                 <i class="fa-solid fa-circle-plus"></i><span>Hikaye Paylaş</span>
@@ -163,15 +177,18 @@
     <div id="post-modal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>Yeni Gönderi</h3>
+                <h3>Yeni Paylaşım</h3>
                 <button class="close-btn" id="close-post"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <div class="image-upload-preview" id="post-image-preview" style="display: none;">
+            <textarea id="post-content-input" class="custom-textarea" placeholder="Neler düşünüyorsun?" style="height: 80px; border: none; border-bottom: 1px solid var(--border-color); font-size: 16px;"></textarea>
+            
+            <div class="image-upload-preview" id="post-image-preview" style="display: none; margin-top: 10px;">
                 <img id="preview-img" src="" style="width: 100%; border-radius: 8px; max-height: 250px; object-fit: cover;">
+                <button id="remove-post-image" style="position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.6); color: white; border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer;"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <button id="select-post-image" class="secondary-btn" style="margin-bottom: 10px;">Galeriden Fotoğraf Seç</button>
-            <textarea id="post-content-input" class="custom-textarea" placeholder="Açıklama yaz..." style="height: 60px;"></textarea>
-            <button id="save-post-btn" class="primary-btn">Paylaş</button>
+            
+            <button id="select-post-image" class="secondary-btn" style="margin-top: 10px;"><i class="fa-regular fa-image"></i> Fotoğraf Ekle (İsteğe Bağlı)</button>
+            <button id="save-post-btn" class="primary-btn" style="margin-top: 10px;">Paylaş</button>
         </div>
     </div>
 
