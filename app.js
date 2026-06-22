@@ -1,3 +1,4 @@
+// FIREBASE BAŞLATMA
 const firebaseConfig = {
     apiKey: "AIzaSyCTbvB4-LBG-jP8zNkJhLNEaQfQpTAdEjA",
     authDomain: "swipper-2f2a4.firebaseapp.com",
@@ -12,7 +13,7 @@ if (!firebase.apps.length) {
 }
 const auth = firebase.auth();
 const db = firebase.firestore();
-const storage = firebase.storage();
+// Storage kütüphanesini iptal ettik, her şeyi direkt veritabanına (Firestore) yazacağız.
 
 document.addEventListener("DOMContentLoaded", () => {
     
@@ -20,7 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const appContainer = document.getElementById('app-container');
     const authError = document.getElementById('auth-error');
     let currentUser = null;
-    let selectedPostImageFile = null;
+    let selectedPostImageBase64 = null; // Resmi veritabanı için metne çevireceğiz
 
     // --- 1. KAYIT OL & GİRİŞ YAP ---
     document.getElementById('register-btn').addEventListener('click', () => {
@@ -113,76 +114,72 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     };
 
-    // --- 4. PROFİL FOTOĞRAFI YÜKLEME (Anında Görsel Önizleme ile) ---
+    // --- 4. SWINDER MANTIĞI: PROFİL FOTOĞRAFI YÜKLEME ---
     const profileUpload = document.getElementById('profile-upload');
     document.getElementById('avatar-container').onclick = () => profileUpload.click();
     
-    profileUpload.onchange = async (e) => {
+    profileUpload.onchange = (e) => {
         const file = e.target.files[0];
         if (!file || !currentUser) return;
         
-        // 1. Aşamada UI'ı beklemeden anında güncelle (Kullanıcı deneyimi için)
-        const tempUrl = URL.createObjectURL(file);
-        document.getElementById('main-profile-pic').src = tempUrl;
-        document.getElementById('nav-profile-img').src = tempUrl;
-        document.getElementById('my-story-img').src = tempUrl;
-        
-        // 2. Aşamada arka planda sunucuya yükle
-        const storageRef = storage.ref(`avatars/${currentUser.uid}`);
-        try {
-            await storageRef.put(file);
-            const url = await storageRef.getDownloadURL();
-            await db.collection('users').doc(currentUser.uid).update({ avatar: url });
-        } catch(err) {
-            alert("Storage hatası. Firebase panelinden Storage kurallarını açtığından emin ol!");
-        }
+        const reader = new FileReader();
+        reader.onload = async (event) => {
+            const base64Image = event.target.result;
+            
+            // Anında Ekranda Göster
+            document.getElementById('main-profile-pic').src = base64Image;
+            document.getElementById('nav-profile-img').src = base64Image;
+            document.getElementById('my-story-img').src = base64Image;
+            
+            // Doğrudan Veritabanına Kaydet (Storage kullanmadan)
+            await db.collection('users').doc(currentUser.uid).update({ avatar: base64Image });
+        };
+        reader.readAsDataURL(file); // Resmi metne çevirme işlemi
     };
 
-    // --- 5. İÇERİK OLUŞTURMA (Alt Navigasyondaki + Butonu) ---
+    // --- 5. SWINDER MANTIĞI: GÖNDERİ PAYLAŞMA ---
     const createOptionsModal = document.getElementById('create-options-modal');
     const postModal = document.getElementById('post-modal');
 
-    // Alt menüdeki artı butonuna tıklanınca modalı aç
     document.getElementById('nav-add-btn').onclick = (e) => {
         e.preventDefault();
         createOptionsModal.style.display = "flex";
     };
 
-    // Gönderi Paylaş
     document.getElementById('btn-create-post').onclick = () => {
         createOptionsModal.style.display = "none";
         postModal.style.display = "flex";
         document.getElementById('post-image-preview').style.display = "none";
         document.getElementById('post-content-input').value = "";
-        selectedPostImageFile = null;
+        selectedPostImageBase64 = null;
     };
 
-    // Gönderi İçin Fotoğraf Seçme
     document.getElementById('select-post-image').onclick = () => document.getElementById('post-image-upload').click();
+    
     document.getElementById('post-image-upload').onchange = (e) => {
-        selectedPostImageFile = e.target.files[0];
-        if(selectedPostImageFile) {
+        const file = e.target.files[0];
+        if(!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            selectedPostImageBase64 = event.target.result;
             const preview = document.getElementById('preview-img');
-            preview.src = URL.createObjectURL(selectedPostImageFile);
+            preview.src = selectedPostImageBase64;
             document.getElementById('post-image-preview').style.display = "block";
             document.getElementById('select-post-image').innerText = "Farklı Fotoğraf Seç";
-        }
+        };
+        reader.readAsDataURL(file);
     };
 
-    // Gönderiyi Kaydet
     document.getElementById('save-post-btn').onclick = async () => {
         const caption = document.getElementById('post-content-input').value;
-        if (!selectedPostImageFile) { alert("Lütfen bir fotoğraf seçin!"); return; }
+        if (!selectedPostImageBase64) { alert("Lütfen bir fotoğraf seçin!"); return; }
 
         document.getElementById('save-post-btn').innerText = "Yükleniyor...";
         
         try {
-            const postRef = storage.ref(`posts/${Date.now()}_${selectedPostImageFile.name}`);
-            await postRef.put(selectedPostImageFile);
-            const imageUrl = await postRef.getDownloadURL();
-
             await db.collection('posts').add({
-                imageUrl: imageUrl,
+                imageUrl: selectedPostImageBase64, // Doğrudan resmi kaydediyoruz
                 caption: caption,
                 authorId: currentUser.uid,
                 createdAt: firebase.firestore.FieldValue.serverTimestamp(),
@@ -197,43 +194,41 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
-    // --- 6. HİKAYE PAYLAŞMA MANTIĞI ---
+    // --- 6. SWINDER MANTIĞI: HİKAYE PAYLAŞMA ---
     const storyUpload = document.getElementById('story-image-upload');
     
-    // Hem menüden hem de ana sayfadaki çemberden hikaye eklenebilsin
     document.getElementById('add-story-btn').onclick = () => storyUpload.click();
     document.getElementById('btn-create-story-menu').onclick = () => {
         createOptionsModal.style.display = "none";
         storyUpload.click();
     };
 
-    storyUpload.onchange = async (e) => {
+    storyUpload.onchange = (e) => {
         const file = e.target.files[0];
         if(!file) return;
 
-        alert("Hikaye yükleniyor...");
-        try {
-            const storyRef = storage.ref(`stories/${Date.now()}_${file.name}`);
-            await storyRef.put(file);
-            const imageUrl = await storyRef.getDownloadURL();
-
-            await db.collection('stories').add({
-                imageUrl: imageUrl,
-                authorId: currentUser.uid,
-                createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            });
-            alert("Hikaye paylaşıldı!");
-        } catch(err) {
-            console.error(err);
-        }
+        const reader = new FileReader();
+        reader.onload = async (event) => {
+            const base64Image = event.target.result;
+            
+            try {
+                await db.collection('stories').add({
+                    imageUrl: base64Image,
+                    authorId: currentUser.uid,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                alert("Hikaye paylaşıldı!");
+            } catch(err) {
+                console.error("Hikaye hatası:", err);
+            }
+        };
+        reader.readAsDataURL(file);
     };
 
-    // Hikayeleri Çekme
     function loadStories() {
         db.collection("stories").orderBy("createdAt", "desc").onSnapshot(async (snapshot) => {
             const wrapper = document.getElementById('stories-wrapper');
-            // Sadece ilk 'Sen' butonunu tut, gerisini temizle
-            const myStoryBtn = wrapper.children[0];
+            const myStoryBtn = wrapper.children[0]; // İlk butonu koru
             wrapper.innerHTML = "";
             wrapper.appendChild(myStoryBtn);
 
@@ -242,9 +237,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 const authorDoc = await db.collection('users').doc(story.authorId).get();
                 const authorData = authorDoc.exists ? authorDoc.data() : { username: "kullanici", avatar: "https://i.pravatar.cc/150" };
 
-                // Kendi hikayemizse veya başkasınınsa ekle
                 const storyHTML = `
-                    <div class="story" onclick="alert('Hikaye Görüntüleme Eklenecek')">
+                    <div class="story" onclick="alert('Hikaye Görüntüleme Sistemi Eklenecek')">
                         <div class="story-ring"><img src="${authorData.avatar}"></div>
                         <span>${authorData.username}</span>
                     </div>
@@ -315,7 +309,6 @@ document.addEventListener("DOMContentLoaded", () => {
     // --- 8. DM (MESAJLAR) LİSTESİ ---
     function loadDMList() {
         const dmContainer = document.getElementById('dm-list');
-        // Dinamik bir platform havası için arkadaş listesi
         const friends = [
             { name: "Muhammed", username: "muhammed", msg: "Gönderini beğendim!", avatar: "https://i.pravatar.cc/150?img=12" },
             { name: "Çağrı", username: "cagri", msg: "Bugün giriyor muyuz?", avatar: "https://i.pravatar.cc/150?img=13" },
@@ -346,7 +339,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const navItems = document.querySelectorAll('.nav-item');
     navItems.forEach(item => {
         item.addEventListener('click', (e) => {
-            // Artı butonuna tıklandıysa sekme değiştirme, sadece modal aç
             if (item.id === 'nav-add-btn') return; 
 
             e.preventDefault();
