@@ -24,29 +24,23 @@ document.addEventListener("DOMContentLoaded", () => {
     let selectedPostImageBase64 = null;
     let activeChatUserId = null;
     let storyTimer = null;
-    let currentSharePostId = null; // DM'den paylaşılacak gönderi ID'si
-    let currentEditPostId = null;  // Düzenlenecek gönderi ID'si
+    let currentSharePostId = null; 
+    let currentEditPostId = null;  
+    let currentEditPostCaption = "";
 
-    // GÖRSEL SIKIŞTIRICI SİSTEMİ
     function compressAndConvert(file, callback) {
         const reader = new FileReader();
         reader.onload = function(e) {
             const img = new Image();
             img.onload = function() {
                 const canvas = document.createElement('canvas');
-                let width = img.width;
-                let height = img.height;
+                let width = img.width; let height = img.height;
                 const MAX_SIZE = 600;
-
-                if (width > height) {
-                    if (width > MAX_SIZE) { height *= MAX_SIZE / width; width = MAX_SIZE; }
-                } else {
-                    if (height > MAX_SIZE) { width *= MAX_SIZE / height; height = MAX_SIZE; }
-                }
+                if (width > height) { if (width > MAX_SIZE) { height *= MAX_SIZE / width; width = MAX_SIZE; } } 
+                else { if (height > MAX_SIZE) { width *= MAX_SIZE / height; height = MAX_SIZE; } }
                 canvas.width = width; canvas.height = height;
                 const ctx = canvas.getContext('2d');
                 ctx.drawImage(img, 0, 0, width, height);
-                
                 const compressedBase64 = canvas.toDataURL('image/jpeg', 0.6);
                 callback(compressedBase64);
             };
@@ -65,15 +59,12 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById('login-btn').addEventListener('click', () => {
         const email = document.getElementById('auth-email').value;
         const pass = document.getElementById('auth-password').value;
-        auth.signInWithEmailAndPassword(email, pass).catch(err => showError("Giriş başarısız. Bilgileri kontrol et."));
+        auth.signInWithEmailAndPassword(email, pass).catch(err => showError("Giriş başarısız. Şifre veya E-posta hatalı."));
     });
 
     document.getElementById('logout-btn').addEventListener('click', () => auth.signOut());
 
-    function showError(msg) {
-        authError.innerText = msg;
-        authError.style.display = "block";
-    }
+    function showError(msg) { authError.innerText = msg; authError.style.display = "block"; }
 
     // --- 2. CANLI SENKRONİZASYON MOTORU ---
     auth.onAuthStateChanged((user) => {
@@ -97,11 +88,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 } else {
                     updateProfileUI(usersCache[user.uid]);
                 }
-                
-                renderExplore();
-                renderDMList();
-                renderStories();
-                renderShareUsersList();
+                renderExplore(); renderDMList(); renderStories(); renderShareUsersList();
             });
 
             loadRealtimePosts();
@@ -113,16 +100,30 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     function updateProfileUI(data) {
-        document.getElementById('display-username').innerHTML = `<i class="fa-solid fa-user-astronaut" style="font-size:12px; margin-right:3px;"></i>${data.username}`;
+        document.getElementById('display-username').innerText = `@${data.username}`;
         document.getElementById('display-name').innerText = data.name;
         document.getElementById('display-bio').innerText = data.bio;
-        
         document.getElementById('main-profile-pic').src = data.avatar;
         document.getElementById('nav-profile-img').src = data.avatar;
         document.getElementById('my-story-img').src = data.avatar;
     }
 
-    // --- 3. PROFİL GÜNCELLEME VE FOTOĞRAF SEÇİMİ ---
+    // --- 3. PROFİL GÜNCELLEME VE KLASÖR SEKMELERİ ---
+    document.querySelectorAll('.p-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.p-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            document.querySelectorAll('.profile-tab-content').forEach(c => {
+                c.style.display = "none";
+                c.classList.remove('active');
+            });
+            const targetId = tab.getAttribute('data-target');
+            const targetDiv = document.getElementById(targetId);
+            targetDiv.style.display = targetId === 'p-grid' ? 'grid' : 'block';
+            targetDiv.classList.add('active');
+        });
+    });
+
     const editModal = document.getElementById('edit-profile-modal');
     document.getElementById('edit-profile-trigger').onclick = () => {
         const data = usersCache[currentUser.uid];
@@ -139,9 +140,7 @@ document.addEventListener("DOMContentLoaded", () => {
             username: document.getElementById('input-username').value.replace(/\s+/g, '').toLowerCase(),
             bio: document.getElementById('input-bio').value
         };
-        db.collection('users').doc(currentUser.uid).update(updated).then(() => {
-            editModal.style.display = "none";
-        });
+        db.collection('users').doc(currentUser.uid).update(updated).then(() => editModal.style.display = "none");
     };
 
     const profileUpload = document.getElementById('profile-upload');
@@ -158,7 +157,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const postModal = document.getElementById('post-modal');
     
     document.getElementById('nav-add-btn').onclick = (e) => { e.preventDefault(); createOptionsModal.style.display = "flex"; };
-    
     document.getElementById('btn-create-post').onclick = () => {
         createOptionsModal.style.display = "none";
         postModal.style.display = "flex";
@@ -200,7 +198,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     };
 
-    // --- 5. HİKAYE PROSESLERİ ---
+    // --- 5. HİKAYELER (24 SAAT SİLİNME MANTIĞI İLE) ---
     const storyUpload = document.getElementById('story-image-upload');
     document.getElementById('add-story-btn').onclick = () => storyUpload.click();
     document.getElementById('btn-create-story-menu').onclick = () => { createOptionsModal.style.display = "none"; storyUpload.click(); };
@@ -225,9 +223,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const seenUsers = new Set();
             let hasMyStory = false;
+            const now = Date.now();
 
             snapshot.forEach(doc => {
                 const story = doc.data();
+                if(!story.createdAt) return;
+                
+                // 24 saat kontrolü (Süresi geçenler gösterilmez)
+                if (now - story.createdAt.toDate().getTime() > 24 * 60 * 60 * 1000) return; 
                 
                 if (story.authorId === currentUser.uid && !hasMyStory) {
                     hasMyStory = true;
@@ -279,17 +282,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     document.getElementById('close-story-viewer').onclick = closeStory;
 
-    // --- 6. HİBRİT AKIŞ VE PROFİL AKIŞI (DÜZENLEME & SİLME DAHİL) ---
+    // --- 6. HİBRİT AKIŞ VE PROFİL KLASÖRLERİ (RESİM & TWEET) ---
     function generatePostHTML(id, post, uData, showOptions) {
         let timeStr = "Şimdi";
-        if(post.createdAt) {
-            timeStr = post.createdAt.toDate().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-        }
+        if(post.createdAt) timeStr = post.createdAt.toDate().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
 
         const imgHTML = post.imageUrl ? `<img class="post-image" src="${post.imageUrl}">` : '';
         const captionHTML = post.caption.trim() !== "" ? `<div class="post-caption">${post.imageUrl ? `<span>${uData.username}</span>` : ''}${post.caption}</div>` : '';
-        
-        // Düzenleme / Silme Menü Butonu (Yalnızca gönderi sahibine gösterilir)
         const optionsHTML = showOptions ? `<button class="post-manage-btn" onclick="openPostOptions('${id}', '${post.caption}')"><i class="fa-solid fa-ellipsis-vertical"></i></button>` : '';
 
         return `
@@ -317,10 +316,12 @@ document.addEventListener("DOMContentLoaded", () => {
     function loadRealtimePosts() {
         db.collection("posts").orderBy("createdAt", "desc").onSnapshot(snapshot => {
             const feed = document.getElementById('feed-container');
-            const profileFeed = document.getElementById('profile-feed-container');
+            const pGrid = document.getElementById('p-grid');
+            const pTweets = document.getElementById('p-tweets');
             
             feed.innerHTML = "";
-            profileFeed.innerHTML = "";
+            pGrid.innerHTML = "";
+            pTweets.innerHTML = "";
             let myPostCount = 0;
 
             snapshot.forEach(doc => {
@@ -329,14 +330,21 @@ document.addEventListener("DOMContentLoaded", () => {
                 const isMyPost = post.authorId === currentUser.uid;
 
                 const html = generatePostHTML(doc.id, post, uData, isMyPost);
-                
-                // Ana akışa ekle
-                feed.insertAdjacentHTML('beforeend', html);
+                feed.insertAdjacentHTML('beforeend', html); // Ana akışa her türlü ekle
 
-                // Eğer benim gönderimse profil akışına da ekle
+                // Profile iki ayrı klasöre ayırarak ekle
                 if(isMyPost) {
                     myPostCount++;
-                    profileFeed.insertAdjacentHTML('beforeend', html);
+                    if(post.imageUrl) {
+                        pGrid.insertAdjacentHTML('beforeend', `
+                            <div class="grid-item">
+                                <img src="${post.imageUrl}">
+                                <button class="grid-manage-btn" onclick="openPostOptions('${doc.id}', '${post.caption || ''}')"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                            </div>
+                        `);
+                    } else {
+                        pTweets.insertAdjacentHTML('beforeend', html);
+                    }
                 }
             });
 
@@ -344,35 +352,37 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // --- 7. DÜZENLEME & SİLME AKSİYONLARI ---
-    window.openPostOptions = (postId, currentCaption) => {
+    // --- 7. DÜZENLEME & SİLME MODALI ---
+    window.openPostOptions = (postId, caption) => {
         currentEditPostId = postId;
-        const action = prompt("Bu gönderi için yapmak istediğiniz işlemi yazın:\n'sil' veya 'duzenle'");
-        
-        if(action === 'sil') {
-            if(confirm("Bu paylaşımı kalıcı olarak silmek istediğinize emin misiniz?")) {
-                db.collection('posts').doc(postId).delete();
-            }
-        } else if(action === 'duzenle') {
-            const editModal = document.getElementById('edit-post-modal');
-            document.getElementById('edit-post-input').value = currentCaption;
-            editModal.style.display = "flex";
+        currentEditPostCaption = caption;
+        document.getElementById('post-options-modal').style.display = "flex";
+    };
+
+    document.getElementById('opt-edit-post').onclick = () => {
+        document.getElementById('post-options-modal').style.display = "none";
+        document.getElementById('edit-post-input').value = currentEditPostCaption;
+        document.getElementById('edit-post-modal').style.display = "flex";
+    };
+
+    document.getElementById('opt-del-post').onclick = () => {
+        if(confirm("Bu paylaşımı kalıcı olarak silmek istediğine emin misin?")) {
+            db.collection('posts').doc(currentEditPostId).delete();
+            document.getElementById('post-options-modal').style.display = "none";
         }
     };
 
     document.getElementById('update-post-btn').onclick = () => {
         const newCaption = document.getElementById('edit-post-input').value;
         if(currentEditPostId) {
-            db.collection('posts').doc(currentEditPostId).update({
-                caption: newCaption
-            }).then(() => {
+            db.collection('posts').doc(currentEditPostId).update({ caption: newCaption }).then(() => {
                 document.getElementById('edit-post-modal').style.display = "none";
                 currentEditPostId = null;
             });
         }
     };
 
-    // --- 8. INSTAGRAM TARZI DM GÖNDERİ PAYLAŞMA SİSTEMİ ---
+    // --- 8. DM'DEN GÖNDERİ PAYLAŞMA ---
     window.openShareModal = (postId) => {
         currentSharePostId = postId;
         document.getElementById('share-modal').style.display = "flex";
@@ -403,14 +413,13 @@ document.addEventListener("DOMContentLoaded", () => {
             const postData = doc.data();
             const textSummary = postData.caption ? `"${postData.caption}"` : "Bir fotoğraf gönderisi";
             
-            // Karşı tarafın DM kutusuna özel bir mesaj kartı yolluyoruz
             db.collection('messages').add({
                 senderId: currentUser.uid,
                 receiverId: receiverUid,
-                text: `🔗 [Bir Gönderi Paylaştı]: ${textSummary}`,
+                text: `🔗 [Gönderi Paylaşıldı]: ${textSummary}`,
                 createdAt: firebase.firestore.FieldValue.serverTimestamp()
             }).then(() => {
-                alert("Gönderi başarıyla DM kutusuna iletildi!");
+                alert("Gönderi başarıyla iletildi!");
                 document.getElementById('share-modal').style.display = "none";
                 currentSharePostId = null;
             });
@@ -447,7 +456,7 @@ document.addEventListener("DOMContentLoaded", () => {
             list.insertAdjacentHTML('beforeend', `
                 <div class="user-item" onclick="openChatWith('${uid}')">
                     <img src="${u.avatar}">
-                    <div class="user-info"><span class="name">${u.name}</span><span class="msg-preview">Sohbeti açmak için tıkla</span></div>
+                    <div class="user-info"><span class="name">${u.name}</span><span class="msg-preview">Mesaj göndermek için tıkla</span></div>
                 </div>
             `);
         });
@@ -482,9 +491,7 @@ document.addEventListener("DOMContentLoaded", () => {
             receiverId: activeChatUserId,
             text: text,
             createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        }).then(() => {
-            document.getElementById('chat-message-input').value = "";
-        });
+        }).then(() => document.getElementById('chat-message-input').value = "");
     };
 
     function loadLiveChatMessages() {
@@ -505,7 +512,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // --- 10. TEMALARI PROFİLE ALMA VE SEKME GEÇİŞLERİ ---
+    // --- 10. TEMA VE SEKME GEÇİŞLERİ ---
     document.getElementById('theme-toggle-btn').onclick = () => {
         document.body.classList.toggle('dark-mode');
         const icon = document.getElementById('theme-toggle-btn').querySelector('i');
@@ -532,6 +539,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     document.querySelectorAll('.close-btn').forEach(btn => btn.onclick = (e) => {
-        e.target.closest('.modal').style.display = "none";
+        if(e.target.id !== 'close-story-viewer') e.target.closest('.modal').style.display = "none";
     });
 });

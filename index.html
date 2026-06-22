@@ -31,7 +31,7 @@
         <header class="top-header">
             <h1 class="insta-logo">Swipper</h1>
             <div class="header-icons">
-                <span style="font-size: 14px; font-weight: 600; color: var(--blue);">Canlı Akış</span>
+                <button class="icon-btn"><i class="fa-regular fa-heart"></i></button>
             </div>
         </header>
 
@@ -109,9 +109,12 @@
                 </div>
 
                 <div class="profile-tabs">
-                    <div class="p-tab active"><i class="fa-solid fa-table-cells"></i> Paylaşımların</div>
+                    <div class="p-tab active" data-target="p-grid"><i class="fa-solid fa-table-cells"></i></div>
+                    <div class="p-tab" data-target="p-tweets"><i class="fa-solid fa-bars-staggered"></i></div>
                 </div>
-                <div id="profile-feed-container"></div>
+                
+                <div id="p-grid" class="profile-tab-content active"></div>
+                <div id="p-tweets" class="profile-tab-content"></div>
             </section>
 
         </main>
@@ -173,6 +176,18 @@
         </div>
     </div>
 
+    <div id="post-options-modal" class="modal">
+        <div class="modal-content bottom-sheet" style="padding: 0;">
+            <div class="modal-drag-handle" style="margin-top: 15px;"></div>
+            <div class="create-option" id="opt-edit-post">
+                <i class="fa-solid fa-pen"></i><span>Düzenle</span>
+            </div>
+            <div class="create-option" id="opt-del-post" style="color: #ed4956; border-bottom:none;">
+                <i class="fa-solid fa-trash" style="color: #ed4956;"></i><span>Sil</span>
+            </div>
+        </div>
+    </div>
+
     <div id="post-modal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -191,6 +206,17 @@
         </div>
     </div>
 
+    <div id="edit-post-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Gönderiyi Düzenle</h3>
+                <button class="close-btn"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <textarea id="edit-post-input" class="custom-textarea" style="height: 100px; font-size: 15px;"></textarea>
+            <button id="update-post-btn" class="primary-btn">Değişiklikleri Kaydet</button>
+        </div>
+    </div>
+
     <div id="share-modal" class="modal">
         <div class="modal-content bottom-sheet">
             <div class="modal-header">
@@ -199,17 +225,6 @@
             </div>
             <p style="font-size: 13px; color: var(--secondary-text); padding: 0 5px;">Göndermek istediğin arkadaşına tıkla:</p>
             <div id="share-users-list" class="user-list" style="max-height: 250px; overflow-y: auto;"></div>
-        </div>
-    </div>
-
-    <div id="edit-post-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Gönderiyi Düzenle</h3>
-                <button class="close-btn"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            <textarea id="edit-post-input" class="custom-textarea" style="height: 100px;"></textarea>
-            <button id="update-post-btn" class="primary-btn">Değişiklikleri Kaydet</button>
         </div>
     </div>
 
