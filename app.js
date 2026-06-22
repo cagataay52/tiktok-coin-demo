@@ -24,8 +24,10 @@ document.addEventListener("DOMContentLoaded", () => {
     let selectedPostImageBase64 = null;
     let activeChatUserId = null;
     let storyTimer = null;
+    let currentSharePostId = null; // DM'den paylaşılacak gönderi ID'si
+    let currentEditPostId = null;  // Düzenlenecek gönderi ID'si
 
-    // GÖRSEL SIKIŞTIRICI
+    // GÖRSEL SIKIŞTIRICI SİSTEMİ
     function compressAndConvert(file, callback) {
         const reader = new FileReader();
         reader.onload = function(e) {
@@ -34,7 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 const canvas = document.createElement('canvas');
                 let width = img.width;
                 let height = img.height;
-                const MAX_SIZE = 800; // Kaliteyi biraz artırdık (800px)
+                const MAX_SIZE = 600;
 
                 if (width > height) {
                     if (width > MAX_SIZE) { height *= MAX_SIZE / width; width = MAX_SIZE; }
@@ -45,7 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 const ctx = canvas.getContext('2d');
                 ctx.drawImage(img, 0, 0, width, height);
                 
-                const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
+                const compressedBase64 = canvas.toDataURL('image/jpeg', 0.6);
                 callback(compressedBase64);
             };
             img.src = e.target.result;
@@ -63,7 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById('login-btn').addEventListener('click', () => {
         const email = document.getElementById('auth-email').value;
         const pass = document.getElementById('auth-password').value;
-        auth.signInWithEmailAndPassword(email, pass).catch(err => showError("Giriş başarısız. Şifre veya E-posta hatalı."));
+        auth.signInWithEmailAndPassword(email, pass).catch(err => showError("Giriş başarısız. Bilgileri kontrol et."));
     });
 
     document.getElementById('logout-btn').addEventListener('click', () => auth.signOut());
@@ -73,7 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
         authError.style.display = "block";
     }
 
-    // --- 2. GERÇEK ZAMANLI KULLANICI MOTORU ---
+    // --- 2. CANLI SENKRONİZASYON MOTORU ---
     auth.onAuthStateChanged((user) => {
         if (user) {
             currentUser = user;
@@ -99,10 +101,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 renderExplore();
                 renderDMList();
                 renderStories();
+                renderShareUsersList();
             });
 
             loadRealtimePosts();
-            loadProfileGrid();
         } else {
             currentUser = null;
             authScreen.style.display = "flex";
@@ -111,7 +113,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     function updateProfileUI(data) {
-        document.getElementById('display-username').innerText = `@${data.username}`;
+        document.getElementById('display-username').innerHTML = `<i class="fa-solid fa-user-astronaut" style="font-size:12px; margin-right:3px;"></i>${data.username}`;
         document.getElementById('display-name').innerText = data.name;
         document.getElementById('display-bio').innerText = data.bio;
         
@@ -120,7 +122,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById('my-story-img').src = data.avatar;
     }
 
-    // --- 3. PROFİL VERİLERİNİ KAYDETME ---
+    // --- 3. PROFİL GÜNCELLEME VE FOTOĞRAF SEÇİMİ ---
     const editModal = document.getElementById('edit-profile-modal');
     document.getElementById('edit-profile-trigger').onclick = () => {
         const data = usersCache[currentUser.uid];
@@ -151,7 +153,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     };
 
-    // --- 4. TWEET / GÖNDERİ PAYLAŞMA (GÖRSEL İSTEĞE BAĞLI) ---
+    // --- 4. PAYLAŞIM YAPMA (GÖNDERİ & TWEET) ---
     const createOptionsModal = document.getElementById('create-options-modal');
     const postModal = document.getElementById('post-modal');
     
@@ -183,15 +185,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.getElementById('save-post-btn').onclick = () => {
         const caption = document.getElementById('post-content-input').value;
-        
-        // Eğer ne metin ne de fotoğraf yoksa uyarı ver
-        if(!selectedPostImageBase64 && caption.trim() === "") { 
-            alert("Lütfen metin yazın veya bir fotoğraf seçin!"); 
-            return; 
-        }
+        if(!selectedPostImageBase64 && caption.trim() === "") return;
         
         db.collection('posts').add({
-            imageUrl: selectedPostImageBase64 || null, // Görsel yoksa null gönder
+            imageUrl: selectedPostImageBase64 || null,
             caption: caption,
             authorId: currentUser.uid,
             createdAt: firebase.firestore.FieldValue.serverTimestamp(),
@@ -203,7 +200,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     };
 
-    // --- 5. HİKAYE PAYLAŞMA VE İZLEME MOTORU ---
+    // --- 5. HİKAYE PROSESLERİ ---
     const storyUpload = document.getElementById('story-image-upload');
     document.getElementById('add-story-btn').onclick = () => storyUpload.click();
     document.getElementById('btn-create-story-menu').onclick = () => { createOptionsModal.style.display = "none"; storyUpload.click(); };
@@ -226,9 +223,7 @@ document.addEventListener("DOMContentLoaded", () => {
             wrapper.innerHTML = "";
             wrapper.appendChild(myBtn);
 
-            const seenUsers = new Set(); // Her kullanıcının sadece 1 (en son) hikayesi görünsün
-            
-            // Eğer kendi hikayemiz varsa listeye ekleyelim
+            const seenUsers = new Set();
             let hasMyStory = false;
 
             snapshot.forEach(doc => {
@@ -236,10 +231,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 
                 if (story.authorId === currentUser.uid && !hasMyStory) {
                     hasMyStory = true;
-                    // Kendi "Hikayen" butonumuzu tıklanabilir hale getir
                     myBtn.onclick = () => openStory(story.imageUrl, usersCache[currentUser.uid].username, usersCache[currentUser.uid].avatar);
-                    myBtn.querySelector('.story-ring').style.background = "var(--insta-gradient)"; // Renklendir
-                    myBtn.querySelector('.plus-icon').style.display = "none"; // Artı işaretini kaldır
+                    myBtn.querySelector('.story-ring').style.background = "var(--insta-gradient)";
+                    myBtn.querySelector('.plus-icon').style.display = "none";
                 }
                 
                 if (seenUsers.has(story.authorId) || story.authorId === currentUser.uid) return;
@@ -256,7 +250,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 `);
             });
             
-            // Eğer kendi hikayemiz yoksa artı butonu işlevini geri ver
             if(!hasMyStory) {
                 myBtn.onclick = () => storyUpload.click();
                 myBtn.querySelector('.story-ring').style.background = "transparent";
@@ -265,7 +258,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Gerçek Hikaye İzleme Olayı
     window.openStory = (imgUrl, username, avatar) => {
         clearTimeout(storyTimer);
         document.getElementById('story-viewer-img').src = imgUrl;
@@ -273,19 +265,11 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById('story-viewer-avatar').src = avatar;
         document.getElementById('story-viewer-modal').style.display = "flex";
 
-        // İlerleme çubuğu animasyonu
         const bar = document.getElementById('story-progress-bar');
-        bar.style.transition = 'none';
-        bar.style.width = '0%';
-        setTimeout(() => {
-            bar.style.transition = 'width 5s linear';
-            bar.style.width = '100%';
-        }, 50);
+        bar.style.transition = 'none'; bar.style.width = '0%';
+        setTimeout(() => { bar.style.transition = 'width 5s linear'; bar.style.width = '100%'; }, 50);
 
-        // 5 Saniye sonra otomatik kapat
-        storyTimer = setTimeout(() => {
-            closeStory();
-        }, 5000);
+        storyTimer = setTimeout(() => closeStory(), 5000);
     };
 
     function closeStory() {
@@ -293,64 +277,147 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById('story-viewer-modal').style.display = "none";
         document.getElementById('story-progress-bar').style.width = '0%';
     }
-
     document.getElementById('close-story-viewer').onclick = closeStory;
 
-    // --- 6. AKIŞ VE GRID YÜKLEME (Hibrit Tasarım) ---
+    // --- 6. HİBRİT AKIŞ VE PROFİL AKIŞI (DÜZENLEME & SİLME DAHİL) ---
+    function generatePostHTML(id, post, uData, showOptions) {
+        let timeStr = "Şimdi";
+        if(post.createdAt) {
+            timeStr = post.createdAt.toDate().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        }
+
+        const imgHTML = post.imageUrl ? `<img class="post-image" src="${post.imageUrl}">` : '';
+        const captionHTML = post.caption.trim() !== "" ? `<div class="post-caption">${post.imageUrl ? `<span>${uData.username}</span>` : ''}${post.caption}</div>` : '';
+        
+        // Düzenleme / Silme Menü Butonu (Yalnızca gönderi sahibine gösterilir)
+        const optionsHTML = showOptions ? `<button class="post-manage-btn" onclick="openPostOptions('${id}', '${post.caption}')"><i class="fa-solid fa-ellipsis-vertical"></i></button>` : '';
+
+        return `
+            <div class="post" id="post-card-${id}">
+                <div class="post-header">
+                    <div class="post-header-left">
+                        <img class="post-avatar" src="${uData.avatar}">
+                        <span class="post-author">${uData.username}</span>
+                        <span class="post-time-feed">· ${timeStr}</span>
+                    </div>
+                    ${optionsHTML}
+                </div>
+                ${!post.imageUrl ? captionHTML : ''}
+                ${imgHTML}
+                <div class="post-actions">
+                    <i class="fa-regular fa-heart"></i>
+                    <i class="fa-regular fa-comment"></i>
+                    <i class="fa-regular fa-paper-plane" onclick="openShareModal('${id}')"></i>
+                </div>
+                ${post.imageUrl ? captionHTML : ''}
+            </div>
+        `;
+    }
+
     function loadRealtimePosts() {
         db.collection("posts").orderBy("createdAt", "desc").onSnapshot(snapshot => {
             const feed = document.getElementById('feed-container');
+            const profileFeed = document.getElementById('profile-feed-container');
+            
             feed.innerHTML = "";
+            profileFeed.innerHTML = "";
+            let myPostCount = 0;
+
             snapshot.forEach(doc => {
                 const post = doc.data();
                 const uData = usersCache[post.authorId] || { username: "kullanici", avatar: "https://i.pravatar.cc/150" };
+                const isMyPost = post.authorId === currentUser.uid;
+
+                const html = generatePostHTML(doc.id, post, uData, isMyPost);
                 
-                let timeStr = "Az önce";
-                if(post.createdAt) {
-                    timeStr = post.createdAt.toDate().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                // Ana akışa ekle
+                feed.insertAdjacentHTML('beforeend', html);
+
+                // Eğer benim gönderimse profil akışına da ekle
+                if(isMyPost) {
+                    myPostCount++;
+                    profileFeed.insertAdjacentHTML('beforeend', html);
                 }
-
-                // Resim yoksa (sadece tweet ise) resim etiketini hiç basma
-                const imgHTML = post.imageUrl ? `<img class="post-image" src="${post.imageUrl}">` : '';
-                
-                // Metin yoksa caption'ı hiç basma
-                const captionHTML = post.caption.trim() !== "" ? `<div class="post-caption">${post.imageUrl ? `<span>${uData.username}</span>` : ''}${post.caption}</div>` : '';
-
-                feed.insertAdjacentHTML('beforeend', `
-                    <div class="post">
-                        <div class="post-header">
-                            <img class="post-avatar" src="${uData.avatar}">
-                            <span class="post-author">${uData.username}</span>
-                            <span class="post-time-feed">· ${timeStr}</span>
-                        </div>
-                        ${!post.imageUrl ? captionHTML : ''} ${imgHTML}
-                        <div class="post-actions"><i class="fa-regular fa-heart"></i><i class="fa-regular fa-comment"></i></div>
-                        ${post.imageUrl ? captionHTML : ''} </div>
-                `);
             });
+
+            document.getElementById('post-count').innerText = myPostCount;
         });
     }
 
-    function loadProfileGrid() {
-        db.collection("posts").orderBy("createdAt", "desc").onSnapshot(snapshot => {
-            const container = document.getElementById('profile-grid-container');
-            container.innerHTML = "";
-            let count = 0;
-            snapshot.forEach(doc => {
-                const post = doc.data();
-                if(post.authorId === currentUser.uid) {
-                    count++;
-                    // Sadece resimli olanları ızgaraya ekle
-                    if(post.imageUrl) {
-                        container.insertAdjacentHTML('beforeend', `<div class="grid-item"><img src="${post.imageUrl}"></div>`);
-                    }
-                }
+    // --- 7. DÜZENLEME & SİLME AKSİYONLARI ---
+    window.openPostOptions = (postId, currentCaption) => {
+        currentEditPostId = postId;
+        const action = prompt("Bu gönderi için yapmak istediğiniz işlemi yazın:\n'sil' veya 'duzenle'");
+        
+        if(action === 'sil') {
+            if(confirm("Bu paylaşımı kalıcı olarak silmek istediğinize emin misiniz?")) {
+                db.collection('posts').doc(postId).delete();
+            }
+        } else if(action === 'duzenle') {
+            const editModal = document.getElementById('edit-post-modal');
+            document.getElementById('edit-post-input').value = currentCaption;
+            editModal.style.display = "flex";
+        }
+    };
+
+    document.getElementById('update-post-btn').onclick = () => {
+        const newCaption = document.getElementById('edit-post-input').value;
+        if(currentEditPostId) {
+            db.collection('posts').doc(currentEditPostId).update({
+                caption: newCaption
+            }).then(() => {
+                document.getElementById('edit-post-modal').style.display = "none";
+                currentEditPostId = null;
             });
-            document.getElementById('post-count').innerText = count;
+        }
+    };
+
+    // --- 8. INSTAGRAM TARZI DM GÖNDERİ PAYLAŞMA SİSTEMİ ---
+    window.openShareModal = (postId) => {
+        currentSharePostId = postId;
+        document.getElementById('share-modal').style.display = "flex";
+    };
+
+    function renderShareUsersList() {
+        const wrap = document.getElementById('share-users-list');
+        wrap.innerHTML = "";
+        
+        Object.keys(usersCache).forEach(uid => {
+            if(uid === currentUser.uid) return;
+            const u = usersCache[uid];
+            wrap.insertAdjacentHTML('beforeend', `
+                <div class="user-item" onclick="processPostShare('${uid}')">
+                    <img src="${u.avatar}">
+                    <div class="user-info"><span class="name">${u.name}</span><span class="username">@${u.username}</span></div>
+                    <i class="fa-regular fa-paper-plane" style="margin-left:auto; color:var(--blue);"></i>
+                </div>
+            `);
         });
     }
 
-    // --- 7. KEŞFET (ARAMA) ---
+    window.processPostShare = (receiverUid) => {
+        if(!currentSharePostId || !currentUser) return;
+        
+        db.collection('posts').doc(currentSharePostId).get().then(doc => {
+            if(!doc.exists) return;
+            const postData = doc.data();
+            const textSummary = postData.caption ? `"${postData.caption}"` : "Bir fotoğraf gönderisi";
+            
+            // Karşı tarafın DM kutusuna özel bir mesaj kartı yolluyoruz
+            db.collection('messages').add({
+                senderId: currentUser.uid,
+                receiverId: receiverUid,
+                text: `🔗 [Bir Gönderi Paylaştı]: ${textSummary}`,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            }).then(() => {
+                alert("Gönderi başarıyla DM kutusuna iletildi!");
+                document.getElementById('share-modal').style.display = "none";
+                currentSharePostId = null;
+            });
+        });
+    };
+
+    // --- 9. KEŞFET VE DM MOTORU ---
     function renderExplore() {
         const results = document.getElementById('search-results');
         results.innerHTML = "";
@@ -371,18 +438,16 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     document.getElementById('search-input').oninput = renderExplore;
 
-    // --- 8. GERÇEK ZAMANLI DM ---
     function renderDMList() {
         const list = document.getElementById('dm-list');
         list.innerHTML = "";
-        
         Object.keys(usersCache).forEach(uid => {
             if(uid === currentUser.uid) return;
             const u = usersCache[uid];
             list.insertAdjacentHTML('beforeend', `
                 <div class="user-item" onclick="openChatWith('${uid}')">
                     <img src="${u.avatar}">
-                    <div class="user-info"><span class="name">${u.name}</span><span class="msg-preview">Mesaj göndermek için tıkla</span></div>
+                    <div class="user-info"><span class="name">${u.name}</span><span class="msg-preview">Sohbeti açmak için tıkla</span></div>
                 </div>
             `);
         });
@@ -440,10 +505,10 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // --- 9. SEKME VE KARANLIK MOD AYARLARI ---
+    // --- 10. TEMALARI PROFİLE ALMA VE SEKME GEÇİŞLERİ ---
     document.getElementById('theme-toggle-btn').onclick = () => {
         document.body.classList.toggle('dark-mode');
-        const icon = document.getElementById('theme-toggle-btn').children[0];
+        const icon = document.getElementById('theme-toggle-btn').querySelector('i');
         icon.classList.toggle('fa-moon');
         icon.classList.toggle('fa-sun');
     };
@@ -467,8 +532,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     document.querySelectorAll('.close-btn').forEach(btn => btn.onclick = (e) => {
-        if(e.target.id !== 'close-story-viewer') {
-            e.target.closest('.modal').style.display = "none";
-        }
+        e.target.closest('.modal').style.display = "none";
     });
 });
