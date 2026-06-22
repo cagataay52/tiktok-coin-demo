@@ -21,6 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
     
     let currentUser = null;
     let usersCache = {}; 
+    let postsCache = {}; // Tekli gönderiyi açmak için hafıza
     let selectedPostImageBase64 = null;
     let activeChatUserId = null;
     let storyTimer = null;
@@ -59,14 +60,14 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById('login-btn').addEventListener('click', () => {
         const email = document.getElementById('auth-email').value;
         const pass = document.getElementById('auth-password').value;
-        auth.signInWithEmailAndPassword(email, pass).catch(err => showError("Giriş başarısız. Şifre veya E-posta hatalı."));
+        auth.signInWithEmailAndPassword(email, pass).catch(err => showError("Giriş başarısız. Bilgileri kontrol et."));
     });
 
     document.getElementById('logout-btn').addEventListener('click', () => auth.signOut());
 
     function showError(msg) { authError.innerText = msg; authError.style.display = "block"; }
 
-    // --- 2. CANLI SENKRONİZASYON MOTORU ---
+    // --- 2. CANLI SENKRONİZASYON ---
     auth.onAuthStateChanged((user) => {
         if (user) {
             currentUser = user;
@@ -92,6 +93,7 @@ document.addEventListener("DOMContentLoaded", () => {
             });
 
             loadRealtimePosts();
+            initReels(); // Swinder/Reels Videolarını Yükle
         } else {
             currentUser = null;
             authScreen.style.display = "flex";
@@ -100,7 +102,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     function updateProfileUI(data) {
-        document.getElementById('display-username').innerText = `@${data.username}`;
+        document.getElementById('display-username').innerHTML = `<i class="fa-solid fa-lock" style="font-size:12px; margin-right:3px;"></i>${data.username}`;
         document.getElementById('display-name').innerText = data.name;
         document.getElementById('display-bio').innerText = data.bio;
         document.getElementById('main-profile-pic').src = data.avatar;
@@ -108,7 +110,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById('my-story-img').src = data.avatar;
     }
 
-    // --- 3. PROFİL GÜNCELLEME VE KLASÖR SEKMELERİ ---
+    // --- 3. PROFİL SEKMELERİ (GÖRSEL / TWEET) ---
     document.querySelectorAll('.p-tab').forEach(tab => {
         tab.addEventListener('click', () => {
             document.querySelectorAll('.p-tab').forEach(t => t.classList.remove('active'));
@@ -152,7 +154,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     };
 
-    // --- 4. PAYLAŞIM YAPMA (GÖNDERİ & TWEET) ---
+    // --- 4. YENİ PAYLAŞIM ---
     const createOptionsModal = document.getElementById('create-options-modal');
     const postModal = document.getElementById('post-modal');
     
@@ -198,7 +200,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     };
 
-    // --- 5. HİKAYELER (24 SAAT SİLİNME MANTIĞI İLE) ---
+    // --- 5. HİKAYELER (24 SAAT) ---
     const storyUpload = document.getElementById('story-image-upload');
     document.getElementById('add-story-btn').onclick = () => storyUpload.click();
     document.getElementById('btn-create-story-menu').onclick = () => { createOptionsModal.style.display = "none"; storyUpload.click(); };
@@ -229,8 +231,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 const story = doc.data();
                 if(!story.createdAt) return;
                 
-                // 24 saat kontrolü (Süresi geçenler gösterilmez)
-                if (now - story.createdAt.toDate().getTime() > 24 * 60 * 60 * 1000) return; 
+                if (now - story.createdAt.toDate().getTime() > 24 * 60 * 60 * 1000) {
+                    db.collection('stories').doc(doc.id).delete(); // 24 saati geçenleri sil
+                    return; 
+                }
                 
                 if (story.authorId === currentUser.uid && !hasMyStory) {
                     hasMyStory = true;
@@ -282,14 +286,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     document.getElementById('close-story-viewer').onclick = closeStory;
 
-    // --- 6. HİBRİT AKIŞ VE PROFİL KLASÖRLERİ (RESİM & TWEET) ---
+    // --- 6. AKIŞ VE PROFİL YÖNETİMİ ---
     function generatePostHTML(id, post, uData, showOptions) {
         let timeStr = "Şimdi";
         if(post.createdAt) timeStr = post.createdAt.toDate().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
 
         const imgHTML = post.imageUrl ? `<img class="post-image" src="${post.imageUrl}">` : '';
         const captionHTML = post.caption.trim() !== "" ? `<div class="post-caption">${post.imageUrl ? `<span>${uData.username}</span>` : ''}${post.caption}</div>` : '';
-        const optionsHTML = showOptions ? `<button class="post-manage-btn" onclick="openPostOptions('${id}', '${post.caption}')"><i class="fa-solid fa-ellipsis-vertical"></i></button>` : '';
+        const optionsHTML = showOptions ? `<button class="post-manage-btn" onclick="openPostOptions('${id}', '${post.caption || ''}')"><i class="fa-solid fa-ellipsis-vertical"></i></button>` : '';
 
         return `
             <div class="post" id="post-card-${id}">
@@ -323,23 +327,24 @@ document.addEventListener("DOMContentLoaded", () => {
             pGrid.innerHTML = "";
             pTweets.innerHTML = "";
             let myPostCount = 0;
+            postsCache = {}; // Modal için
 
             snapshot.forEach(doc => {
                 const post = doc.data();
+                postsCache[doc.id] = post; // Hafızaya al
                 const uData = usersCache[post.authorId] || { username: "kullanici", avatar: "https://i.pravatar.cc/150" };
                 const isMyPost = post.authorId === currentUser.uid;
 
                 const html = generatePostHTML(doc.id, post, uData, isMyPost);
-                feed.insertAdjacentHTML('beforeend', html); // Ana akışa her türlü ekle
+                feed.insertAdjacentHTML('beforeend', html);
 
-                // Profile iki ayrı klasöre ayırarak ekle
                 if(isMyPost) {
                     myPostCount++;
                     if(post.imageUrl) {
                         pGrid.insertAdjacentHTML('beforeend', `
-                            <div class="grid-item">
+                            <div class="grid-item" onclick="openSinglePostModal('${doc.id}')">
                                 <img src="${post.imageUrl}">
-                                <button class="grid-manage-btn" onclick="openPostOptions('${doc.id}', '${post.caption || ''}')"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                                <button class="grid-manage-btn" onclick="event.stopPropagation(); openPostOptions('${doc.id}', '${post.caption || ''}')"><i class="fa-solid fa-ellipsis-vertical"></i></button>
                             </div>
                         `);
                     } else {
@@ -347,10 +352,21 @@ document.addEventListener("DOMContentLoaded", () => {
                     }
                 }
             });
-
             document.getElementById('post-count').innerText = myPostCount;
         });
     }
+
+    // Profil Izgarasında Fotoğrafa Tıklanınca Açılan Görüntüleyici
+    window.openSinglePostModal = (postId) => {
+        const post = postsCache[postId];
+        if(!post) return;
+        const uData = usersCache[post.authorId];
+        const isMyPost = post.authorId === currentUser.uid;
+        
+        const html = generatePostHTML(postId, post, uData, isMyPost);
+        document.getElementById('single-post-container').innerHTML = html;
+        document.getElementById('single-post-modal').style.display = "flex";
+    };
 
     // --- 7. DÜZENLEME & SİLME MODALI ---
     window.openPostOptions = (postId, caption) => {
@@ -369,6 +385,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if(confirm("Bu paylaşımı kalıcı olarak silmek istediğine emin misin?")) {
             db.collection('posts').doc(currentEditPostId).delete();
             document.getElementById('post-options-modal').style.display = "none";
+            document.getElementById('single-post-modal').style.display = "none"; // Açıksa kapat
         }
     };
 
@@ -378,11 +395,12 @@ document.addEventListener("DOMContentLoaded", () => {
             db.collection('posts').doc(currentEditPostId).update({ caption: newCaption }).then(() => {
                 document.getElementById('edit-post-modal').style.display = "none";
                 currentEditPostId = null;
+                document.getElementById('single-post-modal').style.display = "none";
             });
         }
     };
 
-    // --- 8. DM'DEN GÖNDERİ PAYLAŞMA ---
+    // --- 8. DM'DEN PAYLAŞMA ---
     window.openShareModal = (postId) => {
         currentSharePostId = postId;
         document.getElementById('share-modal').style.display = "flex";
@@ -391,7 +409,6 @@ document.addEventListener("DOMContentLoaded", () => {
     function renderShareUsersList() {
         const wrap = document.getElementById('share-users-list');
         wrap.innerHTML = "";
-        
         Object.keys(usersCache).forEach(uid => {
             if(uid === currentUser.uid) return;
             const u = usersCache[uid];
@@ -407,45 +424,35 @@ document.addEventListener("DOMContentLoaded", () => {
 
     window.processPostShare = (receiverUid) => {
         if(!currentSharePostId || !currentUser) return;
-        
         db.collection('posts').doc(currentSharePostId).get().then(doc => {
             if(!doc.exists) return;
             const postData = doc.data();
             const textSummary = postData.caption ? `"${postData.caption}"` : "Bir fotoğraf gönderisi";
-            
             db.collection('messages').add({
-                senderId: currentUser.uid,
-                receiverId: receiverUid,
+                senderId: currentUser.uid, receiverId: receiverUid,
                 text: `🔗 [Gönderi Paylaşıldı]: ${textSummary}`,
                 createdAt: firebase.firestore.FieldValue.serverTimestamp()
             }).then(() => {
-                alert("Gönderi başarıyla iletildi!");
+                alert("Gönderi iletildi!");
                 document.getElementById('share-modal').style.display = "none";
                 currentSharePostId = null;
             });
         });
     };
 
-    // --- 9. KEŞFET VE DM MOTORU ---
-    function renderExplore() {
+    // --- 9. KEŞFET VE DM ---
+    document.getElementById('search-input').oninput = function() {
         const results = document.getElementById('search-results');
         results.innerHTML = "";
-        const queryVal = document.getElementById('search-input').value.toLowerCase();
-
+        const queryVal = this.value.toLowerCase();
         Object.keys(usersCache).forEach(uid => {
             if(uid === currentUser.uid) return;
             const u = usersCache[uid];
             if(u.username.toLowerCase().includes(queryVal) || u.name.toLowerCase().includes(queryVal)) {
-                results.insertAdjacentHTML('beforeend', `
-                    <div class="user-item" onclick="openChatWith('${uid}')">
-                        <img src="${u.avatar}">
-                        <div class="user-info"><span class="name">${u.name}</span><span class="username">@${u.username}</span></div>
-                    </div>
-                `);
+                results.insertAdjacentHTML('beforeend', `<div class="user-item" onclick="openChatWith('${uid}')"><img src="${u.avatar}"><div class="user-info"><span class="name">${u.name}</span><span class="username">@${u.username}</span></div></div>`);
             }
         });
-    }
-    document.getElementById('search-input').oninput = renderExplore;
+    };
 
     function renderDMList() {
         const list = document.getElementById('dm-list');
@@ -453,12 +460,7 @@ document.addEventListener("DOMContentLoaded", () => {
         Object.keys(usersCache).forEach(uid => {
             if(uid === currentUser.uid) return;
             const u = usersCache[uid];
-            list.insertAdjacentHTML('beforeend', `
-                <div class="user-item" onclick="openChatWith('${uid}')">
-                    <img src="${u.avatar}">
-                    <div class="user-info"><span class="name">${u.name}</span><span class="msg-preview">Mesaj göndermek için tıkla</span></div>
-                </div>
-            `);
+            list.insertAdjacentHTML('beforeend', `<div class="user-item" onclick="openChatWith('${uid}')"><img src="${u.avatar}"><div class="user-info"><span class="name">${u.name}</span><span class="msg-preview">Mesaj göndermek için tıkla</span></div></div>`);
         });
     }
 
@@ -469,10 +471,8 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById('dm-chat-container').style.display = "block";
         document.getElementById('chat-user-avatar').src = u.avatar;
         document.getElementById('chat-user-username').innerText = u.username;
-        
         document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
         document.getElementById('dm-tab').classList.add('active');
-        
         loadLiveChatMessages();
     };
 
@@ -485,25 +485,20 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById('send-message-btn').onclick = () => {
         const text = document.getElementById('chat-message-input').value;
         if(text.trim() === "" || !activeChatUserId) return;
-
         db.collection('messages').add({
-            senderId: currentUser.uid,
-            receiverId: activeChatUserId,
-            text: text,
+            senderId: currentUser.uid, receiverId: activeChatUserId, text: text,
             createdAt: firebase.firestore.FieldValue.serverTimestamp()
         }).then(() => document.getElementById('chat-message-input').value = "");
     };
 
     function loadLiveChatMessages() {
         if(!currentUser || !activeChatUserId) return;
-        
         db.collection('messages').orderBy('createdAt', 'asc').onSnapshot(snapshot => {
             const box = document.getElementById('chat-messages');
             box.innerHTML = "";
             snapshot.forEach(doc => {
                 const msg = doc.data();
-                if((msg.senderId === currentUser.uid && msg.receiverId === activeChatUserId) || 
-                   (msg.senderId === activeChatUserId && msg.receiverId === currentUser.uid)) {
+                if((msg.senderId === currentUser.uid && msg.receiverId === activeChatUserId) || (msg.senderId === activeChatUserId && msg.receiverId === currentUser.uid)) {
                     const cls = msg.senderId === currentUser.uid ? 'sent' : 'received';
                     box.insertAdjacentHTML('beforeend', `<div class="chat-msg ${cls}">${msg.text}</div>`);
                 }
@@ -512,7 +507,42 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // --- 10. TEMA VE SEKME GEÇİŞLERİ ---
+    // --- 10. REELS (SWINDER) SİSTEMİ ---
+    function initReels() {
+        // Test amaçlı dikey formatlı harici videolar (Gerçekte veritabanından çekilebilir)
+        const sampleReels = [
+            { url: "https://www.w3schools.com/html/mov_bbb.mp4", user: "swipper_official", text: "Swipper Reels test yayını! 🚀" },
+            { url: "https://media.w3.org/2010/05/sintel/trailer.mp4", user: "eminbal", text: "Sinematik çekimler deniyoruz 🎬" }
+        ];
+        
+        const feed = document.getElementById('reels-feed');
+        feed.innerHTML = '';
+        
+        sampleReels.forEach(reel => {
+            feed.insertAdjacentHTML('beforeend', `
+                <div class="reel-item" onclick="togglePlay(this)">
+                    <video class="reel-video" src="${reel.url}" loop></video>
+                    <div class="reel-info">
+                        <div class="username">@${reel.user}</div>
+                        <div class="caption">${reel.text}</div>
+                    </div>
+                    <div class="reel-actions">
+                        <i class="fa-solid fa-heart"></i>
+                        <i class="fa-solid fa-comment"></i>
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </div>
+                </div>
+            `);
+        });
+    }
+
+    window.togglePlay = (el) => {
+        const video = el.querySelector('video');
+        if(video.paused) { video.play(); } 
+        else { video.pause(); }
+    };
+
+    // --- 11. TEMALAR VE MODALLAR ---
     document.getElementById('theme-toggle-btn').onclick = () => {
         document.body.classList.toggle('dark-mode');
         const icon = document.getElementById('theme-toggle-btn').querySelector('i');

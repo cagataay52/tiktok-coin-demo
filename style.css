@@ -41,7 +41,19 @@ html, body { width: 100%; min-height: 100vh; overflow-x: hidden; background-colo
 .tab-content { display: none; }
 .tab-content.active { display: block; }
 
+/* REELS SİSTEMİ (SWINDER MANTIĞI) */
+.reels-feed { height: 100vh; overflow-y: scroll; scroll-snap-type: y mandatory; background: #000; padding-bottom: 60px; }
+.reels-feed::-webkit-scrollbar { display: none; }
+.reel-item { height: 100%; width: 100%; scroll-snap-align: start; position: relative; display: flex; justify-content: center; align-items: center; background: #121212; }
+.reel-video { width: 100%; height: 100%; object-fit: cover; }
+.reel-actions { position: absolute; right: 15px; bottom: 100px; display: flex; flex-direction: column; gap: 25px; color: white; font-size: 32px; align-items: center; z-index: 10; }
+.reel-actions i { cursor: pointer; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5)); }
+.reel-info { position: absolute; left: 15px; bottom: 90px; color: white; text-shadow: 0 1px 3px rgba(0,0,0,0.8); z-index: 10; width: 70%; }
+.reel-info .username { font-weight: bold; font-size: 16px; margin-bottom: 5px; }
+.reel-info .caption { font-size: 14px; }
+
 .stories-container { display: flex; gap: 15px; padding: 10px 15px; overflow-x: auto; border-bottom: 1px solid var(--border-color); scrollbar-width: none; }
+.stories-container::-webkit-scrollbar { display: none; }
 .story { display: flex; flex-direction: column; align-items: center; font-size: 11px; gap: 5px; position: relative; cursor: pointer; width: 68px; }
 .story-ring { width: 64px; height: 64px; border-radius: 50%; background: var(--insta-gradient); display: flex; justify-content: center; align-items: center; }
 .story-ring img { width: 58px; height: 58px; border-radius: 50%; border: 2px solid var(--bg-color); object-fit: cover; }
@@ -49,8 +61,7 @@ html, body { width: 100%; min-height: 100vh; overflow-x: hidden; background-colo
 .create-story .story-ring img { border: 1px solid var(--border-color); }
 .plus-icon { position: absolute; bottom: 18px; right: 5px; background: var(--blue); color: #fff; border-radius: 50%; width: 18px; height: 18px; display: flex; justify-content: center; align-items: center; border: 2px solid var(--bg-color); font-size: 10px; }
 
-/* TWEET & POST DESIGN */
-.post { padding: 15px 0; border-bottom: 1px solid var(--border-color); position: relative; }
+.post { padding: 15px 0; border-bottom: 1px solid var(--border-color); position: relative; background: var(--bg-color); }
 .post-header { display: flex; align-items: center; padding: 0 15px 10px 15px; justify-content: space-between; }
 .post-header-left { display: flex; align-items: center; }
 .post-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; margin-right: 12px; border: 1px solid var(--border-color); }
@@ -62,10 +73,8 @@ html, body { width: 100%; min-height: 100vh; overflow-x: hidden; background-colo
 .post-actions { display: flex; padding: 10px 15px 0 15px; gap: 20px; font-size: 20px; color: var(--text-color); }
 .post-actions i { cursor: pointer; transition: 0.1s; }
 .post-actions i:hover { color: var(--blue); }
-
 .post-manage-btn { background: none; border: none; color: var(--secondary-text); cursor: pointer; font-size: 16px; padding: 0 5px; }
 
-/* DM SYSTEM */
 .dm-header { padding: 15px; border-bottom: 1px solid var(--border-color); font-size: 16px; }
 .user-list { display: flex; flex-direction: column; }
 .user-item { display: flex; align-items: center; padding: 12px 15px; gap: 15px; cursor: pointer; border-bottom: 1px solid var(--border-color); }
@@ -83,7 +92,6 @@ html, body { width: 100%; min-height: 100vh; overflow-x: hidden; background-colo
 .chat-input-container input { flex: 1; padding: 12px 16px; border: 1px solid var(--border-color); border-radius: 24px; outline: none; background: var(--input-bg); color: var(--text-color); font-size: 14px; }
 .chat-header { display: flex; align-items: center; padding: 10px 15px; border-bottom: 1px solid var(--border-color); background: var(--bg-color); }
 
-/* PROFILE */
 .profile-top-bar { display: flex; justify-content: space-between; padding: 12px 15px; align-items: center; border-bottom: 1px solid var(--border-color); }
 .profile-username { font-weight: 700; font-size: 18px; }
 .profile-header { display: flex; align-items: center; padding: 18px 15px; gap: 30px; }
@@ -98,14 +106,13 @@ html, body { width: 100%; min-height: 100vh; overflow-x: hidden; background-colo
 .profile-actions { padding: 0 15px 15px 15px; display: flex; gap: 10px; }
 .edit-profile-btn { flex: 1; padding: 8px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-color); font-weight: 600; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px; }
 
-/* PROFİL SEKMELERİ VE KLASÖRLER */
 .profile-tabs { display: flex; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); background: var(--bg-color); }
 .p-tab { flex: 1; text-align: center; padding: 12px 0; font-size: 18px; color: var(--secondary-text); cursor: pointer; border-bottom: 1px solid transparent; }
 .p-tab.active { color: var(--text-color); border-bottom: 1px solid var(--text-color); }
 .profile-tab-content { display: none; }
 .profile-tab-content.active { display: block; }
 #p-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; padding: 3px; }
-.grid-item { position: relative; aspect-ratio: 1/1; background-color: var(--input-bg); overflow: hidden; }
+.grid-item { position: relative; aspect-ratio: 1/1; background-color: var(--input-bg); overflow: hidden; cursor: pointer; }
 .grid-item img { width: 100%; height: 100%; object-fit: cover; }
 .grid-manage-btn { position: absolute; top: 5px; right: 5px; background: rgba(0,0,0,0.6); color: white; border: none; border-radius: 50%; width: 26px; height: 26px; cursor: pointer; display: flex; justify-content: center; align-items: center; font-size: 14px; }
 
