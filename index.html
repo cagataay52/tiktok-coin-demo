@@ -13,8 +13,9 @@
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
     
-    <link rel="stylesheet" href="style.css?v=8">
+    <link rel="stylesheet" href="style.css?v=9">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body class="light-mode"> 
@@ -101,8 +102,8 @@
                     </div>
                     <div class="profile-stats">
                         <div class="stat"><strong id="post-count">0</strong><span>Gönderi</span></div>
-                        <div class="stat"><strong>0</strong><span>Takipçi</span></div>
-                        <div class="stat"><strong>0</strong><span>Takip</span></div>
+                        <div class="stat"><strong id="follower-count">0</strong><span>Takipçi</span></div>
+                        <div class="stat"><strong id="following-count">0</strong><span>Takip</span></div>
                     </div>
                 </div>
                 
@@ -136,8 +137,8 @@
                     <div class="avatar-container"><img src="" class="profile-avatar" id="other-profile-pic"></div>
                     <div class="profile-stats">
                         <div class="stat"><strong id="other-profile-post-count">0</strong><span>Gönderi</span></div>
-                        <div class="stat"><strong>0</strong><span>Takipçi</span></div>
-                        <div class="stat"><strong>0</strong><span>Takip</span></div>
+                        <div class="stat"><strong id="other-profile-takipci">0</strong><span>Takipçi</span></div>
+                        <div class="stat"><strong id="other-profile-takip">0</strong><span>Takip</span></div>
                     </div>
                 </div>
                 
@@ -238,12 +239,10 @@
         <div class="modal-content">
             <div class="modal-header"><h3>Yeni Paylaşım</h3><button class="close-btn" id="close-post"><i class="fa-solid fa-xmark"></i></button></div>
             <textarea id="post-content-input" class="custom-textarea" placeholder="Neler düşünüyorsun?" style="height: 80px; border: none; border-bottom: 1px solid var(--border-color); font-size: 16px;"></textarea>
-            
             <div class="image-upload-preview" id="post-image-preview" style="display: none; position: relative;">
                 <img id="preview-img" src="" style="width: 100%; border-radius: 8px; max-height: 250px; object-fit: cover;">
                 <button id="remove-post-image" style="position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.6); color: white; border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer;"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            
             <button id="select-post-image" class="secondary-btn" style="margin-top: 10px;"><i class="fa-regular fa-image"></i> Galeriden Fotoğraf Seç</button>
             <button id="save-post-btn" class="primary-btn" style="margin-top: 10px;">Paylaş</button>
         </div>

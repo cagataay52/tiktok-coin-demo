@@ -20,8 +20,8 @@ document.addEventListener("DOMContentLoaded", () => {
     let currentUser = null;
     let usersCache = {}; 
     let postsCache = {}; 
-    let selectedPostImageBase64 = null;
-    let selectedReelVideoBase64 = null;
+    let selectedPostImageBlobUrl = null;
+    let selectedReelVideoBlobUrl = null;
     let activeChatUserId = null;
     let activeChatId = null; 
     let activeCommentPostIdForSingleView = null;
@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let activeCommentPostCaptionForOptions = "";
     let activeCommentPostTypeForOptions = "post"; 
     let storyTimer = null;
-    let currentSharePostId = null; 
+    let currentSharePostId = null;
     let activeStoryAuthorId = null;
 
     function getChatRoomId(uid1, uid2) { return uid1 < uid2 ? uid1 + '_' + uid2 : uid2 + '_' + uid1; }
@@ -51,16 +51,6 @@ document.addEventListener("DOMContentLoaded", () => {
             };
             img.src = e.target.result;
         };
-        reader.readAsDataURL(file);
-    }
-
-    function convertVideoToBase64(file, callback) {
-        if(file.size > 1048576) {
-            alert("Video Boyutu Çok Büyük! Lütfen 1MB altında çok kısa bir video seçin (Test sınırı)");
-            return;
-        }
-        const reader = new FileReader();
-        reader.onload = (e) => { callback(e.target.result); };
         reader.readAsDataURL(file);
     }
 
@@ -111,7 +101,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById('my-story-img').src = data.avatar;
     }
 
-    // --- 2. PROFİL SEKMELERİ ---
+    // --- 2. PROFİL ---
     document.querySelectorAll('.p-tab').forEach(tab => {
         tab.addEventListener('click', () => {
             document.querySelectorAll('.p-tab').forEach(t => t.classList.remove('active'));
@@ -144,49 +134,52 @@ document.addEventListener("DOMContentLoaded", () => {
         compressAndConvert(e.target.files[0], (compressedBase64) => { db.collection('users').doc(currentUser.uid).update({ avatar: compressedBase64 }); });
     };
 
-    // --- 3. PAYLAŞIM MODULLARI (+ BUTONU) ---
+    // --- 3. PAYLAŞIM ---
     const createOptionsModal = document.getElementById('create-options-modal');
     const postModal = document.getElementById('post-modal');
     
     document.getElementById('header-add-btn').onclick = (e) => { e.preventDefault(); createOptionsModal.style.display = "flex"; };
     
-    // Gönderi Modülü
+    // Gönderi (Fotoğraf / Lokal BLOB)
     document.getElementById('btn-create-post').onclick = () => {
         createOptionsModal.style.display = "none"; postModal.style.display = "flex";
         document.getElementById('post-image-preview').style.display = "none";
         document.getElementById('post-content-input').value = "";
-        selectedPostImageBase64 = null;
+        selectedPostImageBlobUrl = null;
     };
     document.getElementById('select-post-image').onclick = () => document.getElementById('post-image-upload').click();
     document.getElementById('post-image-upload').onchange = (e) => {
-        if(!e.target.files[0]) return;
-        compressAndConvert(e.target.files[0], (compressedBase64) => {
-            selectedPostImageBase64 = compressedBase64;
-            document.getElementById('preview-img').src = compressedBase64;
-            document.getElementById('post-image-preview').style.display = "block";
-        });
+        const file = e.target.files[0];
+        if(!file) return;
+        selectedPostImageBlobUrl = URL.createObjectURL(file); // Doğrudan local blob URL
+        document.getElementById('preview-img').src = selectedPostImageBlobUrl;
+        document.getElementById('post-image-preview').style.display = "block";
+        document.getElementById('select-post-image').innerText = "Fotoğrafı Değiştir";
     };
     document.getElementById('remove-post-image').onclick = () => {
-        selectedPostImageBase64 = null; document.getElementById('post-image-preview').style.display = "none"; document.getElementById('post-image-upload').value = "";
+        selectedPostImageBlobUrl = null; document.getElementById('post-image-preview').style.display = "none"; document.getElementById('post-image-upload').value = "";
+        document.getElementById('select-post-image').innerText = "Galeriden Fotoğraf Seç";
     };
     document.getElementById('save-post-btn').onclick = () => {
         const caption = document.getElementById('post-content-input').value;
-        if(!selectedPostImageBase64 && caption.trim() === "") return;
+        if(!selectedPostImageBlobUrl && caption.trim() === "") return;
         db.collection('posts').add({
-            imageUrl: selectedPostImageBase64 || null, caption: caption, authorId: currentUser.uid, likes: [], type: 'post', createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        }).then(() => { postModal.style.display = "none"; document.getElementById('post-content-input').value = ""; selectedPostImageBase64 = null; });
+            imageUrl: selectedPostImageBlobUrl || null, caption: caption, authorId: currentUser.uid, likes: [], type: 'post', createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        }).then(() => { postModal.style.display = "none"; document.getElementById('post-content-input').value = ""; selectedPostImageBlobUrl = null; });
     };
 
-    // Hikaye Modülü
+    // Hikaye (Lokal BLOB)
     const storyUpload = document.getElementById('story-image-upload');
     document.getElementById('add-story-btn').onclick = () => { if (document.getElementById('add-story-btn').querySelector('.plus-icon').style.display !== 'none') { storyUpload.click(); } };
     document.getElementById('btn-create-story-menu').onclick = () => { createOptionsModal.style.display = "none"; storyUpload.click(); };
     storyUpload.onchange = (e) => {
-        if(!e.target.files[0]) return;
-        compressAndConvert(e.target.files[0], (compressedBase64) => { db.collection('stories').add({ imageUrl: compressedBase64, authorId: currentUser.uid, createdAt: firebase.firestore.FieldValue.serverTimestamp() }); });
+        const file = e.target.files[0];
+        if(!file) return;
+        const blobUrl = URL.createObjectURL(file);
+        db.collection('stories').add({ imageUrl: blobUrl, authorId: currentUser.uid, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
     };
 
-    // Reels Galeriden Video Yükleme Motoru (Swinder Depolamasız Doğrudan İşleme)
+    // Reels (Lokal Galeri / BLOB Video İşlemi)
     document.getElementById('btn-create-reel').onclick = () => {
         createOptionsModal.style.display = "none";
         document.getElementById('reel-video-upload').click();
@@ -194,14 +187,11 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById('reel-video-upload').onchange = (e) => {
         const file = e.target.files[0];
         if(!file) return;
-        
-        convertVideoToBase64(file, (base64Video) => {
-            selectedReelVideoBase64 = base64Video;
-            const caption = prompt("Reels videonuz için bir açıklama yazın:");
-            db.collection('reels').add({
-                videoUrl: selectedReelVideoBase64, caption: caption || "", authorId: currentUser.uid, type: 'reel', createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            }).then(() => { alert("Reels videonuz başarıyla paylaşıldı!"); });
-        });
+        selectedReelVideoBlobUrl = URL.createObjectURL(file);
+        const caption = prompt("Reels videonuz için bir açıklama yazın:");
+        db.collection('reels').add({
+            videoUrl: selectedReelVideoBlobUrl, caption: caption || "", authorId: currentUser.uid, type: 'reel', createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        }).then(() => { alert("Reels videonuz başarıyla eklendi!"); });
     };
 
     // --- 4. HİKAYE YÖNETİMİ ---
@@ -261,7 +251,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }).then(() => { alert("Yanıt iletildi!"); document.getElementById('story-reply-input').value = ""; closeStory(); });
     };
 
-    // --- 5. POST VE TWEET GÖSTERİMİ / YÖNETİMİ ---
+    // --- 5. POST & TWEETS ---
     function generatePostHTML(id, post, uData, showOptions) {
         let timeStr = "Şimdi"; if(post.createdAt) timeStr = post.createdAt.toDate().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
         const imgHTML = post.imageUrl ? `<img class="post-image" src="${post.imageUrl}">` : '';
@@ -304,17 +294,8 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     window.openComments = (postId) => {
-        activeCommentPostIdForSingleView = null; // Sekme Kilitlenmesini Önleyen Optimizasyon
+        activeCommentPostIdForSingleView = null; 
         activeCommentPostIdForOptions = null;
-        
-        activeCommentPostIdForSingleView = postId; 
-        activeCommentPostIdForOptions = null;
-        
-        activeCommentPostIdForSingleView = postId; 
-        activeCommentPostIdForOptions = null;
-        
-        activeCommentPostIdForSingleView = postId; 
-        activePostIdForOptions = null;
         
         activeCommentPostId = postId; document.getElementById('comments-modal').style.display = "flex";
         const list = document.getElementById('comments-list'); list.innerHTML = "";
@@ -361,7 +342,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 const html = generatePostHTML(doc.id, post, uData, isMyPost);
                 feed.insertAdjacentHTML('beforeend', html);
-                renderFeedCommentsPreview(doc.id, `feed-comments-box-${doc.id}`);
+                if(document.getElementById(`feed-comments-box-${doc.id}`)) {
+                     renderFeedCommentsPreview(doc.id, `feed-comments-box-${doc.id}`);
+                }
 
                 if(isMyPost) {
                     myPostCount++;
@@ -371,64 +354,27 @@ document.addEventListener("DOMContentLoaded", () => {
                                 <img src="${post.imageUrl}"><button class="grid-manage-btn" onclick="event.stopPropagation(); openPostOptions('${doc.id}', '${post.caption || ''}', 'post')"><i class="fa-solid fa-ellipsis-vertical"></i></button>
                             </div>
                         `);
-                    } else {
-                        pTweets.insertAdjacentHTML('beforeend', `
-                           <div style="position:relative;">
-                               ${html}
-                           </div>
-                        `);
-                    }
+                    } else { pTweets.insertAdjacentHTML('beforeend', html); }
                 }
             });
             document.getElementById('post-count').innerText = myPostCount;
         });
     }
 
-    // IZGARA VEYA AKIŞTAN GÖNDERİYE TIKLAYINCA BÜYÜTEN MODÜL
     window.openSinglePostModal = (postId) => {
         const post = postsCache[postId]; if(!post) return;
         const uData = usersCache[post.authorId]; const isMyPost = post.authorId === currentUser.uid;
         document.getElementById('single-post-container').innerHTML = generatePostHTML(postId, post, uData, isMyPost);
-        renderFeedCommentsPreview(postId, `feed-comments-box-${postId}`);
+        if(document.getElementById(`feed-comments-box-${postId}`)) {
+             renderFeedCommentsPreview(postId, `feed-comments-box-${postId}`);
+        }
         document.getElementById('single-post-modal').style.display = "flex";
     };
 
-    // --- 6. DÜZENLE VE SİL MANTIĞI (KİLİTLENME ÖNLEYİCİ) ---
-    window.openPostOptions = (postId, caption, type = 'post') => {
-        currentEditPostId = postId; currentEditPostCaption = caption; activePostTypeForOptions = type;
-        document.getElementById('post-options-modal').style.display = "flex";
-    };
-
-    document.getElementById('opt-edit-post').onclick = () => {
-        document.getElementById('post-options-modal').style.display = "none";
-        document.getElementById('edit-post-input').value = currentEditPostCaption;
-        document.getElementById('edit-post-modal').style.display = "flex";
-    };
-
-    document.getElementById('opt-del-post').onclick = () => {
-        if(confirm("Bu paylaşımı silmek istediğine emin misin?")) {
-            const collectionName = activePostTypeForOptions === 'reel' ? 'reels' : 'posts';
-            db.collection(collectionName).doc(currentEditPostId).delete();
-            document.getElementById('post-options-modal').style.display = "none";
-            document.getElementById('single-post-modal').style.display = "none";
-        }
-    };
-
-    document.getElementById('update-post-btn').onclick = () => {
-        const newCaption = document.getElementById('edit-post-input').value;
-        if(currentEditPostId) {
-            const collectionName = activePostTypeForOptions === 'reel' ? 'reels' : 'posts';
-            db.collection(collectionName).doc(currentEditPostId).update({ caption: newCaption }).then(() => {
-                document.getElementById('edit-post-modal').style.display = "none";
-                currentEditPostId = null;
-                document.getElementById('single-post-modal').style.display = "none";
-            });
-        }
-    };
-
-    // --- 7. DM VE PAYLAŞIM ---
+    // --- 6. PAYLAŞIM VE REELS MOTORU ---
     window.openShareModal = (postId) => {
-        currentSharePostId = postId; document.getElementById('share-modal').style.display = "flex";
+        currentPostId = postId; document.getElementById('share-modal').style.display = "flex";
+        currentPostId = postId; document.getElementById('share-modal').style.display = "flex";
     };
 
     function renderShareUsersList() {
@@ -441,23 +387,23 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     window.processPostShare = (receiverUid) => {
-        if(!currentSharePostId || !currentUser) return;
-        db.collection('posts').doc(currentSharePostId).get().then(doc => {
+        if(!currentPostId || !currentUser) return;
+        db.collection('posts').doc(currentPostId).get().then(doc => {
             if(!doc.exists) return; const pData = doc.data(); const textSummary = pData.caption ? `"${pData.caption}"` : "Bir fotoğraf gönderisi";
             const chatId = getChatRoomId(currentUser.uid, receiverUid);
             db.collection('chats').doc(chatId).collection('messages').add({
                 senderId: currentUser.uid, text: `🔗 [Gönderi Paylaşıldı]: ${textSummary}`, createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            }).then(() => { alert("Gönderi iletildi!"); document.getElementById('share-modal').style.display = "none"; currentSharePostId = null; });
+            }).then(() => { alert("Gönderi iletildi!"); document.getElementById('share-modal').style.display = "none"; currentPostId = null; });
         });
     };
 
-    // --- 8. REELS (YEREL GALERİ VE VİDEO DÖNGÜSÜ) ---
+    // --- 7. LOKAL İŞLEMELİ REELS MOTORU (BLOB) ---
     function loadReelsFeed() {
         db.collection('reels').orderBy('createdAt', 'desc').onSnapshot(snapshot => {
             const feed = document.getElementById('reels-feed'); feed.innerHTML = '';
             
             if(snapshot.empty) {
-                feed.insertAdjacentHTML('beforeend', `<div class="reel-item" onclick="togglePlay(this)"><video class="reel-video" src="https://www.w3schools.com/html/mov_bbb.mp4" loop playsinline></video><div class="reel-info"><div class="username">@swipper_official</div><div class="caption">Reels boş. Üst kısımdan ilk reelsi sen yükle!</div></div><div class="reel-actions"><i class="fa-solid fa-heart" onclick="event.stopPropagation(); this.classList.toggle('liked')"></i></div></div>`);
+                feed.insertAdjacentHTML('beforeend', `<div class="reel-item" onclick="togglePlay(this)"><video class="reel-video" src="https://www.w3schools.com/html/mov_bbb.mp4" loop playsinline></video><div class="reel-info"><div class="username">@swipper_official</div><div class="caption">Reels boş. + butonundan ilk reelsi sen yükle!</div></div><div class="reel-actions"><i class="fa-solid fa-heart" onclick="event.stopPropagation(); this.classList.toggle('liked')"></i></div></div>`);
                 return;
             }
 
@@ -479,7 +425,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     window.togglePlay = (el) => { const v = el.querySelector('video'); v.paused ? v.play() : v.pause(); };
 
-    // --- 9. KEŞFET VE PROFİL İŞLEMLERİ ---
+    // --- 8. KEŞFET VE DM ---
     document.getElementById('search-input').oninput = function() {
         const results = document.getElementById('search-results'); results.innerHTML = ""; const queryVal = this.value.toLowerCase();
         Object.keys(usersCache).forEach(uid => {
@@ -505,8 +451,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
         db.collection("reels").where("authorId", "==", uid).get().then(snapshot => {
             snapshot.forEach(doc => {
-                const r = doc.data();
-                count++; postsCache[doc.id] = r;
+                const r = doc.data(); count++; postsCache[doc.id] = r;
                 grid.insertAdjacentHTML('beforeend', `<div class="grid-item" onclick="openSinglePostModal('${doc.id}')"><video src="${r.videoUrl}" style="width:100%; height:100%; object-fit:cover;"></video><i class="fa-solid fa-clapperboard" style="position:absolute; top:5px; right:5px; color:white;"></i></div>`);
             });
             document.getElementById('other-profile-post-count').innerText = count;
@@ -514,7 +459,6 @@ document.addEventListener("DOMContentLoaded", () => {
         document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active')); document.getElementById('other-profile-tab').classList.add('active'); window.scrollTo(0, 0);
     };
 
-    // --- 10. DM (MESAJLAŞMA) ---
     function renderDMList() {
         const list = document.getElementById('dm-list'); list.innerHTML = ""; let userFound = false;
         Object.keys(usersCache).forEach(uid => {
@@ -556,7 +500,33 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // --- 11. DİĞER FONKSİYONLAR VE MODAL KAPATMA ---
+    // --- SİL / DÜZENLE ---
+    window.openPostOptions = (postId, caption, type = 'post') => {
+        currentEditPostId = postId; currentEditPostCaption = caption; activeCommentPostTypeForOptions = type;
+        document.getElementById('post-options-modal').style.display = "flex";
+    };
+    document.getElementById('opt-edit-post').onclick = () => {
+        document.getElementById('post-options-modal').style.display = "none"; document.getElementById('edit-post-input').value = currentEditPostCaption; document.getElementById('edit-post-modal').style.display = "flex";
+    };
+    document.getElementById('opt-del-post').onclick = () => {
+        if(confirm("Bu paylaşımı silmek istediğine emin misin?")) {
+            const cName = activeCommentPostTypeForOptions === 'reel' ? 'reels' : 'posts';
+            db.collection(cName).doc(currentEditPostId).delete();
+            document.getElementById('post-options-modal').style.display = "none";
+            document.getElementById('single-post-modal').style.display = "none";
+        }
+    };
+    document.getElementById('update-post-btn').onclick = () => {
+        const newCaption = document.getElementById('edit-post-input').value;
+        if(currentEditPostId) {
+            const cName = activeCommentPostTypeForOptions === 'reel' ? 'reels' : 'posts';
+            db.collection(cName).doc(currentEditPostId).update({ caption: newCaption }).then(() => {
+                document.getElementById('edit-post-modal').style.display = "none"; currentEditPostId = null; document.getElementById('single-post-modal').style.display = "none";
+            });
+        }
+    };
+
+    // --- TEMA VE MODAL GÜVENLİĞİ (Boşluğa tıklama kapatma) ---
     document.getElementById('theme-toggle-btn').onclick = () => {
         document.body.classList.toggle('dark-mode'); const icon = document.getElementById('theme-toggle-btn').querySelector('i'); icon.classList.toggle('fa-moon'); icon.classList.toggle('fa-sun');
     };
@@ -564,6 +534,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const navItems = document.querySelectorAll('.nav-item');
     navItems.forEach(item => {
         item.addEventListener('click', (e) => {
+            if (item.id === 'nav-add-btn') return; 
             e.preventDefault(); navItems.forEach(i => i.classList.remove('active')); item.classList.add('active');
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
             const targetId = item.dataset.target; if(targetId) document.getElementById(targetId).classList.add('active');
@@ -572,7 +543,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Modalların arka planına (saydam alana) tıklayınca kapatma algoritması (Kilitlenme Önleyici)
     document.querySelectorAll('.modal').forEach(modal => {
         modal.addEventListener('click', (e) => { if(e.target === modal) modal.style.display = "none"; });
     });
@@ -580,7 +550,6 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll('.close-btn').forEach(btn => {
         btn.onclick = (e) => {
             if(e.target.id === 'close-story-viewer' || e.target.parentElement.id === 'close-story-viewer') closeStory();
-            else if(e.target.id === 'close-reel' || e.target.parentElement.id === 'close-reel') reelModal.style.display = "none";
             else e.target.closest('.modal').style.display = "none";
         };
     });
