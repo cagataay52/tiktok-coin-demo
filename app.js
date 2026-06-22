@@ -1,142 +1,181 @@
-// Firebase SDK modüllerini internet üzerinden (CDN) çekiyoruz
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-// Senin Firebase Konfigürasyonun
+// 1. FIREBASE BAŞLATMA
 const firebaseConfig = {
-  apiKey: "AIzaSyCTbvB4-LBG-jP8zNkJhLNEaQfQpTAdEjA",
-  authDomain: "swipper-2f2a4.firebaseapp.com",
-  projectId: "swipper-2f2a4",
-  storageBucket: "swipper-2f2a4.firebasestorage.app",
-  messagingSenderId: "1025977111228",
-  appId: "1:1025977111228:web:f2b0013a21c5f2b434b6b9"
+    apiKey: "AIzaSyCTbvB4-LBG-jP8zNkJhLNEaQfQpTAdEjA",
+    authDomain: "swipper-2f2a4.firebaseapp.com",
+    projectId: "swipper-2f2a4",
+    storageBucket: "swipper-2f2a4.firebasestorage.app",
+    messagingSenderId: "1025977111228",
+    appId: "1:1025977111228:web:f2b0013a21c5f2b434b6b9"
 };
 
-// Firebase'i Başlat
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+}
+const auth = firebase.auth();
+const db = firebase.firestore();
+const storage = firebase.storage(); // GÖRSEL DEPOLAMA İÇİN EKLENDİ
 
 document.addEventListener("DOMContentLoaded", () => {
-    // DOM Elementleri
+    
+    // --- DOM ELEMENTLERİ ---
     const authScreen = document.getElementById('auth-screen');
     const appContainer = document.getElementById('app-container');
     const authEmail = document.getElementById('auth-email');
     const authPassword = document.getElementById('auth-password');
     const authError = document.getElementById('auth-error');
-    
-    // --- AUTHENTICATION (KAYIT & GİRİŞ) ---
-    
-    // Kayıt Ol
-    document.getElementById('register-btn').addEventListener('click', () => {
-        const email = authEmail.value;
-        const password = authPassword.value;
-        createUserWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => {
-                authError.style.display = "none";
-                console.log("Hesap oluşturuldu:", userCredential.user.email);
-            })
-            .catch((error) => {
-                authError.innerText = "Hata: " + error.message;
-                authError.style.display = "block";
-            });
-    });
 
-    // Giriş Yap
-    document.getElementById('login-btn').addEventListener('click', () => {
-        const email = authEmail.value;
-        const password = authPassword.value;
-        signInWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => {
-                authError.style.display = "none";
-            })
-            .catch((error) => {
-                authError.innerText = "Giriş başarısız. Bilgileri kontrol et.";
-                authError.style.display = "block";
-            });
-    });
-
-    // Çıkış Yap
-    document.getElementById('logout-btn').addEventListener('click', () => {
-        signOut(auth);
-    });
-
-    // Kullanıcı Durumunu Dinle (Oturum açıldı mı?)
     let currentUser = null;
-    onAuthStateChanged(auth, (user) => {
+
+    // --- 1. KAYIT OL & GİRİŞ YAP ---
+    document.getElementById('register-btn').addEventListener('click', () => {
+        authError.style.display = "none";
+        auth.createUserWithEmailAndPassword(authEmail.value, authPassword.value)
+            .catch(err => {
+                authError.innerText = "Hata: " + err.message;
+                authError.style.display = "block";
+            });
+    });
+
+    document.getElementById('login-btn').addEventListener('click', () => {
+        authError.style.display = "none";
+        auth.signInWithEmailAndPassword(authEmail.value, authPassword.value)
+            .catch(err => {
+                authError.innerText = "Giriş başarısız. Şifre veya E-posta hatalı.";
+                authError.style.display = "block";
+            });
+    });
+
+    document.getElementById('logout-btn').addEventListener('click', () => {
+        auth.signOut();
+    });
+
+    // Profil Fotoğraflarını Her Yerde Güncelleyen Fonksiyon
+    function updateAllProfilePics(url) {
+        document.getElementById('main-profile-pic').src = url;
+        document.getElementById('nav-profile-img').src = url;
+        document.getElementById('my-story-img').src = url;
+    }
+
+    // --- 2. KULLANICI DURUMUNU DİNLEME ---
+    auth.onAuthStateChanged((user) => {
         if (user) {
-            // Kullanıcı giriş yaptı, ana uygulamayı göster
             currentUser = user;
             authScreen.style.display = "none";
             appContainer.style.display = "block";
             
-            // Profili Güncelle
-            document.getElementById('display-username').innerText = user.email.split('@')[0];
+            const username = user.email.split('@')[0];
+            document.getElementById('display-username').innerText = `@${username}`;
+            document.getElementById('display-name').innerText = username;
             
-            // Gönderileri Çekmeye Başla
+            // Kullanıcının profil fotoğrafı varsa yükle, yoksa varsayılan avatarı kullan
+            const photoURL = user.photoURL || "https://i.pravatar.cc/150?img=11";
+            updateAllProfilePics(photoURL);
+            
             loadRealtimePosts();
         } else {
-            // Kullanıcı çıkış yaptı, giriş ekranını göster
             currentUser = null;
             authScreen.style.display = "flex";
             appContainer.style.display = "none";
+            document.getElementById('auth-password').value = '';
         }
     });
 
-    // --- CLOUD FIRESTORE (GERÇEK ZAMANLI VERİTABANI) ---
+    // --- 3. GALERİDEN PROFİL FOTOĞRAFI YÜKLEME ---
+    const profileUploadInput = document.getElementById('profile-upload');
+    const avatarContainer = document.getElementById('avatar-container');
+    const displayBio = document.getElementById('display-bio');
 
-    // Yeni Gönderi Paylaşma
+    // Profil resmine tıklandığında gizli dosya seçiciyi çalıştır
+    avatarContainer.addEventListener('click', () => {
+        profileUploadInput.click();
+    });
+
+    // Dosya seçildiğinde Firebase Storage'a yükle
+    profileUploadInput.addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        if (!file || !currentUser) return;
+
+        try {
+            displayBio.innerText = "Fotoğraf yükleniyor, lütfen bekle...";
+            displayBio.style.color = "var(--blue)";
+            
+            // Storage referansını oluştur (avatars/KULLANICI_ID yoluna)
+            const storageRef = storage.ref(`avatars/${currentUser.uid}`);
+            
+            // Dosyayı yükle
+            await storageRef.put(file);
+            
+            // Yüklenen dosyanın indirme linkini al
+            const downloadURL = await storageRef.getDownloadURL();
+            
+            // Kullanıcının Auth profiline bu linki kaydet
+            await currentUser.updateProfile({ photoURL: downloadURL });
+            
+            // Ekrandaki resimleri güncelle
+            updateAllProfilePics(downloadURL);
+            
+            displayBio.innerText = "Profil fotoğrafı başarıyla güncellendi!";
+            setTimeout(() => {
+                displayBio.innerText = "Swipper'a Hoş Geldin!";
+                displayBio.style.color = "var(--text-color)";
+            }, 3000);
+
+        } catch (error) {
+            alert("Fotoğraf yüklenirken hata oluştu: " + error.message);
+            displayBio.innerText = "Yükleme başarısız.";
+            displayBio.style.color = "#ed4956";
+        }
+    });
+
+    // --- 4. FIRESTORE: GÖNDERİ PAYLAŞMA VE OKUMA ---
     const postModal = document.getElementById('post-modal');
     document.getElementById('add-post-trigger').onclick = () => postModal.style.display = "flex";
     document.getElementById('close-post').onclick = () => postModal.style.display = "none";
 
-    document.getElementById('save-post-btn').addEventListener('click', async () => {
+    document.getElementById('save-post-btn').addEventListener('click', () => {
         const content = document.getElementById('post-content-input').value;
         if (content.trim() === "" || !currentUser) return;
 
-        try {
-            // Veritabanındaki 'posts' koleksiyonuna yeni veri ekle
-            await addDoc(collection(db, "posts"), {
-                content: content,
-                authorEmail: currentUser.email,
-                authorName: currentUser.email.split('@')[0], // Şimdilik e-postanın ilk kısmını isim yapıyoruz
-                createdAt: serverTimestamp(),
-                likes: 0
-            });
-            
+        const photoURL = currentUser.photoURL || "https://i.pravatar.cc/150?img=11";
+
+        db.collection("posts").add({
+            content: content,
+            authorEmail: currentUser.email,
+            authorName: currentUser.email.split('@')[0],
+            authorPhoto: photoURL, // Gönderiyi atan kişinin anlık fotosu
+            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            likes: 0
+        }).then(() => {
             document.getElementById('post-content-input').value = "";
             postModal.style.display = "none";
-        } catch (e) {
-            console.error("Gönderi eklenirken hata: ", e);
-        }
+        }).catch(err => {
+            alert("Gönderi paylaşılamadı: " + err.message);
+        });
     });
 
-    // Gönderileri Gerçek Zamanlı (Realtime) Okuma
     function loadRealtimePosts() {
-        const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
-        
-        // onSnapshot: Veritabanında bir şey değiştiğinde anında tetiklenir
-        onSnapshot(q, (snapshot) => {
+        db.collection("posts").orderBy("createdAt", "desc").onSnapshot(snapshot => {
             const feedContainer = document.getElementById('feed-container');
-            feedContainer.innerHTML = ""; // Ekranı temizle
+            feedContainer.innerHTML = ""; 
             document.getElementById('post-count').innerText = snapshot.docs.length;
             
-            snapshot.forEach((doc) => {
+            snapshot.forEach(doc => {
                 const post = doc.data();
                 
-                // Zaman hesaplama (Firebase Timestamp)
-                let timeString = "Az önce";
+                let timeString = "Şimdi";
                 if(post.createdAt) {
                     const date = post.createdAt.toDate();
                     timeString = date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
                 }
 
+                // Eğer gönderideki profil fotosu bozuk/yoksa varsayılan atar
+                const postAvatar = post.authorPhoto || "https://i.pravatar.cc/150?img=11";
+
                 const postHTML = `
                     <div class="post">
                         <div class="post-header">
                             <div class="post-header-left">
-                                <img class="post-avatar" src="https://i.pravatar.cc/150?u=${post.authorEmail}">
+                                <img class="post-avatar" src="${postAvatar}">
                                 <div class="post-header-info">
                                     <span class="name-container">${post.authorName}</span>
                                     <span class="time-username">@${post.authorName} · ${timeString}</span>
@@ -155,7 +194,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // --- ALT NAVİGASYON (Sekme Geçişleri) ---
+    // --- 5. ALT MENÜ GEÇİŞLERİ ---
     const navItems = document.querySelectorAll('.nav-item');
     navItems.forEach(item => {
         item.addEventListener('click', (e) => {

@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Swipper</title>
+    
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+    
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -12,7 +18,7 @@
     <div id="auth-screen" class="auth-container">
         <div class="auth-box">
             <h1 class="logo" style="font-size: 36px; margin-bottom: 20px; text-align: center;">Swipper</h1>
-            <p style="text-align: center; margin-bottom: 20px; color: var(--secondary-text);">Devam etmek için giriş yap</p>
+            <p style="text-align: center; margin-bottom: 20px; color: var(--secondary-text);">Dünyaya bağlan</p>
             
             <input type="email" id="auth-email" class="custom-input" placeholder="E-posta" style="margin-bottom: 10px;">
             <input type="password" id="auth-password" class="custom-input" placeholder="Şifre" style="margin-bottom: 15px;">
@@ -20,7 +26,7 @@
             <button id="login-btn" class="primary-btn" style="width: 100%; margin-bottom: 10px;">Giriş Yap</button>
             <button id="register-btn" class="edit-profile-btn" style="width: 100%; margin: 0;">Yeni Hesap Oluştur</button>
             
-            <p id="auth-error" style="color: #ed4956; text-align: center; margin-top: 15px; font-size: 14px; display: none;"></p>
+            <p id="auth-error" style="color: #ed4956; text-align: center; margin-top: 15px; font-size: 14px; font-weight: 600; display: none;"></p>
         </div>
     </div>
 
@@ -34,14 +40,13 @@
         <main id="main-content">
             <section id="home-tab" class="tab-content active">
                 <div class="stories-container" id="stories-wrapper">
-                    <div class="story create-story" id="add-story-btn">
+                    <div class="story create-story">
                         <div class="story-ring"><img src="https://i.pravatar.cc/150?img=11" id="my-story-img" alt="Sen"></div>
                         <span class="plus-icon">+</span>
                         <span>Sen</span>
                     </div>
                 </div>
-                <div id="feed-container">
-                    </div>
+                <div id="feed-container"></div>
             </section>
 
             <section id="explore-tab" class="tab-content">
@@ -69,8 +74,9 @@
                     <button id="settings-btn" class="icon-btn"><i class="fa-solid fa-bars"></i></button>
                 </div>
                 <div class="profile-header">
-                    <div class="avatar-container">
+                    <div class="avatar-container" id="avatar-container">
                         <img src="https://i.pravatar.cc/150?img=11" class="profile-avatar" id="main-profile-pic">
+                        <div class="avatar-overlay"><i class="fa-solid fa-camera"></i></div>
                     </div>
                     <div class="profile-stats">
                         <div class="stat"><strong id="post-count">0</strong><span>Gönderi</span></div>
@@ -79,9 +85,9 @@
                     </div>
                 </div>
                 <div class="profile-bio">
-                    <strong class="profile-display-name" id="display-name">Çağatay Kılıç</strong>
+                    <strong class="profile-display-name" id="display-name">Kullanıcı Adı Yükleniyor...</strong>
                     <p id="display-bio">Swipper'a Hoş Geldin!</p>
-                    <button id="logout-btn" class="edit-profile-btn" style="color: #ed4956;">Çıkış Yap</button>
+                    <button id="logout-btn" class="edit-profile-btn" style="color: #ed4956; border-color: #ed4956;">Çıkış Yap</button>
                 </div>
             </section>
         </main>
@@ -106,6 +112,8 @@
         </div>
     </div>
 
-    <script type="module" src="app.js"></script>
+    <input type="file" id="profile-upload" accept="image/*" style="display: none;">
+
+    <script src="app.js"></script>
 </body>
 </html>
