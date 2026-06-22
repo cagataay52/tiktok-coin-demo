@@ -14,7 +14,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
     
-    <link rel="stylesheet" href="style.css?v=5">
+    <link rel="stylesheet" href="style.css?v=8">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body class="light-mode"> 
@@ -22,7 +22,7 @@
     <div id="auth-screen" class="auth-container">
         <div class="auth-box">
             <h1 class="insta-logo" style="font-size: 44px; margin-bottom: 30px; text-align: center;">Swipper</h1>
-            <input type="email" id="auth-email" class="custom-input" placeholder="E-posta">
+            <input type="email" id="auth-email" class="custom-input" placeholder="E-posta" style="margin-bottom:15px;">
             <input type="password" id="auth-password" class="custom-input" placeholder="Şifre" style="margin-bottom: 20px;">
             <button id="login-btn" class="primary-btn" style="width: 100%;">Giriş Yap</button>
             <div class="divider"><span>veya</span></div>
@@ -32,6 +32,7 @@
     </div>
 
     <div id="app-container" style="display: none;">
+        
         <header class="top-header">
             <h1 class="insta-logo">Swipper</h1>
             <div class="header-icons">
@@ -41,6 +42,7 @@
         </header>
 
         <main id="main-content">
+            
             <section id="home-tab" class="tab-content active">
                 <div class="stories-container" id="stories-wrapper">
                     <div class="story create-story" id="add-story-btn">
@@ -71,6 +73,7 @@
                     <div class="dm-header"><h3>Mesajlar</h3></div>
                     <div id="dm-list" class="user-list"></div>
                 </div>
+                
                 <div id="dm-chat-container" style="display: none;">
                     <div class="chat-header">
                         <button id="back-to-dm-list" class="icon-btn"><i class="fa-solid fa-arrow-left"></i></button>
@@ -90,6 +93,7 @@
                     <span class="profile-username" id="display-username">@yukleniyor</span>
                     <button class="icon-btn" id="logout-btn"><i class="fa-solid fa-right-from-bracket" style="color: #ed4956; font-size: 18px;"></i></button>
                 </div>
+                
                 <div class="profile-header">
                     <div class="avatar-container" id="avatar-container">
                         <img src="" class="profile-avatar" id="main-profile-pic">
@@ -101,18 +105,22 @@
                         <div class="stat"><strong>0</strong><span>Takip</span></div>
                     </div>
                 </div>
+                
                 <div class="profile-bio-section">
                     <strong class="profile-name" id="display-name">Yükleniyor...</strong>
                     <p class="profile-bio-text" id="display-bio">Biyografi yükleniyor...</p>
                 </div>
+                
                 <div class="profile-actions">
                     <button class="edit-profile-btn" id="edit-profile-trigger">Profili Düzenle</button>
                     <button class="edit-profile-btn" id="theme-toggle-btn"><i class="fa-regular fa-moon"></i> Tema</button>
                 </div>
+
                 <div class="profile-tabs">
                     <div class="p-tab active" data-target="p-grid"><i class="fa-solid fa-table-cells"></i></div>
                     <div class="p-tab" data-target="p-tweets"><i class="fa-solid fa-bars-staggered"></i></div>
                 </div>
+                
                 <div id="p-grid" class="profile-tab-content active"></div>
                 <div id="p-tweets" class="profile-tab-content"></div>
             </section>
@@ -123,6 +131,7 @@
                     <span class="profile-username" id="other-profile-username">@kullanici</span>
                     <div style="width: 24px;"></div>
                 </div>
+                
                 <div class="profile-header">
                     <div class="avatar-container"><img src="" class="profile-avatar" id="other-profile-pic"></div>
                     <div class="profile-stats">
@@ -131,13 +140,16 @@
                         <div class="stat"><strong>0</strong><span>Takip</span></div>
                     </div>
                 </div>
+                
                 <div class="profile-bio-section">
                     <strong class="profile-name" id="other-profile-name">İsim Yükleniyor...</strong>
                     <p class="profile-bio-text" id="other-profile-bio">Biyografi yükleniyor...</p>
                 </div>
+                
                 <div class="profile-actions">
                     <button class="primary-btn" id="other-profile-msg-btn" style="width: 100%;">Mesaj Gönder</button>
                 </div>
+
                 <div class="profile-tabs"><div class="p-tab active"><i class="fa-solid fa-table-cells"></i></div></div>
                 <div class="profile-grid" id="other-profile-grid"></div>
             </section>
@@ -209,18 +221,8 @@
         <div class="modal-content bottom-sheet" style="padding: 10px 0;">
             <div class="modal-drag-handle"></div>
             <div class="create-option" id="btn-create-post"><i class="fa-solid fa-table-cells"></i><span>Gönderi veya Tweet Paylaş</span></div>
-            <div class="create-option" id="btn-create-reel"><i class="fa-solid fa-clapperboard"></i><span>Reels Videosu Paylaş</span></div>
+            <div class="create-option" id="btn-create-reel"><i class="fa-solid fa-clapperboard"></i><span>Reels Videosu Yükle</span></div>
             <div class="create-option" id="btn-create-story-menu"><i class="fa-solid fa-circle-plus"></i><span>Hikaye Paylaş</span></div>
-        </div>
-    </div>
-
-    <div id="reel-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header"><h3>Yeni Reels Paylaş</h3><button class="close-btn" id="close-reel"><i class="fa-solid fa-xmark"></i></button></div>
-            <p style="font-size: 12px; color: #ed4956; text-align: center; margin-bottom: 5px;">Sistem sınırı: Lütfen 1MB altı çok kısa bir video seçin.</p>
-            <textarea id="reel-content-input" class="custom-textarea" placeholder="Video açıklaması..." style="height: 60px; border: none; border-bottom: 1px solid var(--border-color); font-size: 14px;"></textarea>
-            <button id="select-reel-video" class="secondary-btn" style="margin-top: 10px;"><i class="fa-solid fa-video"></i> Video Seç</button>
-            <button id="save-reel-btn" class="primary-btn" style="margin-top: 10px; display: none;">Reels Paylaş</button>
         </div>
     </div>
 
@@ -236,11 +238,13 @@
         <div class="modal-content">
             <div class="modal-header"><h3>Yeni Paylaşım</h3><button class="close-btn" id="close-post"><i class="fa-solid fa-xmark"></i></button></div>
             <textarea id="post-content-input" class="custom-textarea" placeholder="Neler düşünüyorsun?" style="height: 80px; border: none; border-bottom: 1px solid var(--border-color); font-size: 16px;"></textarea>
+            
             <div class="image-upload-preview" id="post-image-preview" style="display: none; position: relative;">
                 <img id="preview-img" src="" style="width: 100%; border-radius: 8px; max-height: 250px; object-fit: cover;">
                 <button id="remove-post-image" style="position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.6); color: white; border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer;"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <button id="select-post-image" class="secondary-btn" style="margin-top: 10px;"><i class="fa-regular fa-image"></i> Fotoğraf Ekle</button>
+            
+            <button id="select-post-image" class="secondary-btn" style="margin-top: 10px;"><i class="fa-regular fa-image"></i> Galeriden Fotoğraf Seç</button>
             <button id="save-post-btn" class="primary-btn" style="margin-top: 10px;">Paylaş</button>
         </div>
     </div>
@@ -263,7 +267,7 @@
     <input type="file" id="profile-upload" accept="image/*" style="display: none;">
     <input type="file" id="post-image-upload" accept="image/*" style="display: none;">
     <input type="file" id="story-image-upload" accept="image/*" style="display: none;">
-    <input type="file" id="reel-video-upload" accept="video/mp4,video/x-m4v,video/*" style="display: none;">
+    <input type="file" id="reel-video-upload" accept="video/mp4,video/quicktime,video/*" style="display: none;">
 
     <script src="app.js"></script>
 </body>
