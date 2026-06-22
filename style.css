@@ -71,14 +71,15 @@ html, body { width: 100%; min-height: 100vh; overflow-x: hidden; background-colo
 .post-actions i { cursor: pointer; transition: 0.1s; }
 .post-manage-btn { background: none; border: none; color: var(--secondary-text); cursor: pointer; font-size: 16px; padding: 0 5px; }
 
+/* DM MESSAGES SECTION */
 .dm-header { padding: 15px; border-bottom: 1px solid var(--border-color); font-size: 16px; }
 .user-list { display: flex; flex-direction: column; }
 .user-item { display: flex; align-items: center; padding: 12px 15px; gap: 15px; cursor: pointer; border-bottom: 1px solid var(--border-color); }
 .user-item:hover { background: var(--hover-bg); }
 .user-item img { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; }
-.user-info { display: flex; flex-direction: column; }
+.user-info { display: flex; flex-direction: column; width: 100%; }
 .user-info .name { font-weight: 600; font-size: 14px; }
-.user-info .msg-preview { font-size: 13px; color: var(--secondary-text); max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.user-info .msg-preview { font-size: 13px; color: var(--secondary-text); max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-top: 3px; }
 
 .chat-messages-box { height: calc(100vh - 180px); overflow-y: auto; padding: 15px; padding-bottom: 20px; display: flex; flex-direction: column; gap: 8px; background: var(--bg-color); }
 .chat-msg { padding: 10px 14px; max-width: 75%; font-size: 15px; word-wrap: break-word; line-height: 1.4; position: relative; }

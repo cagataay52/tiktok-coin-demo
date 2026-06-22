@@ -30,7 +30,6 @@ document.addEventListener("DOMContentLoaded", () => {
     let currentEditPostId = null;  
     let currentEditPostCaption = "";
 
-    // Sohbet odası ID'sini alfabetik sırala (uid1_uid2) - Karışmayı engeller
     function getChatRoomId(uid1, uid2) {
         return uid1 < uid2 ? uid1 + '_' + uid2 : uid2 + '_' + uid1;
     }
@@ -55,7 +54,6 @@ document.addEventListener("DOMContentLoaded", () => {
         reader.readAsDataURL(file);
     }
 
-    // --- 1. OTURUM YÖNETİMİ ---
     document.getElementById('register-btn').addEventListener('click', () => {
         const email = document.getElementById('auth-email').value;
         const pass = document.getElementById('auth-password').value;
@@ -72,7 +70,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function showError(msg) { authError.innerText = msg; authError.style.display = "block"; }
 
-    // --- 2. CANLI SENKRONİZASYON ---
     auth.onAuthStateChanged((user) => {
         if (user) {
             currentUser = user;
@@ -94,7 +91,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 } else {
                     updateProfileUI(usersCache[user.uid]);
                 }
-                renderExplore(); renderDMList(); renderStories(); renderShareUsersList();
+                renderExplore(); 
+                renderDMList(); 
+                renderStories(); 
+                renderShareUsersList();
             });
 
             loadRealtimePosts();
@@ -115,7 +115,6 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById('my-story-img').src = data.avatar;
     }
 
-    // --- 3. PROFİL SEKMELERİ (GÖRSEL / TWEET) ---
     document.querySelectorAll('.p-tab').forEach(tab => {
         tab.addEventListener('click', () => {
             document.querySelectorAll('.p-tab').forEach(t => t.classList.remove('active'));
@@ -161,7 +160,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     };
 
-    // --- 4. YENİ PAYLAŞIM ---
     const createOptionsModal = document.getElementById('create-options-modal');
     const postModal = document.getElementById('post-modal');
     
@@ -208,7 +206,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     };
 
-    // --- 5. HİKAYELER ---
     const storyUpload = document.getElementById('story-image-upload');
     document.getElementById('add-story-btn').onclick = () => storyUpload.click();
     document.getElementById('btn-create-story-menu').onclick = () => { createOptionsModal.style.display = "none"; storyUpload.click(); };
@@ -293,7 +290,6 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById('story-progress-bar').style.width = '0%';
     }
 
-    // --- 6. AKIŞ VE PROFİL YÖNETİMİ ---
     function generatePostHTML(id, post, uData, showOptions) {
         let timeStr = "Şimdi";
         if(post.createdAt) timeStr = post.createdAt.toDate().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
@@ -375,7 +371,6 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById('single-post-modal').style.display = "flex";
     };
 
-    // --- 7. DÜZENLEME & SİLME MODALI ---
     window.openPostOptions = (postId, caption) => {
         currentEditPostId = postId;
         currentEditPostCaption = caption;
@@ -407,7 +402,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
-    // --- 8. DM'DEN PAYLAŞMA ---
     window.openShareModal = (postId) => {
         currentSharePostId = postId;
         document.getElementById('share-modal').style.display = "flex";
@@ -416,8 +410,11 @@ document.addEventListener("DOMContentLoaded", () => {
     function renderShareUsersList() {
         const wrap = document.getElementById('share-users-list');
         wrap.innerHTML = "";
+        let userFound = false;
+
         Object.keys(usersCache).forEach(uid => {
             if(uid === currentUser.uid) return;
+            userFound = true;
             const u = usersCache[uid];
             wrap.insertAdjacentHTML('beforeend', `
                 <div class="user-item" onclick="processPostShare('${uid}')">
@@ -427,6 +424,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 </div>
             `);
         });
+
+        if(!userFound) {
+            wrap.innerHTML = `<p style="text-align:center; color: var(--secondary-text); font-size:13px; padding:20px;">Paylaşacak kimse bulunamadı.</p>`;
+        }
     }
 
     window.processPostShare = (receiverUid) => {
@@ -449,11 +450,11 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     };
 
-    // --- 9. KEŞFET VE BAŞKASININ PROFİLİ ---
     document.getElementById('search-input').oninput = function() {
         const results = document.getElementById('search-results');
         results.innerHTML = "";
         const queryVal = this.value.toLowerCase();
+        
         Object.keys(usersCache).forEach(uid => {
             if(uid === currentUser.uid) return;
             const u = usersCache[uid];
@@ -501,27 +502,28 @@ document.addEventListener("DOMContentLoaded", () => {
         window.scrollTo(0, 0);
     };
 
-    // --- 10. GERÇEK ZAMANLI SOHBET ODALARI ---
+    // --- 10. GELİŞTİRİLMİŞ DM SİSTEMİ ---
     function renderDMList() {
         const list = document.getElementById('dm-list');
         list.innerHTML = "";
+        let userFound = false;
+
         Object.keys(usersCache).forEach(uid => {
             if(uid === currentUser.uid) return;
+            userFound = true;
             const u = usersCache[uid];
             const chatId = getChatRoomId(currentUser.uid, uid);
 
-            // Başlangıçta boş şablon
             list.insertAdjacentHTML('beforeend', `
                 <div class="user-item" onclick="openChatWith('${uid}')">
                     <img src="${u.avatar}">
                     <div class="user-info">
                         <span class="name">${u.name}</span>
-                        <span class="msg-preview" id="preview-${uid}">Sohbeti başlat...</span>
+                        <span class="msg-preview" id="preview-${uid}">Sohbeti başlatmak için tıkla</span>
                     </div>
                 </div>
             `);
 
-            // Son mesajı canlı çek (Sadece en son 1 mesajı alır, kasmayı önler)
             db.collection('chats').doc(chatId).collection('messages').orderBy('createdAt', 'desc').limit(1).onSnapshot(snap => {
                 if(!snap.empty) {
                     const lastMsg = snap.docs[0].data();
@@ -530,6 +532,16 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             });
         });
+
+        if (!userFound) {
+            list.innerHTML = `
+                <div style="padding: 40px 20px; text-align: center; color: var(--secondary-text);">
+                    <i class="fa-regular fa-comments" style="font-size: 40px; margin-bottom: 10px; opacity: 0.5;"></i>
+                    <p style="font-weight: 600; color: var(--text-color);">Mesaj Kutun Boş</p>
+                    <p style="font-size: 13px; margin-top: 5px;">Sistemde senden başka kimse olmadığı için burası boş görünüyor. Yeni bir hesap açarak test edebilirsin.</p>
+                </div>
+            `;
+        }
     }
 
     window.openChatWith = (uid) => {
@@ -569,7 +581,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.getElementById('send-message-btn').onclick = sendChatMessage;
 
-    // Klavyeden Enter'a basınca mesaj göndersin
+    // Klavyeden Enter ile mesaj gönderme
     document.getElementById('chat-message-input').addEventListener("keypress", function(event) {
         if (event.key === "Enter") {
             event.preventDefault();
@@ -588,11 +600,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 const cls = msg.senderId === currentUser.uid ? 'sent' : 'received';
                 box.insertAdjacentHTML('beforeend', `<div class="chat-msg ${cls}">${msg.text}</div>`);
             });
-            box.scrollTop = box.scrollHeight; // Yeni mesaj gelince en aşağı kaydırır
+            box.scrollTop = box.scrollHeight; 
         });
     }
 
-    // --- 11. REELS (SWINDER) ---
+    // --- 11. REELS ---
     function initReels() {
         const sampleReels = [
             { url: "https://www.w3schools.com/html/mov_bbb.mp4", user: "swipper_official", text: "Swipper Reels test yayını! 🚀" },
@@ -624,7 +636,7 @@ document.addEventListener("DOMContentLoaded", () => {
         else { video.pause(); }
     };
 
-    // --- 12. TEMA VE SEKME GEÇİŞLERİ ---
+    // --- 12. TEMA VE SEKMELER ---
     document.getElementById('theme-toggle-btn').onclick = () => {
         document.body.classList.toggle('dark-mode');
         const icon = document.getElementById('theme-toggle-btn').querySelector('i');
@@ -641,20 +653,20 @@ document.addEventListener("DOMContentLoaded", () => {
             item.classList.add('active');
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
             const targetId = item.dataset.target;
+            
             if(targetId) document.getElementById(targetId).classList.add('active');
             
             if(targetId === 'dm-tab') {
                 document.getElementById('dm-chat-container').style.display = "none";
                 document.getElementById('dm-list-container').style.display = "block";
+                renderDMList(); // Listeyi zorla güncelle
             }
             window.scrollTo(0, 0);
         });
     });
 
-    // --- 13. TÜM MODALLARI BOŞLUĞA TIKLAYINCA KAPATMA ---
     document.querySelectorAll('.modal').forEach(modal => {
         modal.addEventListener('click', (e) => {
-            // Eğer doğrudan siyah/saydam alana tıklandıysa
             if(e.target === modal) modal.style.display = "none";
         });
     });
