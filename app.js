@@ -24,10 +24,16 @@ document.addEventListener("DOMContentLoaded", () => {
     let postsCache = {}; 
     let selectedPostImageBase64 = null;
     let activeChatUserId = null;
+    let activeChatId = null; // Gerçek zamanlı oda ID'si
     let storyTimer = null;
     let currentSharePostId = null; 
     let currentEditPostId = null;  
     let currentEditPostCaption = "";
+
+    // Sohbet odası ID'si üretici (Benzersiz ID)
+    function getChatRoomId(uid1, uid2) {
+        return uid1 < uid2 ? uid1 + '_' + uid2 : uid2 + '_' + uid1;
+    }
 
     function compressAndConvert(file, callback) {
         const reader = new FileReader();
@@ -42,8 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 canvas.width = width; canvas.height = height;
                 const ctx = canvas.getContext('2d');
                 ctx.drawImage(img, 0, 0, width, height);
-                const compressedBase64 = canvas.toDataURL('image/jpeg', 0.6);
-                callback(compressedBase64);
+                callback(canvas.toDataURL('image/jpeg', 0.6));
             };
             img.src = e.target.result;
         };
@@ -161,7 +166,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const postModal = document.getElementById('post-modal');
     
     document.getElementById('header-add-btn').onclick = (e) => { e.preventDefault(); createOptionsModal.style.display = "flex"; };
-    
     document.getElementById('btn-create-post').onclick = () => {
         createOptionsModal.style.display = "none";
         postModal.style.display = "flex";
@@ -431,8 +435,10 @@ document.addEventListener("DOMContentLoaded", () => {
             if(!doc.exists) return;
             const postData = doc.data();
             const textSummary = postData.caption ? `"${postData.caption}"` : "Bir fotoğraf gönderisi";
-            db.collection('messages').add({
-                senderId: currentUser.uid, receiverId: receiverUid,
+            
+            const chatId = getChatRoomId(currentUser.uid, receiverUid);
+            db.collection('chats').doc(chatId).collection('messages').add({
+                senderId: currentUser.uid, 
                 text: `🔗 [Gönderi Paylaşıldı]: ${textSummary}`,
                 createdAt: firebase.firestore.FieldValue.serverTimestamp()
             }).then(() => {
@@ -443,7 +449,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     };
 
-    // --- 9. BAŞKASININ PROFİLİNİ KEŞFETTEN AÇMA VE MESAJ GÖNDERME ---
+    // --- 9. BAŞKASININ PROFİLİNE GİRME VE MESAJ GÖNDERME ---
     document.getElementById('search-input').oninput = function() {
         const results = document.getElementById('search-results');
         results.innerHTML = "";
@@ -452,6 +458,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if(uid === currentUser.uid) return;
             const u = usersCache[uid];
             if(u.username.toLowerCase().includes(queryVal) || u.name.toLowerCase().includes(queryVal)) {
+                // Tıklandığında direkt DM'ye değil, profiline git
                 results.insertAdjacentHTML('beforeend', `
                     <div class="user-item" onclick="openOtherProfile('${uid}')">
                         <img src="${u.avatar}">
@@ -466,18 +473,15 @@ document.addEventListener("DOMContentLoaded", () => {
         const u = usersCache[uid];
         if(!u) return;
 
-        // Arayüzü Kullanıcıya Göre Doldur
         document.getElementById('other-profile-username').innerText = `@${u.username}`;
         document.getElementById('other-profile-name').innerText = u.name;
         document.getElementById('other-profile-bio').innerText = u.bio;
         document.getElementById('other-profile-pic').src = u.avatar;
 
-        // Mesaj Gönder Butonunu Aktifleştir
         document.getElementById('other-profile-msg-btn').onclick = () => {
             openChatWith(uid);
         };
 
-        // Gönderilerini Grid Olarak Çek
         const grid = document.getElementById('other-profile-grid');
         grid.innerHTML = "";
         let count = 0;
@@ -493,12 +497,12 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById('other-profile-post-count').innerText = count;
         });
 
-        // Tabı Değiştir
         document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
         document.getElementById('other-profile-tab').classList.add('active');
         window.scrollTo(0, 0);
     };
 
+    // --- 10. GERÇEK ZAMANLI SOHBET ODALARI ---
     function renderDMList() {
         const list = document.getElementById('dm-list');
         list.innerHTML = "";
@@ -516,48 +520,54 @@ document.addEventListener("DOMContentLoaded", () => {
 
     window.openChatWith = (uid) => {
         activeChatUserId = uid;
+        activeChatId = getChatRoomId(currentUser.uid, uid);
         const u = usersCache[uid];
+        
         document.getElementById('dm-list-container').style.display = "none";
         document.getElementById('dm-chat-container').style.display = "block";
         document.getElementById('chat-user-avatar').src = u.avatar;
         document.getElementById('chat-user-username').innerText = u.username;
+        
         document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
         document.getElementById('dm-tab').classList.add('active');
+        
         loadLiveChatMessages();
     };
 
     document.getElementById('back-to-dm-list').onclick = () => {
         activeChatUserId = null;
+        activeChatId = null;
         document.getElementById('dm-chat-container').style.display = "none";
         document.getElementById('dm-list-container').style.display = "block";
     };
 
     document.getElementById('send-message-btn').onclick = () => {
         const text = document.getElementById('chat-message-input').value;
-        if(text.trim() === "" || !activeChatUserId) return;
-        db.collection('messages').add({
-            senderId: currentUser.uid, receiverId: activeChatUserId, text: text,
+        if(text.trim() === "" || !activeChatId) return;
+
+        db.collection('chats').doc(activeChatId).collection('messages').add({
+            senderId: currentUser.uid,
+            text: text,
             createdAt: firebase.firestore.FieldValue.serverTimestamp()
         }).then(() => document.getElementById('chat-message-input').value = "");
     };
 
     function loadLiveChatMessages() {
-        if(!currentUser || !activeChatUserId) return;
-        db.collection('messages').orderBy('createdAt', 'asc').onSnapshot(snapshot => {
+        if(!activeChatId) return;
+        
+        db.collection('chats').doc(activeChatId).collection('messages').orderBy('createdAt', 'asc').onSnapshot(snapshot => {
             const box = document.getElementById('chat-messages');
             box.innerHTML = "";
             snapshot.forEach(doc => {
                 const msg = doc.data();
-                if((msg.senderId === currentUser.uid && msg.receiverId === activeChatUserId) || (msg.senderId === activeChatUserId && msg.receiverId === currentUser.uid)) {
-                    const cls = msg.senderId === currentUser.uid ? 'sent' : 'received';
-                    box.insertAdjacentHTML('beforeend', `<div class="chat-msg ${cls}">${msg.text}</div>`);
-                }
+                const cls = msg.senderId === currentUser.uid ? 'sent' : 'received';
+                box.insertAdjacentHTML('beforeend', `<div class="chat-msg ${cls}">${msg.text}</div>`);
             });
             box.scrollTop = box.scrollHeight; 
         });
     }
 
-    // --- 10. REELS (SWINDER) ---
+    // --- 11. REELS (SWINDER) ---
     function initReels() {
         const sampleReels = [
             { url: "https://www.w3schools.com/html/mov_bbb.mp4", user: "swipper_official", text: "Swipper Reels test yayını! 🚀" },
@@ -568,7 +578,7 @@ document.addEventListener("DOMContentLoaded", () => {
         sampleReels.forEach(reel => {
             feed.insertAdjacentHTML('beforeend', `
                 <div class="reel-item" onclick="togglePlay(this)">
-                    <video class="reel-video" src="${reel.url}" loop></video>
+                    <video class="reel-video" src="${reel.url}" loop playsinline></video>
                     <div class="reel-info">
                         <div class="username">@${reel.user}</div>
                         <div class="caption">${reel.text}</div>
@@ -589,7 +599,7 @@ document.addEventListener("DOMContentLoaded", () => {
         else { video.pause(); }
     };
 
-    // --- 11. TEMA VE SEKME GEÇİŞLERİ ---
+    // --- 12. TEMA VE SEKME GEÇİŞLERİ ---
     document.getElementById('theme-toggle-btn').onclick = () => {
         document.body.classList.toggle('dark-mode');
         const icon = document.getElementById('theme-toggle-btn').querySelector('i');
@@ -600,14 +610,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const navItems = document.querySelectorAll('.nav-item');
     navItems.forEach(item => {
         item.addEventListener('click', (e) => {
+            if (item.id === 'nav-add-btn') return; 
             e.preventDefault();
             navItems.forEach(i => i.classList.remove('active'));
             item.classList.add('active');
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
             const targetId = item.dataset.target;
-            if(targetId) {
-                document.getElementById(targetId).classList.add('active');
-            }
+            if(targetId) document.getElementById(targetId).classList.add('active');
+            
             if(targetId === 'dm-tab') {
                 document.getElementById('dm-chat-container').style.display = "none";
                 document.getElementById('dm-list-container').style.display = "block";
@@ -616,20 +626,16 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // --- 12. TÜM MODALLARI BOŞLUĞA TIKLAYINCA KAPATMA ---
+    // --- 13. TÜM MODALLARI BOŞLUĞA TIKLAYINCA KAPATMA ---
     document.querySelectorAll('.modal').forEach(modal => {
         modal.addEventListener('click', (e) => {
-            // Eğer tıklanan element doğrudan modalın arka planıysa kapat
-            if(e.target === modal) {
-                modal.style.display = "none";
-            }
+            if(e.target === modal) modal.style.display = "none";
         });
     });
 
-    // Çarpı butonlarıyla kapatma
     document.querySelectorAll('.close-btn').forEach(btn => {
         btn.onclick = (e) => {
-            if(e.target.id === 'close-story-viewer') {
+            if(e.target.id === 'close-story-viewer' || e.target.parentElement.id === 'close-story-viewer') {
                 closeStory();
             } else {
                 e.target.closest('.modal').style.display = "none";
