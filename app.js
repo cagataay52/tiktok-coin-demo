@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
     
     let currentUser = null;
     let usersCache = {}; 
-    let postsCache = {}; // Tekli gönderiyi açmak için hafıza
+    let postsCache = {}; 
     let selectedPostImageBase64 = null;
     let activeChatUserId = null;
     let storyTimer = null;
@@ -60,7 +60,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById('login-btn').addEventListener('click', () => {
         const email = document.getElementById('auth-email').value;
         const pass = document.getElementById('auth-password').value;
-        auth.signInWithEmailAndPassword(email, pass).catch(err => showError("Giriş başarısız. Bilgileri kontrol et."));
+        auth.signInWithEmailAndPassword(email, pass).catch(err => showError("Giriş başarısız. Şifre veya E-posta hatalı."));
     });
 
     document.getElementById('logout-btn').addEventListener('click', () => auth.signOut());
@@ -93,7 +93,7 @@ document.addEventListener("DOMContentLoaded", () => {
             });
 
             loadRealtimePosts();
-            initReels(); // Swinder/Reels Videolarını Yükle
+            initReels();
         } else {
             currentUser = null;
             authScreen.style.display = "flex";
@@ -102,7 +102,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     function updateProfileUI(data) {
-        document.getElementById('display-username').innerHTML = `<i class="fa-solid fa-lock" style="font-size:12px; margin-right:3px;"></i>${data.username}`;
+        document.getElementById('display-username').innerText = `@${data.username}`;
         document.getElementById('display-name').innerText = data.name;
         document.getElementById('display-bio').innerText = data.bio;
         document.getElementById('main-profile-pic').src = data.avatar;
@@ -120,9 +120,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 c.classList.remove('active');
             });
             const targetId = tab.getAttribute('data-target');
-            const targetDiv = document.getElementById(targetId);
-            targetDiv.style.display = targetId === 'p-grid' ? 'grid' : 'block';
-            targetDiv.classList.add('active');
+            if(targetId) {
+                const targetDiv = document.getElementById(targetId);
+                targetDiv.style.display = targetId === 'p-grid' ? 'grid' : 'block';
+                targetDiv.classList.add('active');
+            }
         });
     });
 
@@ -158,7 +160,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const createOptionsModal = document.getElementById('create-options-modal');
     const postModal = document.getElementById('post-modal');
     
-    document.getElementById('nav-add-btn').onclick = (e) => { e.preventDefault(); createOptionsModal.style.display = "flex"; };
+    document.getElementById('header-add-btn').onclick = (e) => { e.preventDefault(); createOptionsModal.style.display = "flex"; };
+    
     document.getElementById('btn-create-post').onclick = () => {
         createOptionsModal.style.display = "none";
         postModal.style.display = "flex";
@@ -232,7 +235,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 if(!story.createdAt) return;
                 
                 if (now - story.createdAt.toDate().getTime() > 24 * 60 * 60 * 1000) {
-                    db.collection('stories').doc(doc.id).delete(); // 24 saati geçenleri sil
+                    db.collection('stories').doc(doc.id).delete();
                     return; 
                 }
                 
@@ -293,7 +296,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const imgHTML = post.imageUrl ? `<img class="post-image" src="${post.imageUrl}">` : '';
         const captionHTML = post.caption.trim() !== "" ? `<div class="post-caption">${post.imageUrl ? `<span>${uData.username}</span>` : ''}${post.caption}</div>` : '';
-        const optionsHTML = showOptions ? `<button class="post-manage-btn" onclick="openPostOptions('${id}', '${post.caption || ''}')"><i class="fa-solid fa-ellipsis-vertical"></i></button>` : '';
+        const optionsHTML = showOptions ? `<button class="post-manage-btn" onclick="event.stopPropagation(); openPostOptions('${id}', '${post.caption || ''}')"><i class="fa-solid fa-ellipsis-vertical"></i></button>` : '';
 
         return `
             <div class="post" id="post-card-${id}">
@@ -324,14 +327,15 @@ document.addEventListener("DOMContentLoaded", () => {
             const pTweets = document.getElementById('p-tweets');
             
             feed.innerHTML = "";
-            pGrid.innerHTML = "";
-            pTweets.innerHTML = "";
+            if(pGrid) pGrid.innerHTML = "";
+            if(pTweets) pTweets.innerHTML = "";
+            
             let myPostCount = 0;
-            postsCache = {}; // Modal için
+            postsCache = {}; 
 
             snapshot.forEach(doc => {
                 const post = doc.data();
-                postsCache[doc.id] = post; // Hafızaya al
+                postsCache[doc.id] = post; 
                 const uData = usersCache[post.authorId] || { username: "kullanici", avatar: "https://i.pravatar.cc/150" };
                 const isMyPost = post.authorId === currentUser.uid;
 
@@ -356,7 +360,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Profil Izgarasında Fotoğrafa Tıklanınca Açılan Görüntüleyici
     window.openSinglePostModal = (postId) => {
         const post = postsCache[postId];
         if(!post) return;
@@ -385,7 +388,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if(confirm("Bu paylaşımı kalıcı olarak silmek istediğine emin misin?")) {
             db.collection('posts').doc(currentEditPostId).delete();
             document.getElementById('post-options-modal').style.display = "none";
-            document.getElementById('single-post-modal').style.display = "none"; // Açıksa kapat
+            document.getElementById('single-post-modal').style.display = "none";
         }
     };
 
@@ -440,7 +443,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     };
 
-    // --- 9. KEŞFET VE DM ---
+    // --- 9. BAŞKASININ PROFİLİNİ KEŞFETTEN AÇMA VE MESAJ GÖNDERME ---
     document.getElementById('search-input').oninput = function() {
         const results = document.getElementById('search-results');
         results.innerHTML = "";
@@ -449,9 +452,51 @@ document.addEventListener("DOMContentLoaded", () => {
             if(uid === currentUser.uid) return;
             const u = usersCache[uid];
             if(u.username.toLowerCase().includes(queryVal) || u.name.toLowerCase().includes(queryVal)) {
-                results.insertAdjacentHTML('beforeend', `<div class="user-item" onclick="openChatWith('${uid}')"><img src="${u.avatar}"><div class="user-info"><span class="name">${u.name}</span><span class="username">@${u.username}</span></div></div>`);
+                results.insertAdjacentHTML('beforeend', `
+                    <div class="user-item" onclick="openOtherProfile('${uid}')">
+                        <img src="${u.avatar}">
+                        <div class="user-info"><span class="name">${u.name}</span><span class="username">@${u.username}</span></div>
+                    </div>
+                `);
             }
         });
+    };
+
+    window.openOtherProfile = (uid) => {
+        const u = usersCache[uid];
+        if(!u) return;
+
+        // Arayüzü Kullanıcıya Göre Doldur
+        document.getElementById('other-profile-username').innerText = `@${u.username}`;
+        document.getElementById('other-profile-name').innerText = u.name;
+        document.getElementById('other-profile-bio').innerText = u.bio;
+        document.getElementById('other-profile-pic').src = u.avatar;
+
+        // Mesaj Gönder Butonunu Aktifleştir
+        document.getElementById('other-profile-msg-btn').onclick = () => {
+            openChatWith(uid);
+        };
+
+        // Gönderilerini Grid Olarak Çek
+        const grid = document.getElementById('other-profile-grid');
+        grid.innerHTML = "";
+        let count = 0;
+        db.collection("posts").where("authorId", "==", uid).get().then(snapshot => {
+            snapshot.forEach(doc => {
+                const post = doc.data();
+                if(post.imageUrl) {
+                    count++;
+                    postsCache[doc.id] = post; 
+                    grid.insertAdjacentHTML('beforeend', `<div class="grid-item" onclick="openSinglePostModal('${doc.id}')"><img src="${post.imageUrl}"></div>`);
+                }
+            });
+            document.getElementById('other-profile-post-count').innerText = count;
+        });
+
+        // Tabı Değiştir
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+        document.getElementById('other-profile-tab').classList.add('active');
+        window.scrollTo(0, 0);
     };
 
     function renderDMList() {
@@ -460,7 +505,12 @@ document.addEventListener("DOMContentLoaded", () => {
         Object.keys(usersCache).forEach(uid => {
             if(uid === currentUser.uid) return;
             const u = usersCache[uid];
-            list.insertAdjacentHTML('beforeend', `<div class="user-item" onclick="openChatWith('${uid}')"><img src="${u.avatar}"><div class="user-info"><span class="name">${u.name}</span><span class="msg-preview">Mesaj göndermek için tıkla</span></div></div>`);
+            list.insertAdjacentHTML('beforeend', `
+                <div class="user-item" onclick="openChatWith('${uid}')">
+                    <img src="${u.avatar}">
+                    <div class="user-info"><span class="name">${u.name}</span><span class="msg-preview">Mesaj göndermek için tıkla</span></div>
+                </div>
+            `);
         });
     }
 
@@ -507,17 +557,14 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // --- 10. REELS (SWINDER) SİSTEMİ ---
+    // --- 10. REELS (SWINDER) ---
     function initReels() {
-        // Test amaçlı dikey formatlı harici videolar (Gerçekte veritabanından çekilebilir)
         const sampleReels = [
             { url: "https://www.w3schools.com/html/mov_bbb.mp4", user: "swipper_official", text: "Swipper Reels test yayını! 🚀" },
             { url: "https://media.w3.org/2010/05/sintel/trailer.mp4", user: "eminbal", text: "Sinematik çekimler deniyoruz 🎬" }
         ];
-        
         const feed = document.getElementById('reels-feed');
         feed.innerHTML = '';
-        
         sampleReels.forEach(reel => {
             feed.insertAdjacentHTML('beforeend', `
                 <div class="reel-item" onclick="togglePlay(this)">
@@ -542,7 +589,7 @@ document.addEventListener("DOMContentLoaded", () => {
         else { video.pause(); }
     };
 
-    // --- 11. TEMALAR VE MODALLAR ---
+    // --- 11. TEMA VE SEKME GEÇİŞLERİ ---
     document.getElementById('theme-toggle-btn').onclick = () => {
         document.body.classList.toggle('dark-mode');
         const icon = document.getElementById('theme-toggle-btn').querySelector('i');
@@ -553,14 +600,15 @@ document.addEventListener("DOMContentLoaded", () => {
     const navItems = document.querySelectorAll('.nav-item');
     navItems.forEach(item => {
         item.addEventListener('click', (e) => {
-            if (item.id === 'nav-add-btn') return; 
             e.preventDefault();
             navItems.forEach(i => i.classList.remove('active'));
             item.classList.add('active');
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-            document.getElementById(item.dataset.target).classList.add('active');
-            
-            if(item.dataset.target === 'dm-tab') {
+            const targetId = item.dataset.target;
+            if(targetId) {
+                document.getElementById(targetId).classList.add('active');
+            }
+            if(targetId === 'dm-tab') {
                 document.getElementById('dm-chat-container').style.display = "none";
                 document.getElementById('dm-list-container').style.display = "block";
             }
@@ -568,7 +616,24 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    document.querySelectorAll('.close-btn').forEach(btn => btn.onclick = (e) => {
-        if(e.target.id !== 'close-story-viewer') e.target.closest('.modal').style.display = "none";
+    // --- 12. TÜM MODALLARI BOŞLUĞA TIKLAYINCA KAPATMA ---
+    document.querySelectorAll('.modal').forEach(modal => {
+        modal.addEventListener('click', (e) => {
+            // Eğer tıklanan element doğrudan modalın arka planıysa kapat
+            if(e.target === modal) {
+                modal.style.display = "none";
+            }
+        });
+    });
+
+    // Çarpı butonlarıyla kapatma
+    document.querySelectorAll('.close-btn').forEach(btn => {
+        btn.onclick = (e) => {
+            if(e.target.id === 'close-story-viewer') {
+                closeStory();
+            } else {
+                e.target.closest('.modal').style.display = "none";
+            }
+        };
     });
 });

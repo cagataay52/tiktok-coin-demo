@@ -31,6 +31,7 @@
         <header class="top-header">
             <h1 class="insta-logo">Swipper</h1>
             <div class="header-icons">
+                <button class="icon-btn" id="header-add-btn"><i class="fa-regular fa-square-plus"></i></button>
                 <button class="icon-btn"><i class="fa-regular fa-heart"></i></button>
             </div>
         </header>
@@ -59,8 +60,7 @@
             </section>
 
             <section id="reels-tab" class="tab-content" style="padding: 0; margin-top: -60px;">
-                <div class="reels-feed" id="reels-feed">
-                    </div>
+                <div class="reels-feed" id="reels-feed"></div>
             </section>
 
             <section id="dm-tab" class="tab-content">
@@ -93,7 +93,7 @@
                 
                 <div class="profile-header">
                     <div class="avatar-container" id="avatar-container">
-                        <img src="https://i.pravatar.cc/150?img=11" class="profile-avatar" id="main-profile-pic">
+                        <img src="" class="profile-avatar" id="main-profile-pic">
                         <div class="avatar-overlay"><i class="fa-solid fa-camera"></i></div>
                     </div>
                     <div class="profile-stats">
@@ -122,15 +122,47 @@
                 <div id="p-tweets" class="profile-tab-content"></div>
             </section>
 
+            <section id="other-profile-tab" class="tab-content">
+                <div class="profile-top-bar">
+                    <button class="icon-btn" onclick="document.getElementById('nav-explore-btn').click()"><i class="fa-solid fa-arrow-left"></i></button>
+                    <span class="profile-username" id="other-profile-username">@kullanici</span>
+                    <div style="width: 24px;"></div>
+                </div>
+                
+                <div class="profile-header">
+                    <div class="avatar-container">
+                        <img src="" class="profile-avatar" id="other-profile-pic">
+                    </div>
+                    <div class="profile-stats">
+                        <div class="stat"><strong id="other-profile-post-count">0</strong><span>Gönderi</span></div>
+                        <div class="stat"><strong>0</strong><span>Takipçi</span></div>
+                        <div class="stat"><strong>0</strong><span>Takip</span></div>
+                    </div>
+                </div>
+                
+                <div class="profile-bio-section">
+                    <strong class="profile-name" id="other-profile-name">İsim Yükleniyor...</strong>
+                    <p class="profile-bio-text" id="other-profile-bio">Biyografi yükleniyor...</p>
+                </div>
+                
+                <div class="profile-actions">
+                    <button class="primary-btn" id="other-profile-msg-btn" style="width: 100%;">Mesaj Gönder</button>
+                </div>
+
+                <div class="profile-tabs">
+                    <div class="p-tab active"><i class="fa-solid fa-table-cells"></i> Paylaşımlar</div>
+                </div>
+                <div class="profile-grid" id="other-profile-grid"></div>
+            </section>
+
         </main>
 
         <nav class="bottom-nav">
             <a href="#" class="nav-item active" data-target="home-tab"><i class="fa-solid fa-house"></i></a>
-            <a href="#" class="nav-item" data-target="explore-tab"><i class="fa-solid fa-magnifying-glass"></i></a>
-            <a href="#" class="nav-item" id="nav-add-btn"><i class="fa-regular fa-square-plus" style="font-size: 26px;"></i></a>
+            <a href="#" class="nav-item" data-target="explore-tab" id="nav-explore-btn"><i class="fa-solid fa-magnifying-glass"></i></a>
             <a href="#" class="nav-item" data-target="reels-tab"><i class="fa-solid fa-clapperboard"></i></a>
             <a href="#" class="nav-item" data-target="dm-tab"><i class="fa-brands fa-facebook-messenger"></i></a>
-            <a href="#" class="nav-item" data-target="profile-tab"><img src="https://i.pravatar.cc/150?img=11" class="nav-profile-pic" id="nav-profile-img"></a>
+            <a href="#" class="nav-item" data-target="profile-tab"><img src="" class="nav-profile-pic" id="nav-profile-img"></a>
         </nav>
     </div>
 
@@ -140,8 +172,7 @@
                 <h3>Gönderi</h3>
                 <button class="close-btn"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <div id="single-post-container" style="max-height: 80vh; overflow-y: auto;">
-                </div>
+            <div id="single-post-container" style="max-height: 80vh; overflow-y: auto;"></div>
         </div>
     </div>
 
