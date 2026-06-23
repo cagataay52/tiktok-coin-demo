@@ -1,9 +1,8 @@
-// FIREBASE AYARLARI
 const firebaseConfig = {
     apiKey: "AIzaSyCTbvB4-LBG-jP8zNkJhLNEaQfQpTAdEjA",
     authDomain: "swipper-2f2a4.firebaseapp.com",
     projectId: "swipper-2f2a4",
-    storageBucket: "swipper-2f2a4.firebasestorage.app", // BURASI 5GB BEDAVA ALANIN!
+    storageBucket: "swipper-2f2a4.firebasestorage.app",
     messagingSenderId: "1025977111228",
     appId: "1:1025977111228:web:f2b0013a21c5f2b434b6b9"
 };
@@ -11,12 +10,20 @@ const firebaseConfig = {
 if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
 const auth = firebase.auth();
 const db = firebase.firestore();
-const storage = firebase.storage(); // Kotanı yemeyen Storage Modülü aktif edildi.
+
+// ÇİFT TIKLAMA YAKINLAŞTIRMA (ZOOM) KESİN ENGELLEYİCİ (JAVASCRIPT)
+let lastTouchEnd = 0;
+document.addEventListener('touchend', function (event) {
+    let now = (new Date()).getTime();
+    if (now - lastTouchEnd <= 300) { event.preventDefault(); }
+    lastTouchEnd = now;
+}, { passive: false });
 
 document.addEventListener("DOMContentLoaded", () => {
     
     const authScreen = document.getElementById('auth-screen');
     const appContainer = document.getElementById('app-container');
+    const splashScreen = document.getElementById('splash-screen');
     const authError = document.getElementById('auth-error');
     
     let currentUser = null;
@@ -35,19 +42,28 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function getChatRoomId(uid1, uid2) { return uid1 < uid2 ? uid1 + '_' + uid2 : uid2 + '_' + uid1; }
 
-    // --- GOOGLE FIREBASE STORAGE YÜKLEME MOTORU (BEDAVA 5GB ALAN) ---
-    // Hiçbir harici sunucuya gitmez, senin kendi sisteminde yüklenir.
-    async function uploadToFirebaseStorage(file) {
-        const fileExt = file.name.split('.').pop();
-        const uniqueName = `swipper_media/${Date.now()}_${Math.random().toString(36).substring(2)}.${fileExt}`;
-        const storageRef = storage.ref().child(uniqueName);
-        
+    // --- YENİ SINIRSIZ VE ÜCRETSİZ BULUT YÜKLEME MOTORU (CATBOX API) ---
+    // Hiçbir üyelik, kart veya kota sınırı istemez. Firebase'ini şişirmez.
+    async function uploadToFreeCloud(file) {
+        const formData = new FormData();
+        formData.append('reqtype', 'fileupload');
+        formData.append('fileToUpload', file);
+
         try {
-            await storageRef.put(file);
-            return await storageRef.getDownloadURL();
+            const response = await fetch('https://catbox.moe/user/api.php', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (response.ok) {
+                const fileUrl = await response.text(); 
+                return fileUrl; 
+            } else {
+                throw new Error("Yükleme reddedildi.");
+            }
         } catch (error) {
-            console.error("Storage Yükleme Hatası:", error);
-            alert("Yükleme başarısız! (Önemli: Lütfen Firebase panelinden Storage -> Rules sekmesine gidip 'allow read, write: if true;' yapmayı unutmayın.)");
+            console.error("Bulut Yükleme Hatası:", error);
+            alert("Ücretsiz bulut sunucusuna bağlanılamadı. Lütfen internet bağlantınızı kontrol edip tekrar deneyin.");
             return null;
         }
     }
@@ -56,11 +72,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const savedTheme = localStorage.getItem('swipper_theme');
     if (savedTheme === 'dark') {
         document.body.classList.add('dark-mode');
-        const themeIcon = document.getElementById('theme-toggle-btn').querySelector('i');
-        if(themeIcon) { themeIcon.classList.remove('fa-moon'); themeIcon.classList.add('fa-sun'); }
+        const themeIcon = document.getElementById('theme-toggle-btn');
+        if(themeIcon && themeIcon.querySelector('i')) { 
+            themeIcon.querySelector('i').classList.remove('fa-moon'); 
+            themeIcon.querySelector('i').classList.add('fa-sun'); 
+        }
     }
 
-    // --- 1. OTURUM ---
+    // --- 1. OTURUM VE FLICKER ÇÖZÜMÜ ---
     document.getElementById('register-btn').addEventListener('click', () => {
         const email = document.getElementById('auth-email').value;
         const pass = document.getElementById('auth-password').value;
@@ -78,8 +97,13 @@ document.addEventListener("DOMContentLoaded", () => {
     function showError(msg) { authError.innerText = msg; authError.style.display = "block"; }
 
     auth.onAuthStateChanged((user) => {
+        splashScreen.style.display = "none"; 
+        
         if (user) {
-            currentUser = user; authScreen.style.display = "none"; appContainer.style.display = "block";
+            currentUser = user; 
+            authScreen.style.display = "none"; 
+            appContainer.style.display = "block";
+            
             db.collection('users').onSnapshot(snapshot => {
                 usersCache = {};
                 snapshot.forEach(doc => { usersCache[doc.id] = doc.data(); });
@@ -94,7 +118,9 @@ document.addEventListener("DOMContentLoaded", () => {
             });
             loadRealtimePosts(); loadReelsFeed();
         } else {
-            currentUser = null; authScreen.style.display = "flex"; appContainer.style.display = "none";
+            currentUser = null; 
+            authScreen.style.display = "flex"; 
+            appContainer.style.display = "none";
         }
     });
 
@@ -103,7 +129,6 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById('display-name').innerText = data.name;
         document.getElementById('display-bio').innerText = data.bio;
         
-        // Git-Gel (Flicker) engelleme: Eğer resim aynıysa tekrar yükleme.
         const mainPic = document.getElementById('main-profile-pic');
         const navPic = document.getElementById('nav-profile-img');
         const storyPic = document.getElementById('my-story-img');
@@ -113,7 +138,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if(storyPic.src !== data.avatar) storyPic.src = data.avatar;
     }
 
-    // --- 2. PROFİL SEKMELERİ VE GÜNCELLEME ---
+    // --- 2. PROFİL ---
     document.querySelectorAll('.p-tab').forEach(tab => {
         tab.addEventListener('click', () => {
             document.querySelectorAll('.p-tab').forEach(t => t.classList.remove('active'));
@@ -133,9 +158,17 @@ document.addEventListener("DOMContentLoaded", () => {
         editModal.style.display = "flex";
     };
 
-    document.getElementById('save-profile-btn').onclick = () => {
-        const updated = { name: document.getElementById('input-name').value, username: document.getElementById('input-username').value.replace(/\s+/g, '').toLowerCase(), bio: document.getElementById('input-bio').value };
-        db.collection('users').doc(currentUser.uid).update(updated).then(() => editModal.style.display = "none");
+    document.getElementById('save-profile-btn').onclick = async () => {
+        const newName = document.getElementById('input-name').value;
+        const newUsername = document.getElementById('input-username').value.replace(/\s+/g, '').toLowerCase();
+        const newBio = document.getElementById('input-bio').value;
+
+        const snapshot = await db.collection('users').where('username', '==', newUsername).get();
+        let isTaken = false;
+        snapshot.forEach(doc => { if(doc.id !== currentUser.uid) { isTaken = true; } });
+
+        if(isTaken) { alert("Bu kullanıcı adı alınmış. Lütfen başka bir kullanıcı adı seçin!"); return; }
+        db.collection('users').doc(currentUser.uid).update({ name: newName, username: newUsername, bio: newBio }).then(() => editModal.style.display = "none");
     };
 
     const profileUpload = document.getElementById('profile-upload');
@@ -143,20 +176,19 @@ document.addEventListener("DOMContentLoaded", () => {
     profileUpload.onchange = async (e) => {
         const file = e.target.files[0]; if (!file) return;
         document.getElementById('display-bio').innerText = "Profil fotoğrafı yükleniyor...";
-        const url = await uploadToFirebaseStorage(file);
+        const url = await uploadToFreeCloud(file);
         if(url) { 
             db.collection('users').doc(currentUser.uid).update({ avatar: url }); 
             document.getElementById('display-bio').innerText = usersCache[currentUser.uid].bio; 
         } else { document.getElementById('display-bio').innerText = "Yükleme başarısız!"; }
     };
 
-    // --- 3. PAYLAŞIM MODULLARI (+ BUTONU) ---
+    // --- 3. PAYLAŞIM ---
     const createOptionsModal = document.getElementById('create-options-modal');
     const postModal = document.getElementById('post-modal');
     
     document.getElementById('header-add-btn').onclick = (e) => { e.preventDefault(); createOptionsModal.style.display = "flex"; };
     
-    // GÖNDERİ EKRANI AÇMA
     document.getElementById('btn-create-post').onclick = () => {
         createOptionsModal.style.display = "none"; postModal.style.display = "flex";
         document.getElementById('post-image-preview').style.display = "none";
@@ -167,7 +199,6 @@ document.addEventListener("DOMContentLoaded", () => {
         pendingUploadFile = null; pendingUploadType = 'post';
     };
 
-    // REELS EKRANI AÇMA
     document.getElementById('btn-create-reel').onclick = () => {
         createOptionsModal.style.display = "none"; postModal.style.display = "flex";
         document.getElementById('post-image-preview').style.display = "none";
@@ -178,13 +209,11 @@ document.addEventListener("DOMContentLoaded", () => {
         pendingUploadFile = null; pendingUploadType = 'reel';
     };
 
-    // GALERİDEN SEÇİM (HEM POST HEM REEL İÇİN ORTAK)
     document.getElementById('select-post-image').onclick = () => document.getElementById('global-media-upload').click();
     
     document.getElementById('global-media-upload').onchange = (e) => {
         const file = e.target.files[0]; if(!file) return;
         pendingUploadFile = file;
-
         const localPreviewUrl = URL.createObjectURL(file);
         const container = document.getElementById('media-preview-container');
         
@@ -200,7 +229,6 @@ document.addEventListener("DOMContentLoaded", () => {
         pendingUploadFile = null; document.getElementById('post-image-preview').style.display = "none"; document.getElementById('global-media-upload').value = "";
     };
 
-    // FIREBASE STORAGE YÜKLEME VE FIREBASE KAYIT BUTONU
     document.getElementById('save-post-btn').onclick = async () => {
         const caption = document.getElementById('post-content-input').value;
         if(!pendingUploadFile && caption.trim() === "") return;
@@ -212,7 +240,7 @@ document.addEventListener("DOMContentLoaded", () => {
         
         let fileUrl = null;
         if(pendingUploadFile) {
-            fileUrl = await uploadToFirebaseStorage(pendingUploadFile);
+            fileUrl = await uploadToFreeCloud(pendingUploadFile);
             if(!fileUrl) { saveBtn.style.display = "block"; loadText.style.display = "none"; return; }
         }
 
@@ -233,7 +261,7 @@ document.addEventListener("DOMContentLoaded", () => {
         pendingUploadFile = null;
     };
 
-    // --- 4. HİKAYE YÖNETİMİ ---
+    // --- 4. HİKAYE ---
     const storyUpload = document.getElementById('story-image-upload');
     document.getElementById('add-story-btn').onclick = () => { if (document.getElementById('add-story-btn').querySelector('.plus-icon').style.display !== 'none') { storyUpload.click(); } };
     document.getElementById('btn-create-story-menu').onclick = () => { createOptionsModal.style.display = "none"; storyUpload.click(); };
@@ -243,7 +271,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const wrapper = document.getElementById('stories-wrapper');
         wrapper.insertAdjacentHTML('afterbegin', `<div class="story" id="temp-loading-story"><div class="story-ring" style="opacity:0.5;"><img src="https://i.pravatar.cc/150?img=11"></div><span>Yükleniyor...</span></div>`);
         
-        const url = await uploadToFirebaseStorage(file);
+        const url = await uploadToFreeCloud(file);
         if(url) { await db.collection('stories').add({ imageUrl: url, authorId: currentUser.uid, createdAt: firebase.firestore.FieldValue.serverTimestamp() }); }
         document.getElementById('temp-loading-story').remove();
     };
@@ -310,15 +338,8 @@ document.addEventListener("DOMContentLoaded", () => {
         
         let mediaHTML = '';
         if(post.imageUrl) {
-            // Firebase Storage linklerinde format url içinde saklıdır.
-            if(post.imageUrl.includes('.mp4') || post.imageUrl.includes('video') || post.imageUrl.includes('alt=media')) {
-                // Video veya resim ayrımını tarayıcı yapabilsin diye img de kullanabiliriz, ama firebase url'si karmaşıktır.
-                // Firebase Storage'da mp4 uzantısını yüklerken belirttik.
-                if(post.imageUrl.includes('.mp4')) {
-                    mediaHTML = `<video class="post-image" src="${post.imageUrl}" controls playsinline></video>`;
-                } else {
-                    mediaHTML = `<img class="post-image" src="${post.imageUrl}">`;
-                }
+            if(post.imageUrl.includes('.mp4') || post.imageUrl.includes('video')) {
+                mediaHTML = `<video class="post-image" src="${post.imageUrl}" controls playsinline></video>`;
             } else {
                 mediaHTML = `<img class="post-image" src="${post.imageUrl}">`;
             }
@@ -413,7 +434,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 if(isMyPost) {
                     myPostCount++;
                     if(post.imageUrl) {
-                        const mediaTag = (post.imageUrl.includes('.mp4')) 
+                        const mediaTag = (post.imageUrl.includes('.mp4') || post.imageUrl.includes('video')) 
                             ? `<video src="${post.imageUrl}" style="width:100%; height:100%; object-fit:cover;"></video><i class="fa-solid fa-play" style="position:absolute; top:5px; left:5px; color:white;"></i>` 
                             : `<img src="${post.imageUrl}">`;
                             
@@ -488,13 +509,13 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     };
 
-    // --- 8. REELS AKIŞI (FIREBASE STORAGE TABANLI) ---
+    // --- 8. REELS AKIŞI ---
     function loadReelsFeed() {
         db.collection('reels').orderBy('createdAt', 'desc').onSnapshot(snapshot => {
             const feed = document.getElementById('reels-feed'); feed.innerHTML = '';
             
             if(snapshot.empty) {
-                feed.insertAdjacentHTML('beforeend', `<div class="reel-item" onclick="togglePlay(this)"><video class="reel-media" src="https://www.w3schools.com/html/mov_bbb.mp4" loop playsinline></video><div class="reel-info"><div class="username">@swipper_official</div><div class="caption">Reels boş. Üst menüden ilk reelsi sen yükle!</div></div><div class="reel-actions"><i class="fa-solid fa-heart" onclick="event.stopPropagation(); this.classList.toggle('liked')"></i></div></div>`);
+                feed.insertAdjacentHTML('beforeend', `<div class="reel-item" onclick="togglePlay(this)"><video class="reel-media" src="https://files.catbox.moe/dummy.mp4" loop playsinline></video><div class="reel-info"><div class="username">@swipper_official</div><div class="caption">Reels boş. Üst menüden ilk reelsi sen yükle!</div></div><div class="reel-actions"><i class="fa-solid fa-heart" onclick="event.stopPropagation(); this.classList.toggle('liked')"></i></div></div>`);
                 return;
             }
 
@@ -503,7 +524,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 const isMyReel = r.authorId === currentUser.uid;
                 const manageBtn = isMyReel ? `<i class="fa-solid fa-ellipsis-vertical" style="position:absolute; top:20px; right:20px; color:white; z-index:20; font-size:24px; cursor:pointer;" onclick="event.stopPropagation(); openPostOptions('${doc.id}', '${r.caption || ''}', 'reel')"></i>` : '';
                 
-                const mediaTag = (r.videoUrl.includes('.mp4') || r.videoUrl.includes('video') || r.videoUrl.includes('alt=media')) 
+                const mediaTag = (r.videoUrl.includes('.mp4') || r.videoUrl.includes('video')) 
                     ? `<video class="reel-media" src="${r.videoUrl}" loop playsinline></video>`
                     : `<img class="reel-media" src="${r.videoUrl}">`;
 
@@ -600,7 +621,12 @@ document.addEventListener("DOMContentLoaded", () => {
     navItems.forEach(item => {
         item.addEventListener('click', (e) => {
             if (item.id === 'nav-add-btn') return; 
-            e.preventDefault(); navItems.forEach(i => i.classList.remove('active')); item.classList.add('active');
+            e.preventDefault(); 
+            
+            // Başka sekmeye geçince videoyu durdur
+            document.querySelectorAll('video').forEach(v => v.pause());
+
+            navItems.forEach(i => i.classList.remove('active')); item.classList.add('active');
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
             const targetId = item.dataset.target; 
             
@@ -622,7 +648,6 @@ document.addEventListener("DOMContentLoaded", () => {
         };
     });
 
-    // Sayfa başında üst menüyü doğru ayarlama
     document.getElementById('main-top-header').style.display = "flex";
     document.getElementById('main-content').style.marginTop = "60px";
 });
