@@ -14,7 +14,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
     
-    <link rel="stylesheet" href="style.css?v=14">
+    <link rel="stylesheet" href="style.css?v=16">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body class="light-mode"> 
@@ -25,7 +25,7 @@
 
     <div id="auth-screen" class="auth-container">
         <div class="auth-box">
-            <h1 class="insta-logo" style="font-size: 52px; margin-bottom: 30px; text-align: center;">Swipper</h1>
+            <h1 class="insta-logo" style="font-size: 56px; margin-bottom: 30px; text-align: center;">Swipper</h1>
             <input type="email" id="auth-email" class="custom-input" placeholder="E-posta" style="margin-bottom:15px;">
             <input type="password" id="auth-password" class="custom-input" placeholder="Şifre" style="margin-bottom: 20px;">
             <button id="login-btn" class="primary-btn" style="width: 100%;">Giriş Yap</button>
@@ -167,7 +167,7 @@
     <div id="single-post-modal" class="modal">
         <div class="modal-content" style="padding: 0; overflow: hidden; background: var(--bg-color);">
             <div class="modal-header" style="padding: 15px; border-bottom: 1px solid var(--border-color);">
-                <h3>Gönderi</h3>
+                <h3 class="insta-logo" style="font-size: 24px;">Gönderi</h3>
                 <button class="close-btn"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div id="single-post-container" style="max-height: 80vh; overflow-y: auto;"></div>
@@ -238,7 +238,7 @@
             
             <button id="select-post-image" class="secondary-btn" style="margin-top: 10px;"><i class="fa-solid fa-photo-film"></i> Galeriden Seç</button>
             
-            <p id="upload-loading-text" style="display:none; text-align:center; color:var(--blue); font-size:14px; font-weight:600; margin-top:10px;"><i class="fa-solid fa-spinner fa-spin"></i> Bulut Sunucusuna Yükleniyor...</p>
+            <p id="upload-loading-text" style="display:none; text-align:center; color:var(--blue); font-size:14px; font-weight:600; margin-top:10px;"><i class="fa-solid fa-spinner fa-spin"></i> Dosya Optimize Ediliyor ve Yükleniyor...</p>
             
             <button id="save-post-btn" class="primary-btn" style="margin-top: 10px;">Paylaş</button>
         </div>
