@@ -1,8 +1,9 @@
+// FIREBASE AYARLARI
 const firebaseConfig = {
     apiKey: "AIzaSyCTbvB4-LBG-jP8zNkJhLNEaQfQpTAdEjA",
     authDomain: "swipper-2f2a4.firebaseapp.com",
     projectId: "swipper-2f2a4",
-    storageBucket: "swipper-2f2a4.firebasestorage.app",
+    storageBucket: "swipper-2f2a4.firebasestorage.app", // BURASI 5GB BEDAVA ALANIN!
     messagingSenderId: "1025977111228",
     appId: "1:1025977111228:web:f2b0013a21c5f2b434b6b9"
 };
@@ -10,6 +11,7 @@ const firebaseConfig = {
 if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
 const auth = firebase.auth();
 const db = firebase.firestore();
+const storage = firebase.storage(); // Kotanı yemeyen Storage Modülü aktif edildi.
 
 document.addEventListener("DOMContentLoaded", () => {
     
@@ -33,36 +35,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function getChatRoomId(uid1, uid2) { return uid1 < uid2 ? uid1 + '_' + uid2 : uid2 + '_' + uid1; }
 
-    // DÜNYANIN EN İYİ MEDYA SUNUCUSUNA (CLOUDINARY) OTOMATİK YÜKLEME API'Sİ
-    // Sen galeriden videoyu/fotoğrafı seçersin, bu fonksiyon onu sunucuya gönderip bize Linkini (URL) verir.
-    async function uploadToExternalServer(file) {
-        // Video 50 MB'dan büyükse uyar
-        if (file.size > 50 * 1024 * 1024) {
-            alert("Dosya boyutu çok büyük (Max: 50MB). Lütfen daha kısa bir video seçin.");
-            return null;
-        }
-
-        const formData = new FormData();
-        formData.append('file', file);
-        formData.append('upload_preset', 'docs_upload_preset_folder'); // Cloudinary Test/Public Upload Key
-
-        const resourceType = file.type.startsWith('video/') ? 'video' : 'image';
-
+    // --- GOOGLE FIREBASE STORAGE YÜKLEME MOTORU (BEDAVA 5GB ALAN) ---
+    // Hiçbir harici sunucuya gitmez, senin kendi sisteminde yüklenir.
+    async function uploadToFirebaseStorage(file) {
+        const fileExt = file.name.split('.').pop();
+        const uniqueName = `swipper_media/${Date.now()}_${Math.random().toString(36).substring(2)}.${fileExt}`;
+        const storageRef = storage.ref().child(uniqueName);
+        
         try {
-            const res = await fetch(`https://api.cloudinary.com/v1_1/demo/${resourceType}/upload`, {
-                method: 'POST', body: formData
-            });
-            const data = await res.json();
-            if(data.secure_url) {
-                return data.secure_url;
-            } else {
-                throw new Error("Sunucu yanıt vermedi");
-            }
+            await storageRef.put(file);
+            return await storageRef.getDownloadURL();
         } catch (error) {
-            console.error("Yükleme hatası:", error);
-            alert("Harici sunucuya bağlanılamadı. Format desteklenmiyor olabilir.");
+            console.error("Storage Yükleme Hatası:", error);
+            alert("Yükleme başarısız! (Önemli: Lütfen Firebase panelinden Storage -> Rules sekmesine gidip 'allow read, write: if true;' yapmayı unutmayın.)");
             return null;
         }
+    }
+
+    // --- TEMA HAFIZASI ---
+    const savedTheme = localStorage.getItem('swipper_theme');
+    if (savedTheme === 'dark') {
+        document.body.classList.add('dark-mode');
+        const themeIcon = document.getElementById('theme-toggle-btn').querySelector('i');
+        if(themeIcon) { themeIcon.classList.remove('fa-moon'); themeIcon.classList.add('fa-sun'); }
     }
 
     // --- 1. OTURUM ---
@@ -107,12 +102,18 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById('display-username').innerText = `@${data.username}`;
         document.getElementById('display-name').innerText = data.name;
         document.getElementById('display-bio').innerText = data.bio;
-        document.getElementById('main-profile-pic').src = data.avatar;
-        document.getElementById('nav-profile-img').src = data.avatar;
-        document.getElementById('my-story-img').src = data.avatar;
+        
+        // Git-Gel (Flicker) engelleme: Eğer resim aynıysa tekrar yükleme.
+        const mainPic = document.getElementById('main-profile-pic');
+        const navPic = document.getElementById('nav-profile-img');
+        const storyPic = document.getElementById('my-story-img');
+        
+        if(mainPic.src !== data.avatar) mainPic.src = data.avatar;
+        if(navPic.src !== data.avatar) navPic.src = data.avatar;
+        if(storyPic.src !== data.avatar) storyPic.src = data.avatar;
     }
 
-    // --- 2. PROFİL ---
+    // --- 2. PROFİL SEKMELERİ VE GÜNCELLEME ---
     document.querySelectorAll('.p-tab').forEach(tab => {
         tab.addEventListener('click', () => {
             document.querySelectorAll('.p-tab').forEach(t => t.classList.remove('active'));
@@ -125,8 +126,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const editModal = document.getElementById('edit-profile-modal');
     document.getElementById('edit-profile-trigger').onclick = () => {
-        const data = usersCache[currentUser.uid];
-        if(!data) return;
+        const data = usersCache[currentUser.uid]; if(!data) return;
         document.getElementById('input-name').value = data.name;
         document.getElementById('input-username').value = data.username;
         document.getElementById('input-bio').value = data.bio;
@@ -141,12 +141,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const profileUpload = document.getElementById('profile-upload');
     document.getElementById('avatar-container').onclick = () => profileUpload.click();
     profileUpload.onchange = async (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-        document.getElementById('display-bio').innerText = "Fotoğraf yükleniyor...";
-        const url = await uploadToExternalServer(file);
-        if(url) { db.collection('users').doc(currentUser.uid).update({ avatar: url }); }
-        else { document.getElementById('display-bio').innerText = "Yükleme başarısız."; }
+        const file = e.target.files[0]; if (!file) return;
+        document.getElementById('display-bio').innerText = "Profil fotoğrafı yükleniyor...";
+        const url = await uploadToFirebaseStorage(file);
+        if(url) { 
+            db.collection('users').doc(currentUser.uid).update({ avatar: url }); 
+            document.getElementById('display-bio').innerText = usersCache[currentUser.uid].bio; 
+        } else { document.getElementById('display-bio').innerText = "Yükleme başarısız!"; }
     };
 
     // --- 3. PAYLAŞIM MODULLARI (+ BUTONU) ---
@@ -163,11 +164,10 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById('upload-modal-title').innerText = "Yeni Paylaşım";
         document.getElementById('save-post-btn').innerText = "Paylaş";
         document.getElementById('global-media-upload').setAttribute('accept', 'image/*,video/*');
-        pendingUploadFile = null;
-        pendingUploadType = 'post';
+        pendingUploadFile = null; pendingUploadType = 'post';
     };
 
-    // REELS EKRANI AÇMA (Aynı modal, sadece Video kısıtlaması var)
+    // REELS EKRANI AÇMA
     document.getElementById('btn-create-reel').onclick = () => {
         createOptionsModal.style.display = "none"; postModal.style.display = "flex";
         document.getElementById('post-image-preview').style.display = "none";
@@ -175,28 +175,24 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById('upload-modal-title').innerText = "Yeni Reels Paylaş";
         document.getElementById('save-post-btn').innerText = "Reels Paylaş";
         document.getElementById('global-media-upload').setAttribute('accept', 'video/*,image/*'); 
-        pendingUploadFile = null;
-        pendingUploadType = 'reel';
+        pendingUploadFile = null; pendingUploadType = 'reel';
     };
 
-    // GALERİDEN SEÇİM (HEM POST HEM REEL İÇİN ORTAK API)
+    // GALERİDEN SEÇİM (HEM POST HEM REEL İÇİN ORTAK)
     document.getElementById('select-post-image').onclick = () => document.getElementById('global-media-upload').click();
     
     document.getElementById('global-media-upload').onchange = (e) => {
-        const file = e.target.files[0];
-        if(!file) return;
+        const file = e.target.files[0]; if(!file) return;
         pendingUploadFile = file;
 
-        // Geçici Lokal Önizleme (Upload öncesi kullanıcı görsün diye)
         const localPreviewUrl = URL.createObjectURL(file);
         const container = document.getElementById('media-preview-container');
         
         if(file.type.startsWith('video/')) {
-            container.innerHTML = `<video src="${localPreviewUrl}" style="width:100%; border-radius:8px; max-height:250px; background:#000;" autoplay loop muted></video>`;
+            container.innerHTML = `<video src="${localPreviewUrl}" style="width:100%; border-radius:8px; max-height:250px; background:#000;" autoplay loop muted playsinline></video>`;
         } else {
             container.innerHTML = `<img src="${localPreviewUrl}" style="width:100%; border-radius:8px; max-height:250px; object-fit:cover;">`;
         }
-        
         document.getElementById('post-image-preview').style.display = "block";
     };
 
@@ -204,7 +200,7 @@ document.addEventListener("DOMContentLoaded", () => {
         pendingUploadFile = null; document.getElementById('post-image-preview').style.display = "none"; document.getElementById('global-media-upload').value = "";
     };
 
-    // API YÜKLEME VE FIREBASE KAYIT BUTONU
+    // FIREBASE STORAGE YÜKLEME VE FIREBASE KAYIT BUTONU
     document.getElementById('save-post-btn').onclick = async () => {
         const caption = document.getElementById('post-content-input').value;
         if(!pendingUploadFile && caption.trim() === "") return;
@@ -212,16 +208,12 @@ document.addEventListener("DOMContentLoaded", () => {
         const saveBtn = document.getElementById('save-post-btn');
         const loadText = document.getElementById('upload-loading-text');
         
-        saveBtn.style.display = "none";
-        loadText.style.display = "block";
+        saveBtn.style.display = "none"; loadText.style.display = "block";
         
         let fileUrl = null;
         if(pendingUploadFile) {
-            fileUrl = await uploadToExternalServer(pendingUploadFile);
-            if(!fileUrl) { 
-                saveBtn.style.display = "block"; loadText.style.display = "none"; 
-                return; 
-            }
+            fileUrl = await uploadToFirebaseStorage(pendingUploadFile);
+            if(!fileUrl) { saveBtn.style.display = "block"; loadText.style.display = "none"; return; }
         }
 
         if(pendingUploadType === 'reel') {
@@ -247,17 +239,12 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById('btn-create-story-menu').onclick = () => { createOptionsModal.style.display = "none"; storyUpload.click(); };
     
     storyUpload.onchange = async (e) => {
-        const file = e.target.files[0];
-        if(!file) return;
-        
-        // Yükleniyor efekti
+        const file = e.target.files[0]; if(!file) return;
         const wrapper = document.getElementById('stories-wrapper');
         wrapper.insertAdjacentHTML('afterbegin', `<div class="story" id="temp-loading-story"><div class="story-ring" style="opacity:0.5;"><img src="https://i.pravatar.cc/150?img=11"></div><span>Yükleniyor...</span></div>`);
         
-        const url = await uploadToExternalServer(file);
-        if(url) {
-            await db.collection('stories').add({ imageUrl: url, authorId: currentUser.uid, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
-        }
+        const url = await uploadToFirebaseStorage(file);
+        if(url) { await db.collection('stories').add({ imageUrl: url, authorId: currentUser.uid, createdAt: firebase.firestore.FieldValue.serverTimestamp() }); }
         document.getElementById('temp-loading-story').remove();
     };
 
@@ -314,7 +301,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const chatId = getChatRoomId(currentUser.uid, activeStoryAuthorId);
         db.collection('chats').doc(chatId).collection('messages').add({
             senderId: currentUser.uid, text: `Hikayeye Yanıt: ${text}`, createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        }).then(() => { alert("Yanıt iletildi!"); document.getElementById('story-reply-input').value = ""; closeStory(); });
+        }).then(() => { alert("Yanıt DM olarak iletildi!"); document.getElementById('story-reply-input').value = ""; closeStory(); });
     };
 
     // --- 5. GÖNDERİ AKIŞI ---
@@ -323,8 +310,15 @@ document.addEventListener("DOMContentLoaded", () => {
         
         let mediaHTML = '';
         if(post.imageUrl) {
-            if(post.imageUrl.includes('.mp4') || post.imageUrl.includes('video')) {
-                mediaHTML = `<video class="post-image" src="${post.imageUrl}" controls></video>`;
+            // Firebase Storage linklerinde format url içinde saklıdır.
+            if(post.imageUrl.includes('.mp4') || post.imageUrl.includes('video') || post.imageUrl.includes('alt=media')) {
+                // Video veya resim ayrımını tarayıcı yapabilsin diye img de kullanabiliriz, ama firebase url'si karmaşıktır.
+                // Firebase Storage'da mp4 uzantısını yüklerken belirttik.
+                if(post.imageUrl.includes('.mp4')) {
+                    mediaHTML = `<video class="post-image" src="${post.imageUrl}" controls playsinline></video>`;
+                } else {
+                    mediaHTML = `<img class="post-image" src="${post.imageUrl}">`;
+                }
             } else {
                 mediaHTML = `<img class="post-image" src="${post.imageUrl}">`;
             }
@@ -419,7 +413,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 if(isMyPost) {
                     myPostCount++;
                     if(post.imageUrl) {
-                        const mediaTag = (post.imageUrl.includes('.mp4') || post.imageUrl.includes('video')) 
+                        const mediaTag = (post.imageUrl.includes('.mp4')) 
                             ? `<video src="${post.imageUrl}" style="width:100%; height:100%; object-fit:cover;"></video><i class="fa-solid fa-play" style="position:absolute; top:5px; left:5px; color:white;"></i>` 
                             : `<img src="${post.imageUrl}">`;
                             
@@ -494,13 +488,13 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     };
 
-    // --- 8. REELS AKIŞI ---
+    // --- 8. REELS AKIŞI (FIREBASE STORAGE TABANLI) ---
     function loadReelsFeed() {
         db.collection('reels').orderBy('createdAt', 'desc').onSnapshot(snapshot => {
             const feed = document.getElementById('reels-feed'); feed.innerHTML = '';
             
             if(snapshot.empty) {
-                feed.insertAdjacentHTML('beforeend', `<div class="reel-item" onclick="togglePlay(this)"><video class="reel-media" src="https://www.w3schools.com/html/mov_bbb.mp4" loop playsinline></video><div class="reel-info"><div class="username">@swipper_official</div><div class="caption">Reels boş. Galeri ikonundan ilk reelsi sen yükle!</div></div><div class="reel-actions"><i class="fa-solid fa-heart" onclick="event.stopPropagation(); this.classList.toggle('liked')"></i></div></div>`);
+                feed.insertAdjacentHTML('beforeend', `<div class="reel-item" onclick="togglePlay(this)"><video class="reel-media" src="https://www.w3schools.com/html/mov_bbb.mp4" loop playsinline></video><div class="reel-info"><div class="username">@swipper_official</div><div class="caption">Reels boş. Üst menüden ilk reelsi sen yükle!</div></div><div class="reel-actions"><i class="fa-solid fa-heart" onclick="event.stopPropagation(); this.classList.toggle('liked')"></i></div></div>`);
                 return;
             }
 
@@ -509,7 +503,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 const isMyReel = r.authorId === currentUser.uid;
                 const manageBtn = isMyReel ? `<i class="fa-solid fa-ellipsis-vertical" style="position:absolute; top:20px; right:20px; color:white; z-index:20; font-size:24px; cursor:pointer;" onclick="event.stopPropagation(); openPostOptions('${doc.id}', '${r.caption || ''}', 'reel')"></i>` : '';
                 
-                const mediaTag = (r.videoUrl.includes('.mp4') || r.videoUrl.includes('video')) 
+                const mediaTag = (r.videoUrl.includes('.mp4') || r.videoUrl.includes('video') || r.videoUrl.includes('alt=media')) 
                     ? `<video class="reel-media" src="${r.videoUrl}" loop playsinline></video>`
                     : `<img class="reel-media" src="${r.videoUrl}">`;
 
@@ -595,9 +589,11 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // --- 10. TEMA VE SEKMELER (SAYFA ÜST BİLGİSİ İNSTAGRAM MANTIĞI) ---
+    // --- 10. TEMA VE YÖNETİM ---
     document.getElementById('theme-toggle-btn').onclick = () => {
-        document.body.classList.toggle('dark-mode'); const icon = document.getElementById('theme-toggle-btn').querySelector('i'); icon.classList.toggle('fa-moon'); icon.classList.toggle('fa-sun');
+        document.body.classList.toggle('dark-mode'); const icon = document.getElementById('theme-toggle-btn').querySelector('i');
+        if (document.body.classList.contains('dark-mode')) { icon.classList.remove('fa-moon'); icon.classList.add('fa-sun'); localStorage.setItem('swipper_theme', 'dark'); } 
+        else { icon.classList.remove('fa-sun'); icon.classList.add('fa-moon'); localStorage.setItem('swipper_theme', 'light'); }
     };
 
     const navItems = document.querySelectorAll('.nav-item');
@@ -610,17 +606,9 @@ document.addEventListener("DOMContentLoaded", () => {
             
             if(targetId) {
                 document.getElementById(targetId).classList.add('active');
-                
-                // ÜST MENÜ GİZLEME MANTIĞI (Sadece home-tab'de görünsün)
-                if(targetId === 'home-tab') {
-                    document.getElementById('main-top-header').style.display = "flex";
-                    document.getElementById('main-content').style.marginTop = "60px";
-                } else {
-                    document.getElementById('main-top-header').style.display = "none";
-                    document.getElementById('main-content').style.marginTop = "0px";
-                }
+                if(targetId === 'home-tab') { document.getElementById('main-top-header').style.display = "flex"; document.getElementById('main-content').style.marginTop = "60px"; } 
+                else { document.getElementById('main-top-header').style.display = "none"; document.getElementById('main-content').style.marginTop = "0px"; }
             }
-            
             if(targetId === 'dm-tab') { document.getElementById('dm-chat-container').style.display = "none"; document.getElementById('dm-list-container').style.display = "block"; renderDMList(); }
             window.scrollTo(0, 0);
         });
@@ -633,4 +621,8 @@ document.addEventListener("DOMContentLoaded", () => {
             else e.target.closest('.modal').style.display = "none";
         };
     });
+
+    // Sayfa başında üst menüyü doğru ayarlama
+    document.getElementById('main-top-header').style.display = "flex";
+    document.getElementById('main-content').style.marginTop = "60px";
 });
