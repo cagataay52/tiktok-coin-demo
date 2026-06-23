@@ -13,9 +13,8 @@
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
     
-    <link rel="stylesheet" href="style.css?v=9">
+    <link rel="stylesheet" href="style.css?v=8">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body class="light-mode"> 
@@ -137,8 +136,8 @@
                     <div class="avatar-container"><img src="" class="profile-avatar" id="other-profile-pic"></div>
                     <div class="profile-stats">
                         <div class="stat"><strong id="other-profile-post-count">0</strong><span>Gönderi</span></div>
-                        <div class="stat"><strong id="other-profile-takipci">0</strong><span>Takipçi</span></div>
-                        <div class="stat"><strong id="other-profile-takip">0</strong><span>Takip</span></div>
+                        <div class="stat"><strong>0</strong><span>Takipçi</span></div>
+                        <div class="stat"><strong>0</strong><span>Takip</span></div>
                     </div>
                 </div>
                 
@@ -222,8 +221,26 @@
         <div class="modal-content bottom-sheet" style="padding: 10px 0;">
             <div class="modal-drag-handle"></div>
             <div class="create-option" id="btn-create-post"><i class="fa-solid fa-table-cells"></i><span>Gönderi veya Tweet Paylaş</span></div>
-            <div class="create-option" id="btn-create-reel"><i class="fa-solid fa-clapperboard"></i><span>Reels Videosu Yükle</span></div>
+            <div class="create-option" id="btn-create-reel"><i class="fa-solid fa-clapperboard"></i><span>Reels Paylaş (Video / Foto)</span></div>
             <div class="create-option" id="btn-create-story-menu"><i class="fa-solid fa-circle-plus"></i><span>Hikaye Paylaş</span></div>
+        </div>
+    </div>
+
+    <div id="post-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header"><h3 id="upload-modal-title">Yeni Paylaşım</h3><button class="close-btn" id="close-post"><i class="fa-solid fa-xmark"></i></button></div>
+            <textarea id="post-content-input" class="custom-textarea" placeholder="Açıklama yaz..." style="height: 80px; border: none; border-bottom: 1px solid var(--border-color); font-size: 16px;"></textarea>
+            
+            <div class="image-upload-preview" id="post-image-preview" style="display: none; position: relative;">
+                <div id="media-preview-container"></div>
+                <button id="remove-post-image" style="position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.6); color: white; border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer;"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <button id="select-post-image" class="secondary-btn" style="margin-top: 10px;"><i class="fa-solid fa-photo-film"></i> Galeriden Seç</button>
+            
+            <p id="upload-loading-text" style="display:none; text-align:center; color:var(--blue); font-size:14px; font-weight:600; margin-top:10px;"><i class="fa-solid fa-spinner fa-spin"></i> Dış Sunucuya Yükleniyor...</p>
+            
+            <button id="save-post-btn" class="primary-btn" style="margin-top: 10px;">Paylaş</button>
         </div>
     </div>
 
@@ -232,19 +249,6 @@
             <div class="modal-drag-handle" style="margin-top: 15px;"></div>
             <div class="create-option" id="opt-edit-post"><i class="fa-solid fa-pen"></i><span>Düzenle</span></div>
             <div class="create-option" id="opt-del-post" style="color: #ed4956; border-bottom:none;"><i class="fa-solid fa-trash" style="color: #ed4956;"></i><span>Sil</span></div>
-        </div>
-    </div>
-
-    <div id="post-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header"><h3>Yeni Paylaşım</h3><button class="close-btn" id="close-post"><i class="fa-solid fa-xmark"></i></button></div>
-            <textarea id="post-content-input" class="custom-textarea" placeholder="Neler düşünüyorsun?" style="height: 80px; border: none; border-bottom: 1px solid var(--border-color); font-size: 16px;"></textarea>
-            <div class="image-upload-preview" id="post-image-preview" style="display: none; position: relative;">
-                <img id="preview-img" src="" style="width: 100%; border-radius: 8px; max-height: 250px; object-fit: cover;">
-                <button id="remove-post-image" style="position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.6); color: white; border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer;"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            <button id="select-post-image" class="secondary-btn" style="margin-top: 10px;"><i class="fa-regular fa-image"></i> Galeriden Fotoğraf Seç</button>
-            <button id="save-post-btn" class="primary-btn" style="margin-top: 10px;">Paylaş</button>
         </div>
     </div>
 
@@ -264,9 +268,8 @@
     </div>
 
     <input type="file" id="profile-upload" accept="image/*" style="display: none;">
-    <input type="file" id="post-image-upload" accept="image/*" style="display: none;">
+    <input type="file" id="global-media-upload" accept="image/*,video/mp4,video/x-m4v,video/*" style="display: none;">
     <input type="file" id="story-image-upload" accept="image/*" style="display: none;">
-    <input type="file" id="reel-video-upload" accept="video/mp4,video/quicktime,video/*" style="display: none;">
 
     <script src="app.js"></script>
 </body>
