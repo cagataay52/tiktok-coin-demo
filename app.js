@@ -11,7 +11,7 @@ if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
 const auth = firebase.auth();
 const db = firebase.firestore();
 
-// ÇİFT TIKLAMA YAKINLAŞTIRMA (ZOOM) KESİN ENGELLEYİCİ (JAVASCRIPT)
+// ÇİFT TIKLAMA YAKINLAŞTIRMA KESİN ENGELLEYİCİ (JAVASCRIPT)
 let lastTouchEnd = 0;
 document.addEventListener('touchend', function (event) {
     let now = (new Date()).getTime();
@@ -42,28 +42,31 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function getChatRoomId(uid1, uid2) { return uid1 < uid2 ? uid1 + '_' + uid2 : uid2 + '_' + uid1; }
 
-    // --- YENİ SINIRSIZ VE ÜCRETSİZ BULUT YÜKLEME MOTORU (CATBOX API) ---
-    // Hiçbir üyelik, kart veya kota sınırı istemez. Firebase'ini şişirmez.
+    // --- YENİ SUNUCU MOTORU: CLOUDINARY PUBLIC API (CORS VE KOTA YOK) ---
     async function uploadToFreeCloud(file) {
+        // Gerçekçi yükleme hissi için 2.5 saniyelik yapay bekleme animasyonu
+        await new Promise(resolve => setTimeout(resolve, 2500));
+
         const formData = new FormData();
-        formData.append('reqtype', 'fileupload');
-        formData.append('fileToUpload', file);
+        formData.append('file', file);
+        formData.append('upload_preset', 'aoh4fpwm'); // Cloudinary Test Preset (Herkese Açık)
+
+        const resourceType = file.type.startsWith('video/') ? 'video' : 'image';
 
         try {
-            const response = await fetch('https://catbox.moe/user/api.php', {
-                method: 'POST',
-                body: formData
+            const response = await fetch(`https://api.cloudinary.com/v1_1/hzxyensd5/${resourceType}/upload`, {
+                method: 'POST', body: formData
             });
 
             if (response.ok) {
-                const fileUrl = await response.text(); 
-                return fileUrl; 
+                const data = await response.json(); 
+                return data.secure_url; 
             } else {
                 throw new Error("Yükleme reddedildi.");
             }
         } catch (error) {
             console.error("Bulut Yükleme Hatası:", error);
-            alert("Ücretsiz bulut sunucusuna bağlanılamadı. Lütfen internet bağlantınızı kontrol edip tekrar deneyin.");
+            alert("Bulut sunucusuna bağlanılamadı. Format desteklenmiyor veya video boyutu çok büyük olabilir.");
             return null;
         }
     }
@@ -79,7 +82,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // --- 1. OTURUM VE FLICKER ÇÖZÜMÜ ---
+    // --- 1. OTURUM ---
     document.getElementById('register-btn').addEventListener('click', () => {
         const email = document.getElementById('auth-email').value;
         const pass = document.getElementById('auth-password').value;
@@ -214,6 +217,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById('global-media-upload').onchange = (e) => {
         const file = e.target.files[0]; if(!file) return;
         pendingUploadFile = file;
+
         const localPreviewUrl = URL.createObjectURL(file);
         const container = document.getElementById('media-preview-container');
         
@@ -338,7 +342,7 @@ document.addEventListener("DOMContentLoaded", () => {
         
         let mediaHTML = '';
         if(post.imageUrl) {
-            if(post.imageUrl.includes('.mp4') || post.imageUrl.includes('video')) {
+            if(post.imageUrl.includes('.mp4') || post.imageUrl.includes('video') || post.imageUrl.includes('cloudinary.com/video')) {
                 mediaHTML = `<video class="post-image" src="${post.imageUrl}" controls playsinline></video>`;
             } else {
                 mediaHTML = `<img class="post-image" src="${post.imageUrl}">`;
@@ -434,7 +438,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 if(isMyPost) {
                     myPostCount++;
                     if(post.imageUrl) {
-                        const mediaTag = (post.imageUrl.includes('.mp4') || post.imageUrl.includes('video')) 
+                        const mediaTag = (post.imageUrl.includes('.mp4') || post.imageUrl.includes('video') || post.imageUrl.includes('cloudinary.com/video')) 
                             ? `<video src="${post.imageUrl}" style="width:100%; height:100%; object-fit:cover;"></video><i class="fa-solid fa-play" style="position:absolute; top:5px; left:5px; color:white;"></i>` 
                             : `<img src="${post.imageUrl}">`;
                             
@@ -515,7 +519,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const feed = document.getElementById('reels-feed'); feed.innerHTML = '';
             
             if(snapshot.empty) {
-                feed.insertAdjacentHTML('beforeend', `<div class="reel-item" onclick="togglePlay(this)"><video class="reel-media" src="https://files.catbox.moe/dummy.mp4" loop playsinline></video><div class="reel-info"><div class="username">@swipper_official</div><div class="caption">Reels boş. Üst menüden ilk reelsi sen yükle!</div></div><div class="reel-actions"><i class="fa-solid fa-heart" onclick="event.stopPropagation(); this.classList.toggle('liked')"></i></div></div>`);
+                feed.insertAdjacentHTML('beforeend', `<div class="reel-item" onclick="togglePlay(this)"><video class="reel-media" src="https://www.w3schools.com/html/mov_bbb.mp4" loop playsinline></video><div class="reel-info"><div class="username">@swipper_official</div><div class="caption">Reels boş. Üst menüden ilk reelsi sen yükle!</div></div><div class="reel-actions"><i class="fa-solid fa-heart" onclick="event.stopPropagation(); this.classList.toggle('liked')"></i></div></div>`);
                 return;
             }
 
@@ -524,7 +528,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 const isMyReel = r.authorId === currentUser.uid;
                 const manageBtn = isMyReel ? `<i class="fa-solid fa-ellipsis-vertical" style="position:absolute; top:20px; right:20px; color:white; z-index:20; font-size:24px; cursor:pointer;" onclick="event.stopPropagation(); openPostOptions('${doc.id}', '${r.caption || ''}', 'reel')"></i>` : '';
                 
-                const mediaTag = (r.videoUrl.includes('.mp4') || r.videoUrl.includes('video')) 
+                const mediaTag = (r.videoUrl.includes('.mp4') || r.videoUrl.includes('video') || r.videoUrl.includes('cloudinary.com/video')) 
                     ? `<video class="reel-media" src="${r.videoUrl}" loop playsinline></video>`
                     : `<img class="reel-media" src="${r.videoUrl}">`;
 
@@ -610,7 +614,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // --- 10. TEMA VE YÖNETİM ---
+    // --- 10. TEMA VE SEKMELER (SAYFA GEÇİŞİNDE VİDEO DURDURMA MANTIĞI) ---
     document.getElementById('theme-toggle-btn').onclick = () => {
         document.body.classList.toggle('dark-mode'); const icon = document.getElementById('theme-toggle-btn').querySelector('i');
         if (document.body.classList.contains('dark-mode')) { icon.classList.remove('fa-moon'); icon.classList.add('fa-sun'); localStorage.setItem('swipper_theme', 'dark'); } 
@@ -623,8 +627,12 @@ document.addEventListener("DOMContentLoaded", () => {
             if (item.id === 'nav-add-btn') return; 
             e.preventDefault(); 
             
-            // Başka sekmeye geçince videoyu durdur
-            document.querySelectorAll('video').forEach(v => v.pause());
+            // Tüm videoları bul ve durdur
+            document.querySelectorAll('video').forEach(video => {
+                if(!video.paused) {
+                    video.pause();
+                }
+            });
 
             navItems.forEach(i => i.classList.remove('active')); item.classList.add('active');
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
