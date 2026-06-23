@@ -14,7 +14,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
     
-    <link rel="stylesheet" href="style.css?v=8">
+    <link rel="stylesheet" href="style.css?v=10">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body class="light-mode"> 
@@ -33,7 +33,7 @@
 
     <div id="app-container" style="display: none;">
         
-        <header class="top-header">
+        <header class="top-header" id="main-top-header">
             <h1 class="insta-logo">Swipper</h1>
             <div class="header-icons">
                 <button class="icon-btn" id="header-add-btn"><i class="fa-regular fa-square-plus"></i></button>
@@ -64,7 +64,7 @@
                 <div id="search-results" class="user-list"></div>
             </section>
 
-            <section id="reels-tab" class="tab-content" style="padding: 0; margin-top: -60px;">
+            <section id="reels-tab" class="tab-content" style="padding: 0;">
                 <div class="reels-feed" id="reels-feed"></div>
             </section>
 
@@ -131,7 +131,6 @@
                     <span class="profile-username" id="other-profile-username">@kullanici</span>
                     <div style="width: 24px;"></div>
                 </div>
-                
                 <div class="profile-header">
                     <div class="avatar-container"><img src="" class="profile-avatar" id="other-profile-pic"></div>
                     <div class="profile-stats">
@@ -140,16 +139,13 @@
                         <div class="stat"><strong>0</strong><span>Takip</span></div>
                     </div>
                 </div>
-                
                 <div class="profile-bio-section">
                     <strong class="profile-name" id="other-profile-name">İsim Yükleniyor...</strong>
                     <p class="profile-bio-text" id="other-profile-bio">Biyografi yükleniyor...</p>
                 </div>
-                
                 <div class="profile-actions">
                     <button class="primary-btn" id="other-profile-msg-btn" style="width: 100%;">Mesaj Gönder</button>
                 </div>
-
                 <div class="profile-tabs"><div class="p-tab active"><i class="fa-solid fa-table-cells"></i></div></div>
                 <div class="profile-grid" id="other-profile-grid"></div>
             </section>
@@ -221,7 +217,7 @@
         <div class="modal-content bottom-sheet" style="padding: 10px 0;">
             <div class="modal-drag-handle"></div>
             <div class="create-option" id="btn-create-post"><i class="fa-solid fa-table-cells"></i><span>Gönderi veya Tweet Paylaş</span></div>
-            <div class="create-option" id="btn-create-reel"><i class="fa-solid fa-clapperboard"></i><span>Reels Paylaş (Video / Foto)</span></div>
+            <div class="create-option" id="btn-create-reel"><i class="fa-solid fa-clapperboard"></i><span>Reels Videosu Paylaş</span></div>
             <div class="create-option" id="btn-create-story-menu"><i class="fa-solid fa-circle-plus"></i><span>Hikaye Paylaş</span></div>
         </div>
     </div>
@@ -229,7 +225,7 @@
     <div id="post-modal" class="modal">
         <div class="modal-content">
             <div class="modal-header"><h3 id="upload-modal-title">Yeni Paylaşım</h3><button class="close-btn" id="close-post"><i class="fa-solid fa-xmark"></i></button></div>
-            <textarea id="post-content-input" class="custom-textarea" placeholder="Açıklama yaz..." style="height: 80px; border: none; border-bottom: 1px solid var(--border-color); font-size: 16px;"></textarea>
+            <textarea id="post-content-input" class="custom-textarea" placeholder="Neler düşünüyorsun?" style="height: 80px; border: none; border-bottom: 1px solid var(--border-color); font-size: 16px;"></textarea>
             
             <div class="image-upload-preview" id="post-image-preview" style="display: none; position: relative;">
                 <div id="media-preview-container"></div>
@@ -267,9 +263,9 @@
         </div>
     </div>
 
-    <input type="file" id="profile-upload" accept="image/*" style="display: none;">
-    <input type="file" id="global-media-upload" accept="image/*,video/mp4,video/x-m4v,video/*" style="display: none;">
+    <input type="file" id="global-media-upload" accept="image/*,video/*" style="display: none;">
     <input type="file" id="story-image-upload" accept="image/*" style="display: none;">
+    <input type="file" id="profile-upload" accept="image/*" style="display: none;">
 
     <script src="app.js"></script>
 </body>
